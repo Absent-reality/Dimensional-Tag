@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DimensionalTag.ScanPage"
+             BackgroundColor="Black" NavigatedTo="On_Arrived" NavigatedFrom="On_Goodbye">
+
+   <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="200*" />
+            <RowDefinition Height="400*" />
+            <RowDefinition Height="200*" />
+            <RowDefinition Height="200*" />
+        </Grid.RowDefinitions>
+       
+        <Image x:Name="img_scan"
+               Grid.Row="1"
+               HeightRequest="300"
+               WidthRequest="250" 
+               Margin="0,0,0,30"
+               Source="scan_four.png">
+            <Image.Shadow>
+                  <Shadow
+                      Brush="Gray"
+                      Offset="10,10"
+                      Radius="20"
+                      Opacity=".25" />
+            </Image.Shadow>
+        </Image>
+
+        <Label 
+            Grid.Row="3"
+            x:Name="Lbl_scan"                                                                             
+            BackgroundColor="Transparent"            
+            FontSize="Medium"
+            FontAttributes="Bold"
+            TextColor="White"
+            HorizontalTextAlignment="Center"                        
+            HeightRequest="100"              
+            HorizontalOptions="CenterAndExpand" 
+            Opacity="0"/>
+       
+    </Grid>
+</ContentPage>

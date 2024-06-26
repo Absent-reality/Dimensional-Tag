@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="DimensionalTag.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:DimensionalTag"
+    Shell.FlyoutBehavior="Disabled"
+    Title="DimensionalTag">
+
+   
+    <ShellContent   
+        Shell.NavBarIsVisible="False"
+        ContentTemplate="{DataTemplate local:Loading}" 
+        Route="Loading" />
+        
+    <TabBar>
+
+        <Tab Title="Characters" Icon="char_ico.png">
+            <ShellContent                
+                ContentTemplate="{DataTemplate local:CharacterPage}"
+                Route="CharacterPage" />
+        </Tab>
+        <Tab Title="Vehicles" Icon="vehi_ico.png">
+            <ShellContent                
+                ContentTemplate="{DataTemplate local:VehiclesPage}"
+                Route="VehiclesPage" />
+        </Tab>
+        <Tab Title="Worlds" Icon="world_ico.png">
+            <ShellContent
+                ContentTemplate="{DataTemplate local:WorldsPage}"
+                Route="WorldsPage" />
+        </Tab>
+        <Tab Title="Scan" Icon="scan_ico.png">   
+            <ShellContent                                
+                ContentTemplate="{DataTemplate local:ScanPage}"
+                Route="MainPage" />
+        </Tab>
+    </TabBar>
+</Shell>
