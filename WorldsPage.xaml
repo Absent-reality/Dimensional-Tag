@@ -89,25 +89,32 @@
                                     HasShadow="False"
                                     IsClippedToBounds="True">
                                         <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="140*" />
+                                                <RowDefinition Height="120*" />
+                                            </Grid.RowDefinitions>
+                                            
                                             <Image
-                                                Source="world_blank.png" 
-                                                Aspect="Center"
-                                                HeightRequest="200"
+                                                Grid.Row="0"
+                                                Source="{Binding Images}" 
+                                                Aspect="Fill"
+                                                HeightRequest="140"                                            
                                                 VerticalOptions="FillAndExpand"
                                                 HorizontalOptions="FillAndExpand"/>
 
                                             <Label 
+                                                Grid.Row="1"                                                
                                                 x:Name="Lbl_WorldName"                                                                             
                                                 BackgroundColor="Transparent"
-                                                Text="{Binding UpdateSourceEventName=CurrentItem}"
+                                                Text="{Binding Name}"
                                                 FontSize="Medium"
                                                 FontAttributes="Bold"
                                                 TextColor="White"                                               
                                                 HorizontalTextAlignment="Center"
                                                 HorizontalOptions="CenterAndExpand"
-                                                VerticalOptions="EndAndExpand"
-                                                />
+                                                VerticalOptions="CenterAndExpand"
+                                                HeightRequest="120" IsVisible="False" />
+                                                
                                         </Grid>
                                     </Frame>
                                 </StackLayout>
@@ -192,8 +199,7 @@
                                                 Source="char_ico.png"
                                                 Aspect="Fill"
                                                 HeightRequest="130"  
-                                                WidthRequest="130"
-                                                
+                                                WidthRequest="130"                                                
                                                 VerticalOptions="StartAndExpand"
                                                 HorizontalOptions="CenterAndExpand"/>
 
@@ -208,9 +214,8 @@
                                                 HorizontalTextAlignment="Center"                                                
                                                 HorizontalOptions="CenterAndExpand"
                                                 VerticalOptions="CenterAndExpand"
-                                                HeightRequest="120"
-                                                
-                                                />
+                                                HeightRequest="120" />                                              
+                                               
                                         </Grid>
                                     </Frame>
                                 </StackLayout>

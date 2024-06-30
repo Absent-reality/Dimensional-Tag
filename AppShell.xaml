@@ -12,8 +12,16 @@
         Shell.NavBarIsVisible="False"
         ContentTemplate="{DataTemplate local:Loading}" 
         Route="Loading" />
-        
-    <TabBar>
+    
+    <local:CustomTabBar 
+                        x:DataType="local:AppShell"                                              
+                        CenterViewVisible="True"
+                        CenterViewBackgroundColor="Black"
+                        CenterViewCommand="{Binding CenterViewCommand}">
+        <local:CustomTabBar.CenterViewImageSource>
+            <FileImageSource File="search_ico.png"></FileImageSource>
+        </local:CustomTabBar.CenterViewImageSource>        
+    
 
         <Tab Title="Characters" Icon="char_ico.png">
             <ShellContent                
@@ -35,5 +43,6 @@
                 ContentTemplate="{DataTemplate local:ScanPage}"
                 Route="MainPage" />
         </Tab>
-    </TabBar>
+    
+    </local:CustomTabBar>
 </Shell>

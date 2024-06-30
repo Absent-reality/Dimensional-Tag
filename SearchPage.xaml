@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DimensionalTag.SearchPage"
+             Title="SearchPage" BackgroundColor="Transparent"
+             NavigatedTo="On_Arrived"  >
+
+    <Grid>
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
+        </Grid.GestureRecognizers>
+
+        <Border
+            VerticalOptions="Start"
+            Background="White"
+            StrokeShape="{RoundRectangle CornerRadius=20}"
+            Margin="30"
+            Padding="10">
+            <VerticalStackLayout>
+                
+                <Label
+                    HorizontalOptions="CenterAndExpand"
+                    FontSize="Large"
+                    TextDecorations="Underline"
+                    FontAttributes="Bold"
+                    Text="Search for tags."
+                                 />
+                <SearchBar 
+                   x:Name="searchBar"
+                   Placeholder="Search..."
+                   HorizontalTextAlignment="Start"
+                   PlaceholderColor="Gray"
+                   CancelButtonColor="LightSeaGreen"
+                   TextChanged="SearchBar_TextChanged">
+
+                </SearchBar>
+
+                <ListView 
+                 x:Name="searchResults" />
+
+                <Button x:Name="btnCancel"
+                HeightRequest="40"
+                VerticalOptions="End"
+                HorizontalOptions="CenterAndExpand"
+                BackgroundColor="LightSeaGreen"
+                Text=" Close "               
+                FontSize="Small"
+                FontAttributes="Bold"
+                TextColor="Black"
+                CornerRadius="20"
+                Clicked="btnCancel_Clicked" />
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+</ContentPage>

@@ -128,13 +128,78 @@
 	  <None Remove="Resources\Images\Animation\scan_three.png" />
 	  <None Remove="Resources\Images\Animation\scan_two.png" />
 	  <None Remove="Resources\Images\characters.png" />
+	  <None Remove="Resources\Images\Char_Icons\abby_yates.png" />
+	  <None Remove="Resources\Images\Char_Icons\acu_trooper.png" />
+	  <None Remove="Resources\Images\Char_Icons\aquaman.png" />
+	  <None Remove="Resources\Images\Char_Icons\badcop.png" />
+	  <None Remove="Resources\Images\Char_Icons\bane.png" />
+	  <None Remove="Resources\Images\Char_Icons\bart_simpson.png" />
+	  <None Remove="Resources\Images\Char_Icons\batgirl.png" />
+	  <None Remove="Resources\Images\Char_Icons\batman.png" />
+	  <None Remove="Resources\Images\Char_Icons\ba_baracus.png" />
+	  <None Remove="Resources\Images\Char_Icons\beast.png" />
+	  <None Remove="Resources\Images\Char_Icons\beetlejuice_char.png" />
+	  <None Remove="Resources\Images\Char_Icons\benny.png" />
+	  <None Remove="Resources\Images\Char_Icons\blossom.png" />
+	  <None Remove="Resources\Images\Char_Icons\bubbles.png" />
+	  <None Remove="Resources\Images\Char_Icons\buttercup.png" />
+	  <None Remove="Resources\Images\Char_Icons\chase.png" />
+	  <None Remove="Resources\Images\Char_Icons\chell.png" />
+	  <None Remove="Resources\Images\Char_Icons\cole.png" />
+	  <None Remove="Resources\Images\Char_Icons\cragger.png" />
+	  <None Remove="Resources\Images\Char_Icons\cyberman.png" />
+	  <None Remove="Resources\Images\Char_Icons\cyborg.png" />
+	  <None Remove="Resources\Images\Char_Icons\doc_brown.png" />
+	  <None Remove="Resources\Images\Char_Icons\emmet.png" />
+	  <None Remove="Resources\Images\Char_Icons\eris.png" />
+	  <None Remove="Resources\Images\Char_Icons\ethan_hunt.png" />
+	  <None Remove="Resources\Images\Char_Icons\excal_batman.png" />
+	  <None Remove="Resources\Images\Char_Icons\e_t.png" />
+	  <None Remove="Resources\Images\Char_Icons\finn.png" />
+	  <None Remove="Resources\Images\Char_Icons\gamer_kid.png" />
+	  <None Remove="Resources\Images\Char_Icons\gandalf.png" />
+	  <None Remove="Resources\Images\Char_Icons\gimli.png" />
+	  <None Remove="Resources\Images\Char_Icons\gizmo.png" />
+	  <None Remove="Resources\Images\Char_Icons\gollum.png" />
+	  <None Remove="Resources\Images\Char_Icons\green_arrow.png" />
+	  <None Remove="Resources\Images\Char_Icons\harley_quinn.png" />
+	  <None Remove="Resources\Images\Char_Icons\harrypotter.png" />
+	  <None Remove="Resources\Images\Char_Icons\hermione_granger.png" />
+	  <None Remove="Resources\Images\Char_Icons\homer_simpson.png" />
+	  <None Remove="Resources\Images\Char_Icons\jake_the_dog.png" />
+	  <None Remove="Resources\Images\Char_Icons\jay.png" />
+	  <None Remove="Resources\Images\Char_Icons\joker.png" />
+	  <None Remove="Resources\Images\Char_Icons\kai.png" />
+	  <None Remove="Resources\Images\Char_Icons\krusty.png" />
+	  <None Remove="Resources\Images\Char_Icons\laval.png" />
+	  <None Remove="Resources\Images\Char_Icons\legolas.png" />
+	  <None Remove="Resources\Images\Char_Icons\lloyd.png" />
+	  <None Remove="Resources\Images\Char_Icons\lumpy.png" />
+	  <None Remove="Resources\Images\Char_Icons\marceline.png" />
+	  <None Remove="Resources\Images\Char_Icons\marty_mcfly.png" />
+	  <None Remove="Resources\Images\Char_Icons\michael_knight.png" />
+	  <None Remove="Resources\Images\Char_Icons\newt_scamander.png" />
+	  <None Remove="Resources\Images\Char_Icons\nya.png" />
+	  <None Remove="Resources\Images\Char_Icons\owen.png" />
+	  <None Remove="Resources\Images\Char_Icons\peter_vinkman.png" />
+	  <None Remove="Resources\Images\Char_Icons\raven.png" />
+	  <None Remove="Resources\Images\Char_Icons\red_lantern.png" />
+	  <None Remove="Resources\Images\Char_Icons\robin.png" />
+	  <None Remove="Resources\Images\Char_Icons\scooby_doo.png" />
 	  <None Remove="Resources\Images\Char_Icons\sensei_wu.png" />
+	  <None Remove="Resources\Images\Char_Icons\shaggy.png" />
+	  <None Remove="Resources\Images\Char_Icons\slimer.png" />
+	  <None Remove="Resources\Images\Char_Icons\sloth.png" />
 	  <None Remove="Resources\Images\Char_Icons\sonic_the_hedgehog.png" />
+	  <None Remove="Resources\Images\Char_Icons\starfire.png" />
+	  <None Remove="Resources\Images\Char_Icons\stay_puft.png" />
 	  <None Remove="Resources\Images\Char_Icons\stripe.png" />
 	  <None Remove="Resources\Images\Char_Icons\supergirl.png" />
 	  <None Remove="Resources\Images\Char_Icons\superman.png" />
 	  <None Remove="Resources\Images\Char_Icons\the_doctor.png" />
+	  <None Remove="Resources\Images\Char_Icons\tina_goldstein.png" />
 	  <None Remove="Resources\Images\Char_Icons\unikitty.png" />
+	  <None Remove="Resources\Images\Char_Icons\voldemort.png" />
 	  <None Remove="Resources\Images\Char_Icons\wicked_witch.png" />
 	  <None Remove="Resources\Images\Char_Icons\wonder_woman.png" />
 	  <None Remove="Resources\Images\Char_Icons\wyldstyle.png" />
@@ -142,6 +207,7 @@
 	  <None Remove="Resources\Images\galaxy.png" />
 	  <None Remove="Resources\Images\Tab_Icons\char_ico.png" />
 	  <None Remove="Resources\Images\Tab_Icons\scan_ico.png" />
+	  <None Remove="Resources\Images\Tab_Icons\search_ico.png" />
 	  <None Remove="Resources\Images\Tab_Icons\vehi_ico.png" />
 	  <None Remove="Resources\Images\Tab_Icons\world_ico.png" />
 	  <None Remove="Resources\Images\vehicles.png" />
@@ -256,19 +322,85 @@
 	  <MauiImage Include="Resources\Images\Animation\scan_one.png" />
 	  <MauiImage Include="Resources\Images\Animation\scan_three.png" />
 	  <MauiImage Include="Resources\Images\Animation\scan_two.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\abby_yates.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\acu_trooper.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\aquaman.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\badcop.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\bane.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\bart_simpson.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\batgirl.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\batman.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\ba_baracus.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\beast.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\beetlejuice_char.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\benny.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\blossom.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\bubbles.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\buttercup.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\chase.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\chell.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\cole.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\cragger.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\cyberman.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\cyborg.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\doc_brown.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\emmet.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\eris.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\excal_batman.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\e_t.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\ethan_hunt.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\finn.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\gamer_kid.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\gandalf.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\gimli.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\gizmo.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\gollum.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\green_arrow.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\harley_quinn.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\harrypotter.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\hermione_granger.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\homer_simpson.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\jake_the_dog.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\jay.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\joker.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\kai.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\krusty.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\laval.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\legolas.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\lloyd.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\lumpy.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\marceline.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\marty_mcfly.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\michael_knight.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\newt_scamander.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\nya.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\owen.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\peter_vinkman.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\raven.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\red_lantern.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\robin.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\scooby_doo.png" />
 	  <MauiImage Include="Resources\Images\Char_Icons\sensei_wu.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\shaggy.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\slimer.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\sloth.png" />
 	  <MauiImage Include="Resources\Images\Char_Icons\sonic_the_hedgehog.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\starfire.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\stay_puft.png" />
 	  <MauiImage Include="Resources\Images\Char_Icons\stripe.png" />
 	  <MauiImage Include="Resources\Images\Char_Icons\supergirl.png" />
 	  <MauiImage Include="Resources\Images\Char_Icons\superman.png" />
 	  <MauiImage Include="Resources\Images\Char_Icons\the_doctor.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\tina_goldstein.png" />
 	  <MauiImage Include="Resources\Images\Char_Icons\unikitty.png" />
+	  <MauiImage Include="Resources\Images\Char_Icons\voldemort.png" />
 	  <MauiImage Include="Resources\Images\Char_Icons\wicked_witch.png" />
 	  <MauiImage Include="Resources\Images\Char_Icons\wonder_woman.png" />
 	  <MauiImage Include="Resources\Images\Char_Icons\wyldstyle.png" />
 	  <MauiImage Include="Resources\Images\Char_Icons\zane.png" />
 	  <MauiImage Include="Resources\Images\Tab_Icons\char_ico.png" />
 	  <MauiImage Include="Resources\Images\Tab_Icons\scan_ico.png" />
+	  <MauiImage Include="Resources\Images\Tab_Icons\search_ico.png" />
 	  <MauiImage Include="Resources\Images\Tab_Icons\vehi_ico.png" />
 	  <MauiImage Include="Resources\Images\Tab_Icons\world_ico.png" />
 	  <MauiImage Include="Resources\Images\Worlds_Icons\adventure.png" />
@@ -307,8 +439,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.60" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.60" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.1" />
+		<PackageReference Include="M.BindableProperty.Generator" Version="0.11.1" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.61" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.61" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 	</ItemGroup>
 
@@ -323,6 +457,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Loading.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="SearchPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="VehiclesPage.xaml">

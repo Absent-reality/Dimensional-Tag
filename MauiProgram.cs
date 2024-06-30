@@ -1,4 +1,5 @@
 ﻿
+using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 
 namespace DimensionalTag
@@ -10,6 +11,13 @@ namespace DimensionalTag
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
+#if ANDROID
+                .ConfigureMauiHandlers(handlers =>
+                {
+                    handlers.AddHandler<Shell, CustomShellHandler>();
+                })
+#endif
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
