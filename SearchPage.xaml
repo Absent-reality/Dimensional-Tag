@@ -12,43 +12,90 @@
 
         <Border
             VerticalOptions="Start"
-            Background="White"
+            Background="#161616"
             StrokeShape="{RoundRectangle CornerRadius=20}"
             Margin="30"
             Padding="10">
             <VerticalStackLayout>
-                
+
                 <Label
                     HorizontalOptions="CenterAndExpand"
                     FontSize="Large"
-                    TextDecorations="Underline"
+                    TextColor="White"                    
                     FontAttributes="Bold"
-                    Text="Search for tags."
-                                 />
-                <SearchBar 
-                   x:Name="searchBar"
-                   Placeholder="Search..."
-                   HorizontalTextAlignment="Start"
-                   PlaceholderColor="Gray"
-                   CancelButtonColor="LightSeaGreen"
-                   TextChanged="SearchBar_TextChanged">
+                    Text="Search for tags." 
+                    Margin="0,0,0,10">
+                    <Label.Shadow>
+                        <Shadow
+                          Brush="DimGray"
+                          Offset="10,10"
+                          Radius="20"
+                          Opacity=".8" />
+                    </Label.Shadow>
+                </Label>
 
-                </SearchBar>
+                <Border
+                    VerticalOptions="Start"
+                    StrokeShape="{RoundRectangle CornerRadius=5}"
+                    Background="#161616"            
+                    Padding="2" >
 
-                <ListView 
-                 x:Name="searchResults" />
+                    <SearchBar 
+                        x:Name="searchBar"                    
+                        Placeholder="Search..."                    
+                        HorizontalTextAlignment="Start"
+                        TextColor="White"                   
+                        BackgroundColor="#161616"
+                        PlaceholderColor="LightGray"
+                        CancelButtonColor="#01a7d3"                      
+                        TextChanged="SearchBar_TextChanged" >
+                        
+                    </SearchBar>
+                </Border>
+                <Label
+                    x:Name="lbl_results"
+                    Padding="10"
+                    TextDecorations="Underline"
+                    HorizontalTextAlignment="Start"
+                    BackgroundColor="Transparent"
+                    TextColor="White"
+                    />
+                
+                <ListView x:Name="searchResults"
+                          ItemSelected="searchResults_ItemSelected">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextCell 
+                                   Height="50"  
+                                   Text="{x:Binding ItemName}"
+                                   Detail=""/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                   
+                    
 
                 <Button x:Name="btnCancel"
-                HeightRequest="40"
-                VerticalOptions="End"
-                HorizontalOptions="CenterAndExpand"
-                BackgroundColor="LightSeaGreen"
-                Text=" Close "               
-                FontSize="Small"
-                FontAttributes="Bold"
-                TextColor="Black"
-                CornerRadius="20"
-                Clicked="btnCancel_Clicked" />
+                    HeightRequest="40"
+                    VerticalOptions="End"
+                    HorizontalOptions="CenterAndExpand"
+                    BackgroundColor="#01a7d3"
+                    Text=" Close "               
+                    FontSize="Small"
+                    FontAttributes="Bold"
+                    TextColor="Black"
+                    CornerRadius="20"
+                    Clicked="btnCancel_Clicked" 
+                    Padding="10"
+                    Margin="15">
+                    <Button.Shadow>
+                        <Shadow
+                          Brush="DimGray"
+                          Offset="10,10"
+                          Radius="20"
+                          Opacity=".8" />
+                    </Button.Shadow>
+                </Button>
             </VerticalStackLayout>
         </Border>
     </Grid>

@@ -56,6 +56,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Platforms\Android\Resources\values\styles.xml" />
 	  <None Remove="Resources\AppIcon\lego_icn.png" />
 	  <None Remove="Resources\Images\Animation\gear_logo.png" />
 	  <None Remove="Resources\Images\Animation\logo1.png" />
@@ -207,7 +208,7 @@
 	  <None Remove="Resources\Images\galaxy.png" />
 	  <None Remove="Resources\Images\Tab_Icons\char_ico.png" />
 	  <None Remove="Resources\Images\Tab_Icons\scan_ico.png" />
-	  <None Remove="Resources\Images\Tab_Icons\search_ico.png" />
+	  <None Remove="Resources\Images\Tab_Icons\search_icon.png" />
 	  <None Remove="Resources\Images\Tab_Icons\vehi_ico.png" />
 	  <None Remove="Resources\Images\Tab_Icons\world_ico.png" />
 	  <None Remove="Resources\Images\vehicles.png" />
@@ -400,7 +401,7 @@
 	  <MauiImage Include="Resources\Images\Char_Icons\zane.png" />
 	  <MauiImage Include="Resources\Images\Tab_Icons\char_ico.png" />
 	  <MauiImage Include="Resources\Images\Tab_Icons\scan_ico.png" />
-	  <MauiImage Include="Resources\Images\Tab_Icons\search_ico.png" />
+	  <MauiImage Include="Resources\Images\Tab_Icons\search_icon.png" />
 	  <MauiImage Include="Resources\Images\Tab_Icons\vehi_ico.png" />
 	  <MauiImage Include="Resources\Images\Tab_Icons\world_ico.png" />
 	  <MauiImage Include="Resources\Images\Worlds_Icons\adventure.png" />

@@ -266,56 +266,66 @@ namespace DimensionalTag
             v[1] = v1;
         }
 
+        public class SearchItems
+        {
+            public string? ItemName { get; set; }
+            public ushort? Id { get; set; }
+        }
+
+        
         /// <summary>
         /// Use to search through all tag info.
         /// </summary>
         /// <param name="filterText">String input of what to search for.</param>
         /// <returns>Returns an observable collection containing search results.</returns>
-        public static ObservableCollection<string> SearchTags(string filterText)
+        public static ObservableCollection<SearchItems> SearchTags(string filterText)
         {
-            ObservableCollection<string> totalTags = new ObservableCollection<string>();
+            ObservableCollection<SearchItems> totalTags = new ObservableCollection<SearchItems>();
 
             var charList = Character.Characters.FindAll(x => !string.IsNullOrWhiteSpace(x.Name) && x.Name.StartsWith(filterText, StringComparison.OrdinalIgnoreCase))?.ToList();
+            var worldList = World.Worlds.FindAll(x => !string.IsNullOrWhiteSpace(x.Name) && x.Name.StartsWith(filterText, StringComparison.OrdinalIgnoreCase))?.ToList();
+            var vehiList = Vehicle.Vehicles.FindAll(x => !string.IsNullOrWhiteSpace(x.Name) && x.Name.StartsWith(filterText, StringComparison.OrdinalIgnoreCase))?.ToList();
 
             if (charList == null || charList.Count <= 0)
             {
-                var worldList = World.Worlds.FindAll(x => !string.IsNullOrWhiteSpace(x.Name) && x.Name.StartsWith(filterText, StringComparison.OrdinalIgnoreCase))?.ToList();
-                if (worldList == null || worldList.Count <= 0)
-                {
-                    var vehiList = Vehicle.Vehicles.FindAll(x => !string.IsNullOrWhiteSpace(x.Name) && x.Name.StartsWith(filterText, StringComparison.OrdinalIgnoreCase))?.ToList();
-                    if (vehiList == null || vehiList.Count <= 0)
-                    {
-                        totalTags.Add("Name not found.");
-                        return totalTags;
-                    }
-                    else 
-                    { 
-                        foreach (var x in vehiList)
-                        {
-                        totalTags.Add(x.Name);
-                        }
-                        return totalTags;
-                    }
-
-                }
-                else
-                {
-                    foreach (var x in worldList)
-                    {
-                        totalTags.Add(x.Name);
-                    }
-                    return totalTags;
-                }
 
             }
             else
             {
                 foreach (var x in charList)
                 {
-                    totalTags.Add(x.Name);
-                }
-                return totalTags;
+                    totalTags.Add(new SearchItems() { ItemName = x.Name, Id = x.Id });
+                }  
             }
+
+            if (vehiList == null || vehiList.Count <= 0)
+            {
+
+            }
+            else
+            {
+                foreach (var x in vehiList)
+                {
+                    totalTags.Add(new SearchItems() { ItemName = x.Name, Id = x.Id });
+                }
+            }
+ 
+            if (worldList == null || worldList.Count <= 0)
+            {
+            
+            }
+            else
+            { 
+                foreach (var x in worldList)
+                {
+                     totalTags.Add(new SearchItems() { ItemName = x.Name });
+                }
+
+            }   
+            
+            return totalTags; 
+                 
         }
+                 
     }
 }
