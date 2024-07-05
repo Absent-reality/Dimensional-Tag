@@ -36,7 +36,7 @@
                 <LinearItemsLayout 
                             Orientation="Horizontal"
                             SnapPointsAlignment="Center"
-                            SnapPointsType="Mandatory"/>
+                            SnapPointsType="Mandatory" />
             </CarouselView.ItemsLayout>
             <CarouselView.ItemTemplate>
                 <DataTemplate>
@@ -85,7 +85,11 @@
                                HeightRequest="160"
                                WidthRequest="170"
                                HorizontalOptions="Center"
-                               VerticalOptions="Center" />
+                               VerticalOptions="Center">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="Character_Tapped" />
+                                </Image.GestureRecognizers>
+                            </Image>
 
 
                             <Label 

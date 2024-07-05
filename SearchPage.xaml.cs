@@ -1,3 +1,4 @@
+using CommunityToolkit.Maui.Views;
 using System.Collections.ObjectModel;
 
 
@@ -168,7 +169,7 @@ public partial class SearchPage : ContentPage
             var check = e.SelectedItem as LegoTag.SearchItems;
             if ( check == null )
             {
-                await DisplayAlert("Oops...", "Something went wrong.", "Ok.");
+                await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong.", "Ok.", "", false));
             }
             else
             {                
@@ -176,8 +177,8 @@ public partial class SearchPage : ContentPage
                 {
                     World? world = World.Worlds.FirstOrDefault( m => m.Name == check.ItemName );
                     if ( world == null )
-                    {
-                        await DisplayAlert("Oops...", "Something went wrong with world.", "Ok.");
+                    {                     
+                        await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong with world.", "Ok.", "", false));
                     }
                     else
                     {
@@ -194,7 +195,7 @@ public partial class SearchPage : ContentPage
                        Character? character = Character.Characters.FirstOrDefault( m => m.Id == check.Id );
                        if ( character == null ) 
                         {
-                            await DisplayAlert("Oops...", "Something went wrong with character.", "Ok.");
+                            await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong with character.", "Ok.", "", false));
                         }
                         else
                         {
@@ -208,7 +209,7 @@ public partial class SearchPage : ContentPage
                        Vehicle? vehicle = Vehicle.Vehicles.FirstOrDefault( m => m.Id == check.Id );
                         if ( vehicle == null ) 
                         {
-                           await DisplayAlert( "Oops...", "Something went wrong with vehicle.", "Ok." );
+                            await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong with vehicle.", "Ok.", "", false));
                         }
                         else
                         {
@@ -219,7 +220,7 @@ public partial class SearchPage : ContentPage
                     }
                     else
                     {
-                        await DisplayAlert( "Oops...", "Something went wrong with Id.", "Ok." );
+                        await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong with Id.", "Ok.", "", false));
                     }                    
                 }               
             }

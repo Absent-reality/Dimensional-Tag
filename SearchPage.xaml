@@ -63,6 +63,7 @@
                 
                 <ListView x:Name="searchResults"
                           ItemSelected="SearchResults_ItemSelected">
+                        
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <TextCell 

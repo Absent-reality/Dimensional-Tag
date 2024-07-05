@@ -3,6 +3,7 @@ using Android.App;
 using Android.Nfc.Tech;
 using Android.OS;
 using AndroidX.ConstraintLayout.Core;
+using CommunityToolkit.Maui.Views;
 using DimensionalTag.Enums;
 using DimensionalTag.Interfaces;
 using Java.Util.Concurrent;
@@ -22,12 +23,23 @@ namespace DimensionalTag
             RFIDToolsGetter.SetOnRfidReceive(async (cardInfo) =>
             {
                 message = cardInfo;
-                
+                if (cardInfo != "")
+                {
+                   await ShowIt(cardInfo);
+                }
+             
             });
 #endif         
-
+            
         }
         public string message = "";
+
+        private async Task ShowIt(string message)
+        {
+#if ANDROID
+            await Shell.Current.ShowPopupAsync(new AlertPopup("Surprise!", message, "Ok", "", false));
+#endif
+        }
 
         private async void On_Arrived(object sender, NavigatedToEventArgs e)
         {

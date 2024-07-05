@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="DimensionalTag.AlertPopup" Color="Transparent" >
+
+    <Grid>
+
+        <Border
+            VerticalOptions="Start"
+            Background="#161616"
+            StrokeShape="{RoundRectangle CornerRadius=20}"
+            Margin="30"
+            Padding="10">
+
+            <VerticalStackLayout>
+
+                <Label
+                    x:Name="lbl_Title"
+                    HorizontalOptions="FillAndExpand"
+                    HorizontalTextAlignment="Center"
+                    VerticalTextAlignment="Center"
+                    HeightRequest="40"
+                    FontSize="Large"
+                    BackgroundColor="#01a7d3"
+                    TextColor="Black"                    
+                    FontAttributes="Bold"                    
+                    Margin="0,0,0,10">
+                    <Label.Shadow>
+                        <Shadow
+                          Brush="DimGray"
+                          Offset="10,10"
+                          Radius="20"
+                          Opacity=".8" />
+                    </Label.Shadow>
+                </Label>
+
+                <Editor
+                    x:Name="edt_Alert"  
+                    HorizontalTextAlignment="Start"
+                    BackgroundColor="Transparent"                        
+                    TextColor="White"
+                    HorizontalOptions="CenterAndExpand"
+                    IsReadOnly="True" />
+
+                <HorizontalStackLayout 
+                    HorizontalOptions="Center">
+
+                    <Button 
+                        x:Name="btn_Confirm"
+                        HeightRequest="40"
+                        VerticalOptions="End"
+                        HorizontalOptions="StartAndExpand"
+                        BackgroundColor="#01a7d3"                                       
+                        FontSize="Small"
+                        FontAttributes="Bold"
+                        TextColor="Black"
+                        CornerRadius="20"
+                        Clicked="BtnWrite_Clicked"
+                        Padding="10"
+                        Margin="15"
+                        IsVisible="False">
+                        <Button.Shadow>
+                            <Shadow
+                                 Brush="DimGray"
+                                 Offset="10,10"
+                                 Radius="20"
+                                 Opacity=".8" />
+                        </Button.Shadow>
+                    </Button>
+
+                    <Button 
+                        x:Name="btn_Cancel"
+                        HeightRequest="40"
+                        VerticalOptions="End"
+                        HorizontalOptions="EndAndExpand"
+                        BackgroundColor="#01a7d3"               
+                        FontSize="Small"
+                        FontAttributes="Bold"
+                        TextColor="Black"
+                        CornerRadius="20"
+                        Clicked="BtnCancel_Clicked" 
+                        Padding="10"
+                        Margin="15">
+                        <Button.Shadow>
+                            <Shadow
+                                 Brush="DimGray"
+                                 Offset="10,10"
+                                 Radius="20"
+                                 Opacity=".8" />
+                        </Button.Shadow>
+                    </Button>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+</toolkit:Popup>

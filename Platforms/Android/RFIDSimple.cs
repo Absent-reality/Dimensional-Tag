@@ -2,6 +2,7 @@
 using Android.Nfc;
 using Android.Nfc.Tech;
 using AndroidX.Core.Content;
+using CommunityToolkit.Maui.Views;
 using DimensionalTag.Enums;
 using DimensionalTag.Interfaces;
 using System.Text;
@@ -72,7 +73,7 @@ namespace DimensionalTag
 
                     if (thisTag == null)
                     {
-                        ErrorReport("Failed to read tag.");
+                        ErrorReport("Failed to read tag.");                       
                         return "";
                     }
                     CardInfo = GrabTagInfo(thisTag);
@@ -126,11 +127,15 @@ namespace DimensionalTag
                 ForDebug.AppendLine("AuthenticationKey: " + BitConverter.ToString(AuthenticationKey));
 
                 string tech = "";
-                foreach (string t in thisTag.GetTechList()) //check for card capability
+                var this_tag = thisTag.GetTechList();
+                if (this_tag != null)
                 {
-                    tech += t + "\n";
+                    foreach (string t in this_tag) //check for card capability
+                    {
+                       tech += t + "\n";
+                    }
+                    ForDebug.AppendLine("Available tech: " + tech);
                 }
-                ForDebug.AppendLine("Available tech: " + tech);
 
                 if (tech.Contains("android.nfc.tech.NfcA"))
                 {
@@ -193,7 +198,7 @@ namespace DimensionalTag
                                 Vehicle? vec = Vehicle.Vehicles.FirstOrDefault(m => m.Id == id);
                                 if (vec is not null)
                                 {
-                                    info.AppendLine($"{vec.Name}, {vec.Rebuild} build. World: {vec.World}.\r\n");
+                                    info.AppendLine($" {vec.Name}, {vec.Rebuild} build. World: {vec.World}.\r\n");
                                     info.AppendLine("  Capabilities: ");
                                     for (int i = 0; i < vec.Abilities.Count; i++)
                                     {
@@ -483,9 +488,8 @@ namespace DimensionalTag
         /// <param name="message">Message to be displayed</param>
         /// <param name="title">Alert title</param>
         /// <returns>The task to be performed</returns>
-        public static Task Announce(string message, string title) => Application.Current.MainPage.DisplayAlert(title, message, "Ok");
-        public static Task ErrorReport(string message, string title = null) => Application.Current.MainPage.DisplayAlert(string.IsNullOrWhiteSpace(title) ? ALERT_TITLE : title, message, "Ok");
-
+        public static Task Announce(string message, string title) => Shell.Current.ShowPopupAsync(new AlertPopup(title, message, "Ok", "", false));
+        public static Task ErrorReport(string message, string title = null) => Shell.Current.ShowPopupAsync(new AlertPopup(string.IsNullOrWhiteSpace(title) ? ALERT_TITLE : title, message, "Ok", "", false));
         /// <summary>
         /// Serialize command for sending to card.
         /// </summary>

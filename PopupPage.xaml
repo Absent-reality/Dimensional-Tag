@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="DimensionalTag.PopupPage" Color="Transparent">
+
+    <Grid>
+
+        <Border
+            VerticalOptions="Start"
+            Background="#161616"
+            StrokeShape="{RoundRectangle CornerRadius=20}"
+            Margin="30"
+            Padding="10">
+            
+            <VerticalStackLayout >
+
+                <Label
+                    x:Name="lbl_Name"
+                    HorizontalOptions="CenterAndExpand"
+                    FontSize="Large"
+                    TextColor="White"                    
+                    FontAttributes="Bold"
+                    TextDecorations="Underline"
+                    Margin="0,0,0,10">
+                    <Label.Shadow>
+                        <Shadow
+                          Brush="DimGray"
+                          Offset="10,10"
+                          Radius="20"
+                          Opacity=".8" />
+                    </Label.Shadow>
+                </Label>
+
+                    <Image
+                    x:Name="Img_Character"                 
+                    BackgroundColor="Transparent"
+                    HeightRequest="70"                  
+                    HorizontalOptions="Center" />
+                                  
+
+                <Label
+                    x:Name="lbl_World"
+                    Padding="10"
+                    HorizontalTextAlignment="Center"
+                    BackgroundColor="Transparent"
+                    TextColor="White" />
+
+                <Label
+                    x:Name="lbl_Abilities"
+                    Padding="10"
+                    TextDecorations="Underline"
+                    FontSize="Medium"
+                    FontAttributes="Bold"
+                    HorizontalTextAlignment="Center"
+                    HorizontalOptions="CenterAndExpand"
+                    BackgroundColor="Transparent"
+                    TextColor="White" />
+
+                <Editor
+                    x:Name="edt_Abilities"  
+                    HorizontalTextAlignment="Center"
+                    BackgroundColor="Transparent"                        
+                    TextColor="White"
+                    HorizontalOptions="CenterAndExpand"
+                    IsReadOnly="True" />
+
+                <HorizontalStackLayout >
+
+                    <Button 
+                        x:Name="btn_Write"
+                        HeightRequest="40"
+                        VerticalOptions="End"
+                        HorizontalOptions="StartAndExpand"
+                        BackgroundColor="#01a7d3"
+                        Text=" Write? "               
+                        FontSize="Small"
+                        FontAttributes="Bold"
+                        TextColor="Black"
+                        CornerRadius="20"
+                        Clicked="WriteButton_Clicked"
+                        Padding="10"
+                        Margin="15">
+                        <Button.Shadow>
+                            <Shadow
+                                 Brush="DimGray"
+                                 Offset="10,10"
+                                 Radius="20"
+                                 Opacity=".8" />
+                        </Button.Shadow>
+                    </Button>
+
+                    <Button 
+                        x:Name="btn_Cancel"
+                        HeightRequest="40"
+                        VerticalOptions="End"
+                        HorizontalOptions="EndAndExpand"
+                        BackgroundColor="#01a7d3"
+                        Text=" Cancel? "               
+                        FontSize="Small"
+                        FontAttributes="Bold"
+                        TextColor="Black"
+                        CornerRadius="20"
+                        Clicked="CancelButton_Clicked" 
+                        Padding="10"
+                        Margin="15">
+                        <Button.Shadow>
+                            <Shadow
+                                 Brush="DimGray"
+                                 Offset="10,10"
+                                 Radius="20"
+                                 Opacity=".8" />
+                        </Button.Shadow>
+                    </Button>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+</toolkit:Popup>

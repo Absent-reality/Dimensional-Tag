@@ -2,6 +2,7 @@
 using Android.App;
 using Android.Nfc.Tech;
 using Android.OS;
+using CommunityToolkit.Maui.Views;
 using DimensionalTag.Enums;
 using DimensionalTag.Interfaces;
 using Java.Util.Concurrent;
@@ -98,4 +99,25 @@ public partial class CharacterPage : ContentPage
         carousel.FadeTo(0);
     }
 
+    private async void Character_Tapped(object sender, TappedEventArgs e)
+    {
+#if ANDROID
+        Character? current = carousel.CurrentItem as Character;
+        if (current != null) 
+        { 
+
+            var popup = new PopupPage(current);
+               var result = await Shell.Current.ShowPopupAsync(popup);
+               if (result is bool m)
+               {
+
+                var alert = new AlertPopup(" Alert! ", " Are you sure you want to write this data? ", " Cancel?", " Write? ", true);
+                var confirm = await Shell.Current.ShowPopupAsync(alert);
+
+               }
+               
+        }
+#endif        
+
+    }
 }

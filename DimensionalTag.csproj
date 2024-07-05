@@ -448,6 +448,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="AlertPopup.xaml.cs">
+	    <DependentUpon>AlertPopup.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="ScanPage.xaml.cs">
 	    <DependentUpon>ScanPage.xaml</DependentUpon>
 	  </Compile>
@@ -458,6 +461,12 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Loading.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="AlertPopup.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="PopupPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="SearchPage.xaml">
