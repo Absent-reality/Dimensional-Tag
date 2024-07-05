@@ -62,7 +62,7 @@
                     />
                 
                 <ListView x:Name="searchResults"
-                          ItemSelected="searchResults_ItemSelected">
+                          ItemSelected="SearchResults_ItemSelected">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <TextCell 
@@ -85,7 +85,7 @@
                     FontAttributes="Bold"
                     TextColor="Black"
                     CornerRadius="20"
-                    Clicked="btnCancel_Clicked" 
+                    Clicked="BtnCancel_Clicked" 
                     Padding="10"
                     Margin="15">
                     <Button.Shadow>

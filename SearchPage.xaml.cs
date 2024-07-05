@@ -1,6 +1,5 @@
-using Java.Lang;
 using System.Collections.ObjectModel;
-using System.Globalization;
+
 
 namespace DimensionalTag;
 
@@ -14,7 +13,7 @@ public partial class SearchPage : ContentPage
 
 	}
 
-    void Page_Loaded(object sender, EventArgs e)
+    void Page_Loaded(object? sender, EventArgs e)
     {
         //Only need to fire this once then we can forget it.
         this.Loaded -= Page_Loaded;
@@ -85,7 +84,7 @@ public partial class SearchPage : ContentPage
                // important: Set out completion source to done!
                done.TrySetResult();
            });
-        //we now return the task so we can wait for the animation to finish.
+    
         return done.Task;
     }
 
@@ -97,18 +96,11 @@ public partial class SearchPage : ContentPage
         await Navigation.PopModalAsync(animated: false);
     }
 
-    public class ListItem
-    {
-        public string? ItemName { get; set; }
-        public ushort? Id { get; set; }
-       
-    }
-
-    private ObservableCollection<ListItem> ListItems = [];
-    
+    private ObservableCollection<LegoTag.SearchItems> ListItems = [];
+   
     private void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
     {
-       
+       //Begin the digging for matches. 
         ListItems.Clear();
 
         bool notFound = false;
@@ -121,13 +113,13 @@ public partial class SearchPage : ContentPage
             if (items == null || items.Count == 0)
             {
                 notFound = true;
-                ListItems.Add(new ListItem() { ItemName = "Name not found." });
+                ListItems.Add(new LegoTag.SearchItems() { ItemName = "Name not found." });
             }
             else
             {
                 notFound = false;
                 foreach(var item in items)
-                ListItems.Add(new ListItem() { ItemName = item.ItemName, Id = item.Id });
+                ListItems.Add(new LegoTag.SearchItems() { ItemName = item.ItemName, Id = item.Id });
             }
  
             if (notFound) { lbl_results.Text = $" Results: {0} "; }
@@ -147,7 +139,7 @@ public partial class SearchPage : ContentPage
             
     }
 
-    private async void btnCancel_Clicked(object sender, EventArgs e)
+    private async void BtnCancel_Clicked(object sender, EventArgs e)
     {
         await Close();
     }
@@ -168,79 +160,69 @@ public partial class SearchPage : ContentPage
         DeviceDisplay.KeepScreenOn = false;
     }
 
-    private async void searchResults_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+    private async void SearchResults_ItemSelected(object sender, SelectedItemChangedEventArgs e)
     {
               
         if (e.SelectedItem != null)
         {          
-            var check = e.SelectedItem as ListItem;
+            var check = e.SelectedItem as LegoTag.SearchItems;
             if ( check == null )
             {
                 await DisplayAlert("Oops...", "Something went wrong.", "Ok.");
             }
             else
             {                
-                if (check.Id == null & check.ItemName != null)
+                if ( check.Id == null & check.ItemName != null )
                 {
-                    World? world = World.Worlds.FirstOrDefault(m => m.Name == check.ItemName);
+                    World? world = World.Worlds.FirstOrDefault( m => m.Name == check.ItemName );
                     if ( world == null )
                     {
                         await DisplayAlert("Oops...", "Something went wrong with world.", "Ok.");
                     }
                     else
                     {
-                        var navParam = new ShellNavigationQueryParameters
-                        {
-                            {"World", world }
-                        };
+                        var navParam = new Dictionary<string, object> { { "WorldParam", world } };
+
                         await Shell.Current.GoToAsync($"///WorldsPage", navParam);
                     }
                     
                 }
-                else if (check.Id != null)
+                else if ( check.Id != null )
                 {
-                    if(check.Id.Value <= 800)
+                    if ( check.Id.Value <= 800 )
                     {
-                       Character? character = Character.Characters.FirstOrDefault(m => m.Id == check.Id);
-                       if (character == null) 
+                       Character? character = Character.Characters.FirstOrDefault( m => m.Id == check.Id );
+                       if ( character == null ) 
                         {
                             await DisplayAlert("Oops...", "Something went wrong with character.", "Ok.");
                         }
                         else
                         {
-                            var navParam = new ShellNavigationQueryParameters
-                            {
-                                 {"Character", character }
-                            };
-                                await Shell.Current.GoToAsync($"///CharacterPage", navParam);
-                            
+                            var navParam = new Dictionary<string, object> { { "CharacterParam", character } };
+
+                            await Shell.Current.GoToAsync( $"///CharacterPage", navParam );                           
                         }
                     }
-                    else if (check.Id.Value > 800)
+                    else if ( check.Id.Value > 800 )
                     {                  
-                       Vehicle? vehicle = Vehicle.Vehicles.FirstOrDefault(m => m.Id == check.Id);
-                        if (vehicle == null) 
+                       Vehicle? vehicle = Vehicle.Vehicles.FirstOrDefault( m => m.Id == check.Id );
+                        if ( vehicle == null ) 
                         {
-                           await DisplayAlert("Oops...", "Something went wrong with vehicle.", "Ok.");
+                           await DisplayAlert( "Oops...", "Something went wrong with vehicle.", "Ok." );
                         }
                         else
                         {
-                            var navParam = new ShellNavigationQueryParameters
-                            {
-                                 {"Vehicle", vehicle }
-                            };
-                                await Shell.Current.GoToAsync($"///VehiclePage", navParam);
+                            var navParam = new Dictionary<string, object> { { "VehicleParam", vehicle } };
+
+                            await Shell.Current.GoToAsync( $"///VehiclesPage", navParam );
                         }
                     }
                     else
                     {
-                        await DisplayAlert("Oops...", "Something went wrong with Id.", "Ok.");
-                    }
-                    
+                        await DisplayAlert( "Oops...", "Something went wrong with Id.", "Ok." );
+                    }                    
                 }               
-
             }
         }
     }
-
 }

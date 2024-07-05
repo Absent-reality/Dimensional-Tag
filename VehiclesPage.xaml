@@ -19,21 +19,22 @@
                Source="vehicles.png"
                Margin="0,0,0,10"
                WidthRequest="300"
-               HeightRequest="100">
-            <Image.Shadow>
-                <Shadow
-                    Brush="Gray"
-                    Offset="20,20"
-                    Radius="20"
-                    Opacity=".8" />
-            </Image.Shadow>
+               HeightRequest="100"
+               Opacity="0">
         </Image>
 
         <CarouselView x:Name="vehicle_carousel" 
                       BackgroundColor="Transparent" 
                       PeekAreaInsets="80" 
                       VerticalOptions="Center" 
-                      Grid.Row="1" Margin="0,50,0,0">
+                      Grid.Row="1" Margin="0,50,0,0"
+                      Opacity="0">
+            <CarouselView.ItemsLayout>
+                <LinearItemsLayout 
+                            Orientation="Horizontal"
+                            SnapPointsAlignment="Center"
+                            SnapPointsType="Mandatory"/>
+            </CarouselView.ItemsLayout>
 
             <CarouselView.ItemTemplate>
                 <DataTemplate>

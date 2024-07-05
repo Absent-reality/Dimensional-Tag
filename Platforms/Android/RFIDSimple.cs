@@ -458,7 +458,7 @@ namespace DimensionalTag
                                 }
                             }
                             else
-                            {
+                            {                                
                                 ErrorReport($"Not a supported NTAG card, only 213, 215 and 216 ar supported. \n Current detected type: {CardType}");
                                 return;
                             }

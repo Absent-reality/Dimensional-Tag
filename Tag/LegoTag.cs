@@ -234,7 +234,7 @@ namespace DimensionalTag
         /// <summary>
         /// Dencrypt 64 bits with a 128 bit key using TEA.
         /// </summary>
-        /// <param name="v">Array of two 32 bit uints to be dencoded in place.</param>
+        /// <param name="v">Array of two 32 bit uints to be decoded in place.</param>
         /// <param name="k">Array of four 32 bit uints to act as key.</param>
         private static void TeaDecrypt(uint[] v, uint[] k)
         {
@@ -266,12 +266,14 @@ namespace DimensionalTag
             v[1] = v1;
         }
 
+        /// <summary>
+        /// Class to organize get items.
+        /// </summary>
         public class SearchItems
         {
             public string? ItemName { get; set; }
             public ushort? Id { get; set; }
         }
-
         
         /// <summary>
         /// Use to search through all tag info.
@@ -280,15 +282,14 @@ namespace DimensionalTag
         /// <returns>Returns an observable collection containing search results.</returns>
         public static ObservableCollection<SearchItems> SearchTags(string filterText)
         {
-            ObservableCollection<SearchItems> totalTags = new ObservableCollection<SearchItems>();
+            ObservableCollection<SearchItems> totalTags = [];
 
-            var charList = Character.Characters.FindAll(x => !string.IsNullOrWhiteSpace(x.Name) && x.Name.StartsWith(filterText, StringComparison.OrdinalIgnoreCase))?.ToList();
-            var worldList = World.Worlds.FindAll(x => !string.IsNullOrWhiteSpace(x.Name) && x.Name.StartsWith(filterText, StringComparison.OrdinalIgnoreCase))?.ToList();
-            var vehiList = Vehicle.Vehicles.FindAll(x => !string.IsNullOrWhiteSpace(x.Name) && x.Name.StartsWith(filterText, StringComparison.OrdinalIgnoreCase))?.ToList();
+            var charList = Character.Characters.FindAll(x => !string.IsNullOrWhiteSpace(x.Name) && x.Name.Contains(filterText, StringComparison.OrdinalIgnoreCase))?.ToList();
+            var worldList = World.Worlds.FindAll(x => !string.IsNullOrWhiteSpace(x.Name) && x.Name.Contains(filterText, StringComparison.OrdinalIgnoreCase))?.ToList();
+            var vehiList = Vehicle.Vehicles.FindAll(x => !string.IsNullOrWhiteSpace(x.Name) && x.Name.Contains(filterText, StringComparison.OrdinalIgnoreCase))?.ToList();
 
             if (charList == null || charList.Count <= 0)
             {
-
             }
             else
             {
@@ -300,7 +301,6 @@ namespace DimensionalTag
 
             if (vehiList == null || vehiList.Count <= 0)
             {
-
             }
             else
             {
@@ -311,8 +311,7 @@ namespace DimensionalTag
             }
  
             if (worldList == null || worldList.Count <= 0)
-            {
-            
+            {            
             }
             else
             { 
@@ -323,8 +322,7 @@ namespace DimensionalTag
 
             }   
             
-            return totalTags; 
-                 
+            return totalTags;                  
         }
                  
     }

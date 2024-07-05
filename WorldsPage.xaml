@@ -14,28 +14,25 @@
                Source="worlds.png"             
                Margin="0,30,0,0"
                WidthRequest="300"
-               HeightRequest="100">
-            <Image.Shadow>
-                <Shadow
-                          Brush="Gray"
-                          Offset="20,20"
-                          Radius="20"
-                          Opacity=".8" />
-            </Image.Shadow>
+               HeightRequest="100" 
+               Opacity="0">
         </Image>
 
-        <Frame Padding="15" HeightRequest="260" IsClippedToBounds="True" BackgroundColor="Transparent" BorderColor="Transparent">
-            <StackLayout Spacing="0">
+            <StackLayout 
+                HeightRequest="260"
+                Spacing="0">
                 <CarouselView x:Name="World_Carousel" 
-                              BackgroundColor="Transparent" 
+                              BackgroundColor="Transparent"
+                              Loop="True"
                               PeekAreaInsets="70" 
                               CurrentItemChanged="world_carousel_CurrentItemChanged" 
-                              HeightRequest="250" >
+                              HeightRequest="250"
+                              Opacity="0">
                     <CarouselView.ItemsLayout>
-                        <LinearItemsLayout
+                        <LinearItemsLayout 
                             Orientation="Horizontal"
                             SnapPointsAlignment="Center"
-                            SnapPointsType="Mandatory"/>
+                            SnapPointsType="MandatorySingle"/>
                     </CarouselView.ItemsLayout>
 
                     <CarouselView.ItemTemplate>
@@ -80,21 +77,14 @@
                                     </VisualStateGroup>
                                 </VisualStateManager.VisualStateGroups>
                                 <StackLayout BackgroundColor="Transparent" IsVisible="True" >
-                                    <Frame
-                                        BackgroundColor="Transparent"
-                                        BorderColor="Transparent"
-                                    Margin="5"
-                                    Padding="0"
-                                    CornerRadius="0"
-                                    HasShadow="False"
-                                    IsClippedToBounds="True">
-                                        <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="140*" />
-                                                <RowDefinition Height="120*" />
-                                            </Grid.RowDefinitions>
-                                            
-                                            <Image
+
+                                <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="140*" />
+                                        <RowDefinition Height="120*" />
+                                    </Grid.RowDefinitions>
+
+                                    <Image
                                                 Grid.Row="0"
                                                 Source="{Binding Images}" 
                                                 Aspect="Fill"
@@ -102,7 +92,7 @@
                                                 VerticalOptions="FillAndExpand"
                                                 HorizontalOptions="FillAndExpand"/>
 
-                                            <Label 
+                                    <Label 
                                                 Grid.Row="1"                                                
                                                 x:Name="Lbl_WorldName"                                                                             
                                                 BackgroundColor="Transparent"
@@ -114,87 +104,81 @@
                                                 HorizontalOptions="CenterAndExpand"
                                                 VerticalOptions="CenterAndExpand"
                                                 HeightRequest="120" IsVisible="False" />
-                                                
-                                        </Grid>
-                                    </Frame>
-                                </StackLayout>
+
+                                </Grid>
+                            </StackLayout>
                             </StackLayout>
                         </DataTemplate>
                     </CarouselView.ItemTemplate>
                 </CarouselView>
             </StackLayout>
-        </Frame>
 
-        <Frame Padding="15" HeightRequest="280" IsClippedToBounds="True" BackgroundColor="Transparent" BorderColor="Transparent">
-            <StackLayout Spacing="0">
-                <CarouselView x:Name="Item_Carousel" 
+
+
+        <StackLayout Spacing="0"
+                         HeightRequest="280">
+            <CarouselView x:Name="Item_Carousel" 
                               BackgroundColor="Transparent" 
                               PeekAreaInsets="70" 
-                              HeightRequest="180" >
-                    <CarouselView.ItemsLayout>
-                        <LinearItemsLayout
+                              HeightRequest="180" 
+                              Opacity="0">
+                <CarouselView.ItemsLayout>
+                    <LinearItemsLayout
                               Orientation="Horizontal"
                               SnapPointsAlignment="Center"
                               SnapPointsType="Mandatory"/>
-                    </CarouselView.ItemsLayout>
+                </CarouselView.ItemsLayout>
 
-                    <CarouselView.ItemTemplate>
-                        <DataTemplate>
-                            <StackLayout>
+                <CarouselView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout>
 
-                                <VisualStateManager.VisualStateGroups>
-                                    <VisualStateGroup x:Name="CommonStates">
-                                        <VisualState x:Name="PreviousItem">
-                                            <VisualState.Setters>
-                                                <Setter Property="Opacity"
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="PreviousItem">
+                                        <VisualState.Setters>
+                                            <Setter Property="Opacity"
                                                      Value=".5"/>
-                                                <Setter Property="Scale"
+                                            <Setter Property="Scale"
                                                      Value=".75"/>
-                                            </VisualState.Setters>
-                                        </VisualState>
+                                        </VisualState.Setters>
+                                    </VisualState>
 
-                                        <VisualState x:Name="CurrentItem">
-                                            <VisualState.Setters>
-                                                <Setter Property="Scale"
+                                    <VisualState x:Name="CurrentItem">
+                                        <VisualState.Setters>
+                                            <Setter Property="Scale"
                                                      Value=".75" />
-                                            </VisualState.Setters>
-                                        </VisualState>
+                                        </VisualState.Setters>
+                                    </VisualState>
 
-                                        <VisualState x:Name="NextItem">
-                                            <VisualState.Setters>
-                                                <Setter Property="Opacity"
+                                    <VisualState x:Name="NextItem">
+                                        <VisualState.Setters>
+                                            <Setter Property="Opacity"
                                                       Value=".5"/>
-                                                <Setter Property="Scale"
+                                            <Setter Property="Scale"
                                                       Value=".75"/>
-                                            </VisualState.Setters>
-                                        </VisualState>
+                                        </VisualState.Setters>
+                                    </VisualState>
 
-                                        <VisualState x:Name="DefaultItem">
-                                            <VisualState.Setters>
-                                                <Setter Property="Opacity"
+                                    <VisualState x:Name="DefaultItem">
+                                        <VisualState.Setters>
+                                            <Setter Property="Opacity"
                                                     Value=".25" />
-                                                <Setter Property="Scale"
+                                            <Setter Property="Scale"
                                                     Value=".75"/>
-                                            </VisualState.Setters>
-                                        </VisualState>
-                                    </VisualStateGroup>
-                                </VisualStateManager.VisualStateGroups>
-                                <StackLayout BackgroundColor="Transparent" IsVisible="True" >
-                                    <Frame
-                                        BackgroundColor="Transparent"
-                                        BorderColor="Transparent"
-                                    Margin="5"
-                                    Padding="0"
-                                    CornerRadius="0"
-                                    HasShadow="False"
-                                    IsClippedToBounds="True">
-                                        <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" >
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="140*" />
-                                                <RowDefinition Height="120*" />
-                                            </Grid.RowDefinitions>
-                                            
-                                            <Image
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <StackLayout BackgroundColor="Transparent" IsVisible="True" >
+
+                                <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" >
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="140*" />
+                                        <RowDefinition Height="120*" />
+                                    </Grid.RowDefinitions>
+
+                                    <Image
                                                 Grid.Row="0"
                                                 Source="char_ico.png"
                                                 Aspect="Fill"
@@ -203,7 +187,7 @@
                                                 VerticalOptions="StartAndExpand"
                                                 HorizontalOptions="CenterAndExpand"/>
 
-                                            <Label                                                 
+                                    <Label                                                 
                                                 x:Name="Lbl_Name"  
                                                 Grid.Row="1"
                                                 BackgroundColor="Transparent"
@@ -214,16 +198,15 @@
                                                 HorizontalTextAlignment="Center"                                                
                                                 HorizontalOptions="CenterAndExpand"
                                                 VerticalOptions="CenterAndExpand"
-                                                HeightRequest="120" />                                              
-                                               
-                                        </Grid>
-                                    </Frame>
-                                </StackLayout>
+                                                HeightRequest="120" />
+
+                                </Grid>
+
                             </StackLayout>
-                        </DataTemplate>
-                    </CarouselView.ItemTemplate>
-                </CarouselView>
-            </StackLayout>
-        </Frame>
+                        </StackLayout>
+                    </DataTemplate>
+                </CarouselView.ItemTemplate>
+            </CarouselView>
+        </StackLayout>
     </StackLayout>
 </ContentPage>

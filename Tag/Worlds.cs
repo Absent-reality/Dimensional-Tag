@@ -25,7 +25,7 @@ namespace DimensionalTag
         }
 
         public static readonly List<World> Worlds = new List<World>()
-        {
+        {            
             new World ("DC Comics",                                  "dc.png"),
             new World ("Lord of the Rings",                          "lotr.png"),
             new World ("The Lego Movie",                             "lego_movie.png"),
@@ -54,7 +54,7 @@ namespace DimensionalTag
             new World ("The Goonies",                                "goonies.png"),
             new World ("LEGO City: Undercover",                      "lego_city.png"),
             new World ("Teen Titans Go!",                            "teen_titans.png"),
-            new World ("Beetlejuice",                                "beetlejuice.png"),
+            new World ("Beetlejuice World",                                "beetlejuice.png"),
             new World ("The Powerpuff Girls",                        "powerpuff.png"),
         };
     }
