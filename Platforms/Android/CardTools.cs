@@ -6,7 +6,7 @@ using DimensionalTag.Tools;
 
 namespace DimensionalTag
 {
-    public class RFIDTools
+    public class CardTools
     {
         private NfcAdapter? _nfcAdaper;
         private Activity act;
@@ -16,7 +16,7 @@ namespace DimensionalTag
 
         public ushort WriteItemId;
         public string WriteItemType;
-        public RFIDTools(Activity actIn)
+        public CardTools(Activity actIn)
         {
             act = actIn;
             _nfcAdaper = NfcAdapter.GetDefaultAdapter(act);
@@ -51,13 +51,12 @@ namespace DimensionalTag
 
             if (OnAfterNfcWrite != null)
             {
-
-              //  RFID_Simple.PrepareToWrite(intent, WriteItemId, WriteItemType);
+                Card_Play.PrepareToWrite(intent, WriteItemId, WriteItemType);
                 OnAfterNfcWrite();
                 return;
             }
 
-            var cardInfo = RFID_Simple.TryRead(intent);
+            var cardInfo = Card_Play.TryRead(intent);
                        
             if (OnNfcDataRecieve != null)
             {

@@ -11,24 +11,24 @@ namespace DimensionalTag
     [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize  | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density | ConfigChanges.Orientation, ScreenOrientation = ScreenOrientation.Portrait )]
     public class MainActivity : MauiAppCompatActivity
     {
-        public RFIDTools rfidTools;
+        public CardTools cardTools;
 
         protected override void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            rfidTools = new RFIDTools(this);
+            cardTools = new CardTools(this);
         }
 
         protected override void OnResume()
         {
             base.OnResume();
-            rfidTools.OnResume();
+            cardTools.OnResume();
         }
 
         protected override void OnNewIntent(Intent? intent)
         {
             base.OnNewIntent(intent);
-            rfidTools.OnNewIntent(intent);
+            cardTools.OnNewIntent(intent);
         }
     }
 }

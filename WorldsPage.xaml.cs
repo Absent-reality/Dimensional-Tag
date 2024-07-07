@@ -177,7 +177,7 @@ public partial class WorldsPage : ContentPage
                                 var confirm = await Shell.Current.ShowPopupAsync(alert);
                                 if (confirm is bool tru)
                                 {
-                                    var navParam = new Dictionary<string, object> { { "WriteCharacter", vehicle } };
+                                    var navParam = new Dictionary<string, object> { { "WriteVehicle", vehicle } };
 
                                     await Shell.Current.GoToAsync($"///ScanPage", navParam);
                                 }

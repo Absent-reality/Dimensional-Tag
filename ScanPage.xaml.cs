@@ -1,22 +1,10 @@
-﻿#if ANDROID
-using Android.App;
-using Android.App.AppSearch;
-using Android.Nfc.Tech;
-using Android.OS;
-using AndroidX.ConstraintLayout.Core;
+﻿
 using CommunityToolkit.Maui.Views;
-using DimensionalTag.Enums;
 using DimensionalTag.Tools;
-using Java.Lang;
-using Java.Time;
-using Java.Util.Concurrent;
-using Microsoft.Maui.Controls;
-using System.ComponentModel;
-using System.Text;
-#endif
+
 
 namespace DimensionalTag
-{ 
+{
     [QueryProperty(nameof(WriteCharacter), nameof(WriteCharacter))]
     [QueryProperty(nameof(WriteVehicle), nameof(WriteVehicle))]
   
@@ -40,7 +28,7 @@ namespace DimensionalTag
             InitializeComponent();
         
 #if ANDROID
-            RFIDToolsGetter.SetOnRfidReceive(async (cardInfo) =>
+            CardToolsGetter.SetOnCardReceive(async (cardInfo) =>
             {
                
                 if (cardInfo != null)
@@ -118,13 +106,18 @@ namespace DimensionalTag
                         cameToWrite = true;
                         Character c = (Character)item;
 
-                       
-                        var h =  RFIDToolsGetter.WriteCard("Character", c.Id);
-                        h.Wait(1000);
-                        if (h.IsCompleted)
+                        await Task.Run(async () =>
                         {
-                            await Shell.Current.ShowPopupAsync(new AlertPopup("Yay!", "Write Complete.", "Ok.", "", false));
-                        }
+                            await CardToolsGetter.WriteCard("Character", c.Id);
+                         
+                            MainThread.BeginInvokeOnMainThread(async () =>
+                            {
+                                await Shell.Current.ShowPopupAsync(new AlertPopup("Yay!", "Write Complete.", "Ok.", "", false));
+                                cameToWrite = false;
+                                SwapBg(cameToWrite);
+                                CardToolsGetter.WriteCardCancel();
+                            });
+                        });
                     }
                     break;
 
@@ -133,12 +126,27 @@ namespace DimensionalTag
                         cameToWrite = true;
                         Vehicle v = (Vehicle)item;
 
+                        await Task.Run(async () =>
+                        {
+                            await CardToolsGetter.WriteCard("Vehicle", v.Id);
+
+                            MainThread.BeginInvokeOnMainThread(async () =>
+                            {
+                                await Shell.Current.ShowPopupAsync(new AlertPopup("Yay!", "Write Complete.", "Ok.", "", false));
+                                cameToWrite = false;
+                                SwapBg(cameToWrite);
+                                CardToolsGetter.WriteCardCancel();
+                            });
+                        });
                     }
                     break;
 
                 case null:
                     {
                         await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong.", "Ok.", "", false));
+                        cameToWrite = false;
+                        SwapBg(cameToWrite);
+                        CardToolsGetter.WriteCardCancel();
                     }
                     break;
             }
@@ -149,39 +157,7 @@ namespace DimensionalTag
         {
             DeviceDisplay.KeepScreenOn = true;
             await Task.Delay(600);
-            if (!cameToWrite)
-            {
-                Lbl_scan.Text = "Place phone on tag to scan.";
-                await Lbl_scan.FadeTo(1, 1000);
-
-                for (int idc = 1; idc < 10; idc++)
-                {
-                    img_scan.Source = "scan_one.png";
-                    await Task.Delay(200);
-                    img_scan.Source = "scan_two.png";
-                    await Task.Delay(200);
-                    img_scan.Source = "scan_three.png";
-                    await Task.Delay(200);
-                    img_scan.Source = "scan_four.png";
-                    await Task.Delay(200);
-                }
-
-            }
-            else if (cameToWrite)
-            {
-
-                Lbl_scan.Text = "Hold phone on empty tag to write.";
-                await Lbl_scan.FadeTo(1, 1000);
-                img_write.IsVisible = true;
-                await Task.Delay(200);
-                await img_scan.TranslateTo(0, -50, 500);
-                await Task.Delay(600);
-                await img_scan.TranslateTo(0, 0, 500);
-                await Task.Delay(500);
-                await img_scan.TranslateTo(0, -50, 500);
-                await Task.Delay(600);
-                await img_scan.TranslateTo(0, 0, 500);
-            }
+            SwapBg(cameToWrite);
 
         }
 
@@ -191,6 +167,53 @@ namespace DimensionalTag
             DeviceDisplay.KeepScreenOn = false;
             img_write.IsVisible = false;
             cameToWrite = false;
+#if ANDROID
+            CardToolsGetter.WriteCardCancel();
+#endif
+        }
+
+        private async void SwapBg(bool switchItUp)
+        {
+            switch (switchItUp)
+            {
+                case true:
+                    {
+
+                        Lbl_scan.Text = "Hold phone on empty tag to write.";
+                        await Lbl_scan.FadeTo(1, 1000);
+                        img_write.IsVisible = true;
+                        await Task.Delay(200);
+                        await img_scan.TranslateTo(0, -50, 500);
+                        await Task.Delay(600);
+                        await img_scan.TranslateTo(0, 0, 500);
+                        await Task.Delay(500);
+                        await img_scan.TranslateTo(0, -50, 500);
+                        await Task.Delay(600);
+                        await img_scan.TranslateTo(0, 0, 500);
+
+                    }
+                    break;
+
+                case false:
+                    {
+                        Lbl_scan.Text = "Place phone on tag to scan.";
+                        await Lbl_scan.FadeTo(1, 1000);
+
+                        for (int idc = 1; idc < 10; idc++)
+                        {
+                            img_scan.Source = "scan_one.png";
+                            await Task.Delay(200);
+                            img_scan.Source = "scan_two.png";
+                            await Task.Delay(200);
+                            img_scan.Source = "scan_three.png";
+                            await Task.Delay(200);
+                            img_scan.Source = "scan_four.png";
+                            await Task.Delay(200);
+                        }
+                    }
+                    break;
+            }
+
         }
 
     }

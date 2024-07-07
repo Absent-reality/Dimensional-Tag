@@ -9,7 +9,7 @@ using System.Text;
 
 namespace DimensionalTag
 {
-    public class RFID_Simple
+    public class Card_Play
     {
         /// <summary>
         ///  For easy set of alert popup's title
@@ -208,7 +208,7 @@ namespace DimensionalTag
                             {
                                 info.AppendLine("Found a vehicle!\r\n");
 
-                                // The 2 first one used
+                                // The 2 first one used. 
                                 var id = LegoTag.GetVehicleId(dataFromCard);
                                 ForDebug.AppendLine($" Vehicle ID: {id}: ");
                                 Vehicle? vec = Vehicle.Vehicles.FirstOrDefault(m => m.Id == id);
@@ -425,8 +425,10 @@ namespace DimensionalTag
 
                                     switch (legoType)
                                     {
-                                        case "Character":
+                                        case "Character": //Note: Does not make card readonly.
+                                                          //You can write over characters that have previously been made.
                                             {
+
                                                 // Get the encrypted character ID
                                                 var car = LegoTag.EncrypCharactertId(Uid, id);
 
@@ -448,6 +450,7 @@ namespace DimensionalTag
                                                 if (!dataFromCard.SequenceEqual(Data.AsSpan(0, 4).ToArray()))
                                                 {
                                                     ForDebug.AppendLine("Failed to write to card.");
+                                                    Announce("Failed to write to card.", "Ok.");
                                                     return;
                                                 }
                                                 else
@@ -480,6 +483,7 @@ namespace DimensionalTag
                                                 if (!dataFromCard.SequenceEqual(Data.AsSpan(0, 4).ToArray()))
                                                 {
                                                     ForDebug.AppendLine("Failed to write to card.");
+                                                    Announce("Failed to write to card.", "Ok.");
                                                     return;
                                                 }
                                                 else
@@ -532,8 +536,7 @@ namespace DimensionalTag
         /// <exception cref="ArgumentException"></exception>
         public static byte[] Serialize()
         {
-            byte[] array = null;
-
+            byte[] array;
             switch (CardCommand)
             {
                 case UltralightCommand.GetVersion:
@@ -620,7 +623,7 @@ namespace DimensionalTag
         }
 
         /// <summary>
-        /// Checks if the tag is a vehicles.
+        /// Checks if the tag is a vehicle.
         /// </summary>
         /// <param name="data">Page 0x26 of the NFC data.</param>
         /// <returns>True if the tag is a vehicle.</returns>
