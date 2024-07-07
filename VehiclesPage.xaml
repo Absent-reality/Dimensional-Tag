@@ -83,7 +83,11 @@
                                HeightRequest="160"
                                WidthRequest="170"
                                HorizontalOptions="Center"
-                               VerticalOptions="Center" />
+                               VerticalOptions="Center" >
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="Vehicle_Tapped" />
+                                </Image.GestureRecognizers>
+                            </Image>
 
 
                             <Label 

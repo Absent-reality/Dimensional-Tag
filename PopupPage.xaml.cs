@@ -50,22 +50,7 @@ public partial class PopupPage : Popup
                     }
                 }
                 break;
-
-            case World:
-				{
-					World w = (World)obj;
-					if (w == null) { }
-					else
-					{
-						lbl_World.Text = "";
-						lbl_Name.Text = w.Name;
-						edt_Abilities.Text = "";
-						Img_Character.Source = w.Images;
-						
-					}
-				}
-				break;
-
+				
 			case null:
 				break;
 		}

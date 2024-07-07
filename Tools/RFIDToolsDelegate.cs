@@ -4,8 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DimensionalTag.Interfaces
+namespace DimensionalTag.Tools
 {
-    public delegate void NfcDataReceive(string cardInfo);
- 
+    public delegate void NfcDataReceive(object cardInfo); 
 }

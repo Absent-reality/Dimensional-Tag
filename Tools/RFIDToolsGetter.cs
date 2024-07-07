@@ -4,14 +4,14 @@ using static DimensionalTag.RFIDTools;
 using static System.Net.Mime.MediaTypeNames;
 #endif
 
-namespace DimensionalTag.Interfaces
+namespace DimensionalTag.Tools
 {
     public partial class RFIDToolsGetter
     {
 #if ANDROID
         private static RFIDTools GetRFIDTools()
         {
-            var acti = (MainActivity)Platform.CurrentActivity;
+            var acti = (MainActivity?)Platform.CurrentActivity;
             return acti.rfidTools;
         }
 #endif
@@ -23,7 +23,7 @@ namespace DimensionalTag.Interfaces
 #endif
         }
 
-        public static Task WriteRFIDrun(string text)
+        public static Task WriteCard(string text, ushort Id)
         {
             var task = new TaskCompletionSource<string>();
 #if ANDROID
@@ -33,7 +33,8 @@ namespace DimensionalTag.Interfaces
                 rftools.OnAfterNfcWrite = null;
                 task.SetResult("");
             };            
-            rftools.recordString = text;
+            rftools.WriteItemType = text;
+            rftools.WriteItemId = Id;
 #endif
             return task.Task;
         }

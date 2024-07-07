@@ -1,3 +1,5 @@
+using CommunityToolkit.Maui.Views;
+using System.Collections.ObjectModel;
 
 namespace DimensionalTag;
 
@@ -76,12 +78,13 @@ public partial class WorldsPage : ContentPage
             }                           
         }
     }
+
+    private ObservableCollection<LegoTag.SearchItems> ListItems = [];
     private void world_carousel_CurrentItemChanged(object sender, CurrentItemChangedEventArgs e)
     {
+        //Begin the digging for matches. 
+        ListItems.Clear();
 
-        List<string> chari = [];
-        List<string> vehi = [];
-       
        if ( e.CurrentItem != null )
         {
             World? world = e.CurrentItem as World;
@@ -93,18 +96,17 @@ public partial class WorldsPage : ContentPage
 
                 foreach (var w in C)
                 {
-                   chari.Add(w.Name);
+                    ListItems.Add(new LegoTag.SearchItems() { ItemName = w.Name, Id = w.Id });
                 }
                 foreach (var w in V)
                 {
-                   vehi.Add(w.Name);
+                    ListItems.Add(new LegoTag.SearchItems() { ItemName = w.Name, Id = w.Id });
                 }
              
             }
         }
       
-       var items = new List<string>([.. chari, .. vehi]);  
-       Item_Carousel.ItemsSource = items;     
+       Item_Carousel.ItemsSource = ListItems;     
 
     }
 
@@ -121,5 +123,73 @@ public partial class WorldsPage : ContentPage
         world_title.FadeTo(0);
         World_Carousel.FadeTo(0);
         Item_Carousel.FadeTo(0);
+    }
+
+    private async void Item_Tapped(object sender, TappedEventArgs e)
+    {
+
+        if ( Item_Carousel.CurrentItem != null)
+        {
+            var check = Item_Carousel.CurrentItem as LegoTag.SearchItems;
+
+            if (check == null)
+            {
+                await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong.", "Ok.", "", false));
+            }
+            else
+            {
+                if (check.Id == null & check.ItemName != null)
+                {
+                    await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong..", "Ok.", "", false));
+                }
+                else if (check.Id != null)
+                {
+                    if (check.Id.Value <= 800)
+                    {
+                        Character? character = Character.Characters.FirstOrDefault(m => m.Id == check.Id);
+                        if (character != null)
+                        {
+                            var popup = new PopupPage(character);
+                            var result = await Shell.Current.ShowPopupAsync(popup);
+                            if (result is bool sure)
+                            {
+                                var alert = new AlertPopup(" Alert! ", " Are you sure you want to write this data? ", " Cancel?", " Write? ", true);
+                                var confirm = await Shell.Current.ShowPopupAsync(alert);
+                                if (confirm is bool tru)
+                                {
+                                    var navParam = new Dictionary<string, object> { { "WriteCharacter", character } };
+
+                                    await Shell.Current.GoToAsync($"///ScanPage", navParam);
+                                }
+                            }
+                        }
+                    }
+                    else if (check.Id.Value > 800)
+                    {
+                        Vehicle? vehicle = Vehicle.Vehicles.FirstOrDefault(m => m.Id == check.Id);
+                        if (vehicle != null)
+                        {
+                            var popup = new PopupPage(vehicle);
+                            var result = await Shell.Current.ShowPopupAsync(popup);
+                            if (result is bool meh)
+                            {
+                                var alert = new AlertPopup(" Alert! ", " Are you sure you want to write this data? ", " Cancel?", " Write? ", true);
+                                var confirm = await Shell.Current.ShowPopupAsync(alert);
+                                if (confirm is bool tru)
+                                {
+                                    var navParam = new Dictionary<string, object> { { "WriteCharacter", vehicle } };
+
+                                    await Shell.Current.GoToAsync($"///ScanPage", navParam);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong with Id.", "Ok.", "", false));
+                    }
+                }
+            }
+        }     
     }
 }

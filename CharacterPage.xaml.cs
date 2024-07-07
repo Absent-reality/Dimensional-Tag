@@ -1,15 +1,4 @@
-#if ANDROID
-using Android.App;
-using Android.Nfc.Tech;
-using Android.OS;
 using CommunityToolkit.Maui.Views;
-using DimensionalTag.Enums;
-using DimensionalTag.Interfaces;
-using Java.Util.Concurrent;
-using Microsoft.Maui.Controls;
-using System.ComponentModel;
-using System.Text;
-#endif
 
 namespace DimensionalTag;
 
@@ -56,7 +45,7 @@ public partial class CharacterPage : ContentPage
 
     private async void SpinTo(Character character)
     {
-        await Task.Delay(600);
+        await Task.Delay(800);
         var check = Character.Characters.FirstOrDefault(x => x.Name == character.Name);
         if (check != null)
         {
@@ -71,7 +60,7 @@ public partial class CharacterPage : ContentPage
             {
                 for (int idc = 0; idc < number - start; idc++)
                 {
-                    await Task.Delay(100);
+                    await Task.Delay(250);
                     carousel.Position++;
                 }
             }
@@ -79,7 +68,7 @@ public partial class CharacterPage : ContentPage
             {
                 for (int idc = start; idc > number; idc--)
                 {
-                    await Task.Delay(100);
+                    await Task.Delay(250);
                     carousel.Position--;
                 }
             }
@@ -105,16 +94,21 @@ public partial class CharacterPage : ContentPage
         Character? current = carousel.CurrentItem as Character;
         if (current != null) 
         { 
-
-            var popup = new PopupPage(current);
+               var popup = new PopupPage(current);
                var result = await Shell.Current.ShowPopupAsync(popup);
-               if (result is bool m)
-               {
 
+            if (result is bool sure)
+            {
                 var alert = new AlertPopup(" Alert! ", " Are you sure you want to write this data? ", " Cancel?", " Write? ", true);
                 var confirm = await Shell.Current.ShowPopupAsync(alert);
+                if (confirm is bool tru)
+                {
+                    var navParam = new Dictionary<string, object> { { "WriteCharacter", current } };
 
-               }
+                    await Shell.Current.GoToAsync($"///ScanPage", navParam);
+                }
+
+            }
                
         }
 #endif        

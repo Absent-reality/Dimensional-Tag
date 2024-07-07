@@ -71,6 +71,6 @@ public partial class Loading : ContentPage
         await Img_grd.FadeTo(0, 250);
         Img_grd.Source = "logo1.png";
         Img_grd.Scale = 1;
-        await Shell.Current.GoToAsync("///CharacterPage");
+        await Shell.Current.GoToAsync($"///CharacterPage");
     }
 }

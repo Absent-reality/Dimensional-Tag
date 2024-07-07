@@ -1,7 +1,8 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.Nfc;
-using DimensionalTag.Interfaces;
+using CommunityToolkit.Maui.Views;
+using DimensionalTag.Tools;
 
 namespace DimensionalTag
 {
@@ -13,7 +14,8 @@ namespace DimensionalTag
         public delegate void AfterNFCwrite();
         public AfterNFCwrite OnAfterNfcWrite;
 
-        public string recordString;
+        public ushort WriteItemId;
+        public string WriteItemType;
         public RFIDTools(Activity actIn)
         {
             act = actIn;
@@ -26,11 +28,7 @@ namespace DimensionalTag
         {
             if (_nfcAdaper == null)
             {
-                
-                var alert = new AlertDialog.Builder(act).Create();
-                alert.SetMessage("Nfc is not supported on this device.");
-                alert.SetTitle("Nfc Unavailable");
-                alert.Show();
+                ErrorReport("Nfc Unavailable", "Nfc is not supported on this device.");
             }
             else
             {
@@ -54,7 +52,7 @@ namespace DimensionalTag
             if (OnAfterNfcWrite != null)
             {
 
-               // RFID_Simple.BeginWrite(intent, 41, "Character");
+              //  RFID_Simple.PrepareToWrite(intent, WriteItemId, WriteItemType);
                 OnAfterNfcWrite();
                 return;
             }
@@ -64,7 +62,11 @@ namespace DimensionalTag
             if (OnNfcDataRecieve != null)
             {
                 OnNfcDataRecieve(cardInfo: cardInfo);
+                
             }
         }
+
+        private static Task ErrorReport(string title, string message) => Shell.Current.ShowPopupAsync(new AlertPopup( title, message, "Ok", "", false));
+
     }
 }

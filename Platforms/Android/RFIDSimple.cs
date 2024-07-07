@@ -4,61 +4,73 @@ using Android.Nfc.Tech;
 using AndroidX.Core.Content;
 using CommunityToolkit.Maui.Views;
 using DimensionalTag.Enums;
-using DimensionalTag.Interfaces;
+using DimensionalTag.Tools;
 using System.Text;
 
 namespace DimensionalTag
 {
     public class RFID_Simple
     {
+        /// <summary>
+        ///  For easy set of alert popup's title
+        /// </summary>
         public const string ALERT_TITLE = "Oops!";
 
-        //
-        // Summary:
-        //     UUID is the Serial Number, called MAC sometimes
+        /// <summary>
+        ///   UUID is the Serial Number, called MAC sometimes
+        /// </summary>
         public static byte[] Uid = [0];
-
-        //
-        // Summary:
-        //     Authentication key
+ 
+        /// <summary>
+        ///  Authentication key
+        /// </summary>
         public static byte[] AuthenticationKey = [0];
-
-        //
-        // Summary:
-        //     The Data which has been read or to write for the specific block
+  
+        /// <summary>
+        ///  The Data which has been read or to write for the specific block
+        /// </summary>
         public static byte[] Data { get; set; } = new byte[0];
 
         /// <summary>
-        ///     The Information about the card. Whether vehicle or character.
+        ///  The Information about the card. Whether vehicle or character.
         /// </summary>
         public static string CardInfo { get; set; } = "";
 
-        //
-        // Summary:
-        //     The command to execute on the card
+        /// <summary>
+        /// The card object to be returned. 
+        /// </summary>
+        public static object SomeCard { get; set; } = new object();
+
+        /// <summary>
+        ///  The command to execute on the card
+        /// </summary>
         public static UltralightCommand CardCommand { get; set; }
 
         /// <summary>
-        ///    Instance of Tag (not sure that we really need this...
+        ///  Bool for tag connection
         /// </summary>
         public static bool TagConnected { get; set; } = false;
 
         public static UltralightCardType CardType { get; set; }
 
+        /// <summary>
+        /// Capacity of Nfc card
+        /// </summary>
         public static int NdefCapacity;
 
         public static StringBuilder ForDebug = new();
-        //
-        // Summary:
-        //     The block number to authenticate or read or write
+ 
+        /// <summary>
+        ///  The block number to authenticate or read or write
+        /// </summary>
         public static byte BlockNumber { get; set; }
 
         /// <summary>
         /// Switch intent based on device version.
         /// </summary>
         /// <param name="intent"></param>
-        /// <returns></returns>
-        public static string TryRead(Intent intent)
+        /// <returns>Object representing the card.</returns>
+        public static object TryRead(Intent intent)
         {
             try
             {               
@@ -74,9 +86,12 @@ namespace DimensionalTag
                     if (thisTag == null)
                     {
                         ErrorReport("Failed to read tag.");                       
-                        return "";
+                       // return "";
                     }
-                    CardInfo = GrabTagInfo(thisTag);
+                    else
+                    {
+                        SomeCard = GrabTagInfo(thisTag);
+                    }
                 }
                 else
                 {
@@ -87,25 +102,27 @@ namespace DimensionalTag
 
                     if (thisTag == null) 
                     {
-                        ErrorReport("Failed to read tag.");
-                        return "";
+                        ErrorReport("Failed to read tag.");             
                     }
-                    CardInfo = GrabTagInfo(thisTag);
+                    else
+                    {
+                       SomeCard = GrabTagInfo(thisTag);
+                    }             
                 }
             }
             catch (Exception e)
             {
                 ErrorReport(e.Message);
             }
-            return CardInfo;
+            return SomeCard;
         }
 
         /// <summary>
         /// Start reading tag info.
         /// </summary>
         /// <param name="tag">Nfc tag from intent.</param>
-        /// <returns></returns>
-        public static string GrabTagInfo(Tag tag)
+        /// <returns>Object representing the card.</returns>
+        public static object GrabTagInfo(Tag tag)
         {
             try
             {
@@ -120,6 +137,7 @@ namespace DimensionalTag
                 else
                 {
                     ErrorReport("Failed to read tag id.");
+                    return 0;
                 }
 
                 ForDebug.AppendLine("Uid: " + BitConverter.ToString(Uid));
@@ -163,8 +181,7 @@ namespace DimensionalTag
 
                                 if (IsEmptyCard(dataFromCard.AsSpan(8, 4).ToArray()))
                                 {
-                                    ErrorReport("Tag doesnt contain lego data and may be empty.");
-                                    return "";
+                                    ForDebug.AppendLine("Tag doesnt contain lego data or may be empty.");
                                 }
                             }
                             catch 
@@ -182,8 +199,7 @@ namespace DimensionalTag
                                 }
                                 catch (Exception e)
                                 {
-                                    ErrorReport($"Failed to read tag. Select a different tag and try again.{e.Message}");
-                                    return "";
+                                    ErrorReport($"Failed to read tag. Select a different tag and try again.{e.Message}");                                   
                                 }
                             }
                             
@@ -204,10 +220,12 @@ namespace DimensionalTag
                                     {
                                         info.AppendLine($"{vec.Abilities[i]}{(i != vec.Abilities.Count - 1 ? ", " : "")}");
                                     }
+                                    SomeCard = vec;
                                 }
                                 else
                                 {
                                     ErrorReport("Vehicle does not exist!");
+                                    return 0;
                                 }
                             }
                             else
@@ -217,22 +235,28 @@ namespace DimensionalTag
                                 ForDebug.AppendLine($" Character ID: {id}: ");
                                 if (id == 0)
                                 {
-                                    ErrorReport("Character does not exist! Make sure tag is a lego character or vehicle.");
-                                    return "";
-                                }
-                                Character? car = Character.Characters.FirstOrDefault(m => m.Id == id);
-                                if (car is not null)
-                                {
-                                    info.AppendLine($"{car.Name} - World: {car.World}.\r\n");
-                                    info.AppendLine("  Capabilities: ");
-                                    for (int i = 0; i < car.Abilities.Count; i++)
-                                    {
-                                        info.AppendLine($"{car.Abilities[i]}{(i != car.Abilities.Count - 1 ? ", " : "")}");
-                                    }
+                                    ErrorReport("Item does not exist! Make sure tag is a lego character or vehicle.");
+                                    return 0;
                                 }
                                 else
                                 {
-                                    ErrorReport("Character does not exist!");
+                                    Character? car = Character.Characters.FirstOrDefault(m => m.Id == id);
+                                    if (car is not null)
+                                    {
+                                        info.AppendLine($"{car.Name} - World: {car.World}.\r\n");
+                                        info.AppendLine("  Capabilities: ");
+                                        for (int i = 0; i < car.Abilities.Count; i++)
+                                        {
+                                            info.AppendLine($"{car.Abilities[i]}{(i != car.Abilities.Count - 1 ? ", " : "")}");
+                                        }
+                                        SomeCard = car;
+                                    }
+                                    else
+                                    {
+                                        ErrorReport("Character does not exist!");
+                                        return 0;
+                                    }
+
                                 }
                             }
                             CardInfo = info.ToString();
@@ -248,7 +272,8 @@ namespace DimensionalTag
                 ErrorReport("Failed to read tag. Tag maybe empty, or incompatible.");
                 ForDebug.AppendLine(e.Message);
             }
-            return CardInfo;
+            // return CardInfo;
+            return SomeCard;
 
         }
 
@@ -304,13 +329,13 @@ namespace DimensionalTag
         }
 
 
-        public static void BeginWrite(Tag? tag, ushort id, string legoType)
+        public static void BeginWrite(Tag tag, ushort id, string legoType)
         {
             try
             {
 
                 StringBuilder info = new();
-                Tag? thisTag = tag;
+                Tag thisTag = tag;
 
                 var uuid = thisTag?.GetId();
                 if (uuid != null)
@@ -327,11 +352,15 @@ namespace DimensionalTag
                 ForDebug.AppendLine("AuthenticationKey: " + BitConverter.ToString(AuthenticationKey));
 
                 string tech = "";
-                foreach (string t in thisTag.GetTechList()) //check for card capability
+                var this_tag = thisTag?.GetTechList();
+                if (this_tag != null)
                 {
-                    tech += t + "\n";
-                }
-                ForDebug.AppendLine("Available tech: " + tech);
+                   foreach (string t in this_tag) //check for card capability
+                   {
+                       tech += t + "\n";
+                   }
+                     ForDebug.AppendLine("Available tech: " + tech);
+                }          
 
                 if (tech.Contains("android.nfc.tech.NfcA"))
                 {
@@ -421,7 +450,10 @@ namespace DimensionalTag
                                                     ForDebug.AppendLine("Failed to write to card.");
                                                     return;
                                                 }
-
+                                                else
+                                                {
+                                                    Announce("Write complete!", "Ok");
+                                                }
                                             }
                                             break;
 
@@ -450,9 +482,12 @@ namespace DimensionalTag
                                                     ForDebug.AppendLine("Failed to write to card.");
                                                     return;
                                                 }
+                                                else
+                                                {
+                                                    Announce("Write complete!", "Ok");
+                                                }
                                             }
                                             break;
-
                                     }
 
                                 }
@@ -470,7 +505,7 @@ namespace DimensionalTag
 
                           nfcA.Close();
                           if (!nfcA.IsConnected) { TagConnected = false; }
-
+                            Announce("Write complete!", "Ok");
                         }
                     }
                 }
@@ -479,7 +514,6 @@ namespace DimensionalTag
             {
                 ErrorReport(e.Message);
             }
-
         }
 
         /// <summary>
@@ -490,6 +524,7 @@ namespace DimensionalTag
         /// <returns>The task to be performed</returns>
         public static Task Announce(string message, string title) => Shell.Current.ShowPopupAsync(new AlertPopup(title, message, "Ok", "", false));
         public static Task ErrorReport(string message, string title = null) => Shell.Current.ShowPopupAsync(new AlertPopup(string.IsNullOrWhiteSpace(title) ? ALERT_TITLE : title, message, "Ok", "", false));
+
         /// <summary>
         /// Serialize command for sending to card.
         /// </summary>
@@ -545,7 +580,6 @@ namespace DimensionalTag
             return array;
         }
 
-
         /// <summary>
         /// Gets byte array size for a given Nfc command.
         /// </summary>
@@ -594,7 +628,6 @@ namespace DimensionalTag
         {
             return data.SequenceEqual(new byte[] { 0x00, 0x00, 0x00, 0x00 });
         }
-
 
         /// <summary>
         /// Gets Card type and capacity
@@ -664,9 +697,10 @@ namespace DimensionalTag
                 return;
             }
         }
-        //
-        // Summary:
-        //     Get the number of blocks for a specific sector
+
+        /// <summary>
+        ///  Get the number of blocks for a specific sector
+        /// </summary>
         public int NumberBlocks => CardType switch
         {
             UltralightCardType.UltralightNtag210 => 16,

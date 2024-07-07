@@ -11,6 +11,14 @@
             <RowDefinition Height="200*" />
             <RowDefinition Height="200*" />
         </Grid.RowDefinitions>
+
+        <Image x:Name="img_write"
+               Grid.Row="0"
+               Source="world_blank.png"
+               HeightRequest="60"
+               Margin="0,100,0,0"
+               IsVisible="False"
+               />
        
         <Image x:Name="img_scan"
                Grid.Row="1"

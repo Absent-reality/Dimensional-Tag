@@ -90,7 +90,8 @@
                                                 Aspect="Fill"
                                                 HeightRequest="140"                                            
                                                 VerticalOptions="FillAndExpand"
-                                                HorizontalOptions="FillAndExpand"/>
+                                                HorizontalOptions="FillAndExpand">
+                                    </Image>
 
                                     <Label 
                                                 Grid.Row="1"                                                
@@ -185,13 +186,17 @@
                                                 HeightRequest="130"  
                                                 WidthRequest="130"                                                
                                                 VerticalOptions="StartAndExpand"
-                                                HorizontalOptions="CenterAndExpand"/>
+                                                HorizontalOptions="CenterAndExpand">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="Item_Tapped" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
 
                                     <Label                                                 
                                                 x:Name="Lbl_Name"  
                                                 Grid.Row="1"
                                                 BackgroundColor="Transparent"
-                                                Text="{Binding UpdateSourceEventName=CurrentItem}"
+                                                Text="{Binding ItemName}"
                                                 FontSize="Medium"
                                                 FontAttributes="Bold"
                                                 TextColor="White"                                               
