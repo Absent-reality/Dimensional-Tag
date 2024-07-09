@@ -273,6 +273,7 @@ namespace DimensionalTag
         {
             public string? ItemName { get; set; }
             public ushort? Id { get; set; }
+            public string? Images { get; set; }
         }
         
         /// <summary>

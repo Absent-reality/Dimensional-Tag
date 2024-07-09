@@ -33,8 +33,7 @@ namespace DimensionalTag
                
                 if (cardInfo != null)
                 {
-                    LoadTo(cardInfo);
-                    
+                    LoadTo(cardInfo);                   
                 }
              
             });

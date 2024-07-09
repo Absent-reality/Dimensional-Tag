@@ -12,7 +12,8 @@ namespace DimensionalTag.Tools
         private static CardTools GetCardTools()
         {
             var acti = (MainActivity?)Platform.CurrentActivity;
-            return acti.cardTools;
+               
+               return acti.cardTools;                  
         }
 #endif
         public static void SetOnCardReceive(NfcDataReceive cb)

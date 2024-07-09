@@ -2,7 +2,7 @@
 <toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             x:Class="DimensionalTag.PopupPage" Color="Transparent">
+             x:Class="DimensionalTag.PopupPage" Color="Transparent" >
 
     <Grid>
 
@@ -12,8 +12,8 @@
             StrokeShape="{RoundRectangle CornerRadius=20}"
             Margin="30"
             Padding="10">
-            
-            <VerticalStackLayout >
+
+            <VerticalStackLayout>
 
                 <Label
                     x:Name="lbl_Name"
@@ -32,12 +32,12 @@
                     </Label.Shadow>
                 </Label>
 
-                    <Image
+                <Image
                     x:Name="Img_Character"                 
                     BackgroundColor="Transparent"
                     HeightRequest="70"                  
                     HorizontalOptions="Center" />
-                                  
+
 
                 <Label
                     x:Name="lbl_World"
@@ -58,7 +58,8 @@
                     TextColor="White" />
 
                 <Editor
-                    x:Name="edt_Abilities"  
+                    x:Name="edt_Abilities" 
+                    MaximumHeightRequest="200"
                     HorizontalTextAlignment="Center"
                     BackgroundColor="Transparent"                        
                     TextColor="White"
@@ -112,6 +113,7 @@
                                  Opacity=".8" />
                         </Button.Shadow>
                     </Button>
+                    
                 </HorizontalStackLayout>
             </VerticalStackLayout>
         </Border>

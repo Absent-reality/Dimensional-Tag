@@ -96,11 +96,11 @@ public partial class WorldsPage : ContentPage
 
                 foreach (var w in C)
                 {
-                    ListItems.Add(new LegoTag.SearchItems() { ItemName = w.Name, Id = w.Id });
+                    ListItems.Add(new LegoTag.SearchItems() { ItemName = w.Name, Id = w.Id, Images = w.Images});
                 }
                 foreach (var w in V)
                 {
-                    ListItems.Add(new LegoTag.SearchItems() { ItemName = w.Name, Id = w.Id });
+                    ListItems.Add(new LegoTag.SearchItems() { ItemName = w.Name, Id = w.Id, Images = w.Images});
                 }
              
             }

@@ -181,7 +181,7 @@
 
                                     <Image
                                                 Grid.Row="0"
-                                                Source="char_ico.png"
+                                                Source="{Binding Images}"
                                                 Aspect="Fill"
                                                 HeightRequest="130"  
                                                 WidthRequest="130"                                                

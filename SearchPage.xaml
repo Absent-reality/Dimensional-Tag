@@ -7,7 +7,7 @@
 
     <Grid>
         <Grid.GestureRecognizers>
-            <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
+            <TapGestureRecognizer Tapped="Tapped_Outside" />
         </Grid.GestureRecognizers>
 
         <Border

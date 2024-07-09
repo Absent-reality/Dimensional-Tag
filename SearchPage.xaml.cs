@@ -151,7 +151,7 @@ public partial class SearchPage : ContentPage
         searchBar.Text = string.Empty;
     }
 
-    private async void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
+    private async void Tapped_Outside(object sender, TappedEventArgs e)
     {
         await Close();
     }

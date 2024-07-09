@@ -65,4 +65,5 @@ public partial class PopupPage : Popup
     {
 		CloseAsync(true);
     }
+
 }

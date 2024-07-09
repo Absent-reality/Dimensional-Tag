@@ -16,7 +16,7 @@ public partial class VehiclesPage : ContentPage
 	{
 		InitializeComponent();
         this.Loaded += Page_Loaded;       
-		vehicle_carousel.ItemsSource = Vehicle.Vehicles;
+		vehicle_carousel.ItemsSource = Vehicle.Vehicles;       
 	}
 
     void Page_Loaded(object? sender, EventArgs e)
@@ -47,7 +47,7 @@ public partial class VehiclesPage : ContentPage
         await Task.Delay(800);
         var check = Vehicle.Vehicles.FirstOrDefault(x => x.Name == vehicle.Name);
         if (check != null)
-        {
+        {    
             int start = vehicle_carousel.Position;
             var number = Vehicle.Vehicles.IndexOf(check);
 

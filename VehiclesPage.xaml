@@ -79,7 +79,7 @@
                         <StackLayout BackgroundColor="Transparent" IsVisible="True">
 
                             <Image
-                               Source="vehi_ico"
+                               Source="{Binding Images}"
                                HeightRequest="160"
                                WidthRequest="170"
                                HorizontalOptions="Center"

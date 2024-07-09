@@ -7,6 +7,11 @@
     Shell.FlyoutBehavior="Disabled"
     Title="DimensionalTag">
  
+        <ShellContent   
+        Shell.NavBarIsVisible="False"
+        ContentTemplate="{DataTemplate local:Loading}" 
+        Route="Loading" />
+    
     <local:CustomTabBar 
                         x:DataType="local:AppShell"                                              
                         CenterViewVisible="True"
@@ -42,8 +47,5 @@
         </Tab>
     
     </local:CustomTabBar>
-    <ShellContent   
-        Shell.NavBarIsVisible="False"
-        ContentTemplate="{DataTemplate local:Loading}" 
-        Route="Loading" />
+
 </Shell>

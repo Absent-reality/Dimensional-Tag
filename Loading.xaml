@@ -9,6 +9,7 @@
             <RowDefinition Height="100*" />
             <RowDefinition Height="200*" />
             <RowDefinition Height="100*" />
+            <RowDefinition Height="50*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="50*" />
@@ -35,5 +36,18 @@
                Margin="0,5,0,0"
                Opacity="0" />
 
+        <Label
+            Grid.Row="2"
+            Grid.Column="1"
+            x:Name="lbl_ver"
+            HeightRequest="50"
+            HorizontalOptions="Center"
+            TextColor="White"
+            FontSize="Micro"
+            Text="Ver: 1.0.0"
+            VerticalOptions="End"
+            />
+
     </Grid>
+
 </ContentPage>

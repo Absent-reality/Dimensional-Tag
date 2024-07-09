@@ -17,14 +17,15 @@
             <RowDefinition Height="200*" />
         </Grid.RowDefinitions>
 
-        <Image x:Name="char_title"             
+            <Image x:Name="char_title"             
                Grid.Row="0"
                Source="characters.png"
                Margin="0,0,0,10"
                WidthRequest="300"
+               HorizontalOptions="Center"
                HeightRequest="100"
                Opacity="0">
-        </Image>
+            </Image>
 
         <CarouselView x:Name="carousel" 
                       Opacity="0"
