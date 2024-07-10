@@ -78,9 +78,33 @@ namespace DimensionalTag
                         }
                         else
                         {
-                            var navParam = new Dictionary<string, object> { { "VehicleParam", vehicle } };
+                            if (vehicle.Form == 1)
+                            {
+                                var navParam = new Dictionary<string, object> { { "VehicleParam", vehicle } };
 
-                            await Shell.Current.GoToAsync($"///VehiclesPage", navParam);
+                                await Shell.Current.GoToAsync($"///VehiclesPage", navParam);
+                            }
+                            else if (vehicle.Form == 2)
+                            {
+                                var veh = Vehicle.Vehicles.FirstOrDefault(v => v.Id == vehicle.Id - 1);
+                                if (veh != null)
+                                {
+                                    var navParam = new Dictionary<string, object> { { "VehicleParam", veh } };
+                                    await Shell.Current.GoToAsync($"///VehiclesPage", navParam);
+                                }
+
+
+                            }
+                            else if (vehicle.Form == 3)
+                            {
+                                var V = Vehicle.Vehicles.FirstOrDefault(x => x.Id == vehicle.Id - 2);
+                                if (V != null)
+                                {
+                                    var navParam = new Dictionary<string, object> { { "VehicleParam", V } };
+                                    await Shell.Current.GoToAsync($"///VehiclesPage", navParam);
+                                }
+
+                            }                         
                         }
                     }
                     break;

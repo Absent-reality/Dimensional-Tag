@@ -13,7 +13,7 @@
             Margin="30"
             Padding="10">
 
-            <VerticalStackLayout>
+            <VerticalStackLayout Visual="">
 
                 <Label
                     x:Name="lbl_Name"
@@ -38,13 +38,67 @@
                     HeightRequest="70"                  
                     HorizontalOptions="Center" />
 
-
                 <Label
                     x:Name="lbl_World"
                     Padding="10"
                     HorizontalTextAlignment="Center"
                     BackgroundColor="Transparent"
                     TextColor="White" />
+                    
+                <HorizontalStackLayout
+                                  x:Name="stack1"
+                                  IsVisible="False">
+                
+                <Label
+                    x:Name="lbl_Form_Two"
+                    Padding="5"
+                    Text=" Form 2: "
+                    HorizontalTextAlignment="Center"
+                    FontAttributes="Bold"
+                    BackgroundColor="Transparent"
+                    TextColor="White" />
+
+                    <Label
+                    x:Name="lbl_Form2"
+                    Padding="5"                    
+                    HorizontalTextAlignment="Center"
+                    FontAttributes="Bold"
+                    BackgroundColor="Transparent"
+                    TextColor="#01a7d3" >
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Tapped="Form2_Tapped"  />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                </HorizontalStackLayout>
+                <HorizontalStackLayout
+                                 x:Name="stack2"
+                                  IsVisible="False">
+                    
+                    <Label
+                    x:Name="lbl_Form_Three"
+                    Padding="5"
+                    Text=" Form 3: "
+                    HorizontalTextAlignment="Center"
+                    FontAttributes="Bold"
+                    BackgroundColor="Transparent"
+                    TextColor="White" />
+
+                    <Label
+                    x:Name="lbl_Form3"
+                    Padding="5"                    
+                    HorizontalTextAlignment="Center"
+                    FontAttributes="Bold"
+                    BackgroundColor="Transparent"
+                    TextColor="#01a7d3">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Tapped="Form3_Tapped" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                </HorizontalStackLayout>
 
                 <Label
                     x:Name="lbl_Abilities"
@@ -95,7 +149,7 @@
                         x:Name="btn_Cancel"
                         HeightRequest="40"
                         VerticalOptions="End"
-                        HorizontalOptions="EndAndExpand"
+                        HorizontalOptions="End"
                         BackgroundColor="#01a7d3"
                         Text=" Cancel? "               
                         FontSize="Small"

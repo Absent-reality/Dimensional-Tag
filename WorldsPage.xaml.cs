@@ -92,7 +92,8 @@ public partial class WorldsPage : ContentPage
             if ( world != null )
             { 
                 var C = Character.Characters.FindAll(x => x.World == world.Name);
-                var V = Vehicle.Vehicles.FindAll(x => x.World == world.Name);
+                var v = Vehicle.Vehicles.FindAll(x => x.World == world.Name);
+                var V = v.FindAll(x => x.Form == 1);
 
                 foreach (var w in C)
                 {

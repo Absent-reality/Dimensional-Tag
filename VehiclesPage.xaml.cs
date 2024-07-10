@@ -1,4 +1,5 @@
 using CommunityToolkit.Maui.Views;
+using System.Collections.ObjectModel;
 
 
 namespace DimensionalTag;
@@ -15,8 +16,9 @@ public partial class VehiclesPage : ContentPage
     public VehiclesPage()
 	{
 		InitializeComponent();
-        this.Loaded += Page_Loaded;       
-		vehicle_carousel.ItemsSource = Vehicle.Vehicles;       
+        this.Loaded += Page_Loaded;
+        var veh = Vehicle.Vehicles.FindAll(x => x.Form == 1);
+		vehicle_carousel.ItemsSource = veh;       
 	}
 
     void Page_Loaded(object? sender, EventArgs e)
