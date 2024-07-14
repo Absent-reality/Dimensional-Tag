@@ -12,10 +12,11 @@ public partial class CharacterPage : ContentPage
     }
 
     public CharacterPage()
-	{
+	{       
 		InitializeComponent();
         carousel.ItemsSource = Character.Characters;
-        this.Loaded += Page_Loaded;
+        mediaElement.Source = MediaSource.FromResource("swoosh.wav");
+        this.Loaded += Page_Loaded;       
     }
 
      void Page_Loaded(object? sender, EventArgs e)
@@ -30,13 +31,18 @@ public partial class CharacterPage : ContentPage
 
     public async void PoppingIn()
     {
+       mediaElement.Source =  MediaSource.FromResource("swoosh.wav");
          //measure the display size to know how far to translate.
         var width = (DeviceDisplay.MainDisplayInfo.Width)/2;
 
         await Task.Delay(500);
         await char_title.TranslateTo(-width, 0, 100);
         await char_title.FadeTo(1);
+        char_title.IsVisible = true;
         await char_title.TranslateTo(0, 0, 250);
+        mediaElement.Play();
+        await Task.Delay(500);
+        mediaElement.Stop();
 
         await Task.Delay(500);
         await carousel.FadeTo(1);
@@ -81,11 +87,21 @@ public partial class CharacterPage : ContentPage
         PoppingIn();
     }
 
-    private void OnGoodbye(object sender, NavigatedFromEventArgs e)
+    private async void OnGoodbye(object sender, NavigatedFromEventArgs e)
     {
         DeviceDisplay.KeepScreenOn = false;
-        char_title.FadeTo(0);
-        carousel.FadeTo(0);
+        if (mediaElement.CurrentState == CommunityToolkit.Maui.Core.Primitives.MediaElementState.Playing)
+        {
+            mediaElement.Stop();
+        }
+        mediaElement.Source = MediaSource.FromResource("page_turned.mp3");
+        mediaElement.Play();
+        await Task.Delay(80);
+        mediaElement.Stop();
+
+        await char_title.FadeTo(0);
+        await carousel.FadeTo(0);
+ 
     }
 
     private async void Character_Tapped(object sender, TappedEventArgs e)
@@ -113,5 +129,16 @@ public partial class CharacterPage : ContentPage
         }
 #endif        
 
+    }
+
+    private async void OnPosition_Changed(object sender, PositionChangedEventArgs e) 
+    {
+        if (mediaElement.CurrentState == CommunityToolkit.Maui.Core.Primitives.MediaElementState.Playing)
+        {
+            mediaElement.Stop();
+        }
+        mediaElement.Source = MediaSource.FromResource("click.mp3");
+        mediaElement.Play();
+        await Task.Delay(80);
     }
 }

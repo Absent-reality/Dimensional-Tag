@@ -12,6 +12,7 @@ namespace DimensionalTag
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
+                .UseMauiCommunityToolkitMediaElement()
 #if ANDROID
                 .ConfigureMauiHandlers(handlers =>
                 {

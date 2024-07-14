@@ -1,3 +1,6 @@
+using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Views;
+
 namespace DimensionalTag;
 
 public partial class Loading : ContentPage
@@ -5,10 +8,12 @@ public partial class Loading : ContentPage
 	public Loading()
 	{
 		InitializeComponent();
+
 	}
 
 	private async void OnArrival(object sender, NavigatedToEventArgs e)
 	{
+        
         await Task.Delay(1000);
         await Img_grd.FadeTo(1, 1000); // Fade out
         lbl_txt.IsVisible = false;
@@ -71,6 +76,13 @@ public partial class Loading : ContentPage
         await Img_grd.FadeTo(0, 250);
         Img_grd.Source = "logo1.png";
         Img_grd.Scale = 1;
+        await Task.Delay(3000);
         await Shell.Current.GoToAsync($"///CharacterPage");
+    }
+
+    private void OnGoodbye(object sender, NavigatedFromEventArgs e)
+    {
+            
+        mediaElement.Handler?.DisconnectHandler();
     }
 }

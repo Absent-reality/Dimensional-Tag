@@ -345,6 +345,8 @@ namespace DimensionalTag
                 else
                 {
                     ErrorReport("Failed to read tag id.");
+                    return;
+                    
                 }
 
                 ForDebug.AppendLine("Uid: " + BitConverter.ToString(Uid));
@@ -388,7 +390,7 @@ namespace DimensionalTag
                                     CardCommand = UltralightCommand.Read16Bytes; //Reads 4 pages starting at BlockNumber
                                     dataFromCard = SendAway(nfcA);
 
-                                    if (IsEmptyCard(dataFromCard.AsSpan(8, 4).ToArray()))
+                                    if (IsEmptyCard(dataFromCard.AsSpan(0, 16).ToArray()))
                                     {
                                         switch (CardType)
                                         {
@@ -425,8 +427,7 @@ namespace DimensionalTag
 
                                     switch (legoType)
                                     {
-                                        case "Character": //Note: Does not make card readonly.
-                                                          //You can write over characters that have previously been made.
+                                        case "Character": 
                                             {
 
                                                 // Get the encrypted character ID
@@ -443,22 +444,19 @@ namespace DimensionalTag
                                                 CardCommand = UltralightCommand.Write4Bytes;
                                                 SendAway(nfcA);
 
-                                                //Try to read from block 0x25. 
+                                                //Try to read from block 0x25. (Let's see if it worked.)
                                                 BlockNumber = 0x25;
                                                 CardCommand = UltralightCommand.Read16Bytes; //Reads 4 pages starting at BlockNumber
                                                 dataFromCard = SendAway(nfcA);
-                                                if (!dataFromCard.SequenceEqual(Data.AsSpan(0, 4).ToArray()))
+                                                if (!dataFromCard.AsSpan(0, 4).SequenceEqual(Data.AsSpan(0, 4).ToArray()))
                                                 {
                                                     ForDebug.AppendLine("Failed to write to card.");
-                                                    Announce("Failed to write to card.", "Ok.");
+                                                    Announce("Failed!", "Oops");
                                                     return;
                                                 }
-                                                else
-                                                {
-                                                    Announce("Write complete!", "Ok");
-                                                }
+
                                             }
-                                            break;
+                                            break; 
 
                                         case "Vehicle":
                                             {
@@ -480,16 +478,13 @@ namespace DimensionalTag
                                                 BlockNumber = 0x26;
                                                 CardCommand = UltralightCommand.Read16Bytes; //Reads 4 pages starting at BlockNumber
                                                 dataFromCard = SendAway(nfcA);
-                                                if (!dataFromCard.SequenceEqual(Data.AsSpan(0, 4).ToArray()))
+                                                if (!dataFromCard.AsSpan(0, 4).SequenceEqual(Data.AsSpan(0, 4).ToArray()))
                                                 {
                                                     ForDebug.AppendLine("Failed to write to card.");
-                                                    Announce("Failed to write to card.", "Ok.");
+                                                    ErrorReport("Failed to write to card.");
                                                     return;
                                                 }
-                                                else
-                                                {
-                                                    Announce("Write complete!", "Ok");
-                                                }
+
                                             }
                                             break;
                                     }
@@ -509,7 +504,7 @@ namespace DimensionalTag
 
                           nfcA.Close();
                           if (!nfcA.IsConnected) { TagConnected = false; }
-                            Announce("Write complete!", "Ok");
+                            Announce("Write complete!", "  WooHoo!  ");
                         }
                     }
                 }
@@ -517,6 +512,7 @@ namespace DimensionalTag
             catch (Exception e)
             {
                 ErrorReport(e.Message);
+                return;
             }
         }
 
@@ -623,13 +619,16 @@ namespace DimensionalTag
         }
 
         /// <summary>
-        /// Checks if the tag is a vehicle.
+        /// Checks if the tag is empty.
         /// </summary>
-        /// <param name="data">Page 0x26 of the NFC data.</param>
-        /// <returns>True if the tag is a vehicle.</returns>
+        /// <param name="data">16 bytes of the NFC data read from card.</param>
+        /// <returns>True if the tag is empty.</returns>
         public static bool IsEmptyCard(byte[] data)
         {
-            return data.SequenceEqual(new byte[] { 0x00, 0x00, 0x00, 0x00 });
+            return data.SequenceEqual(new byte[] { 0x00, 0x00, 0x00, 0x00,
+                                                   0x00, 0x00, 0x00, 0x00,
+                                                   0x00, 0x00, 0x00, 0x00,
+                                                   0x00, 0x00, 0x00, 0x00 });
         }
 
         /// <summary>

@@ -131,15 +131,18 @@ namespace DimensionalTag
 
                         await Task.Run(async () =>
                         {
-                            await CardToolsGetter.WriteCard("Character", c.Id);
-                         
+                            
+                          await CardToolsGetter.WriteCard("Character", c.Id);
+                            
+
                             MainThread.BeginInvokeOnMainThread(async () =>
                             {
-                                await Shell.Current.ShowPopupAsync(new AlertPopup("Yay!", "Write Complete.", "Ok.", "", false));
+
                                 cameToWrite = false;
                                 SwapBg(cameToWrite);
-                                CardToolsGetter.WriteCardCancel();
+                              
                             });
+
                         });
                     }
                     break;
@@ -155,10 +158,8 @@ namespace DimensionalTag
 
                             MainThread.BeginInvokeOnMainThread(async () =>
                             {
-                                await Shell.Current.ShowPopupAsync(new AlertPopup("Yay!", "Write Complete.", "Ok.", "", false));
                                 cameToWrite = false;
                                 SwapBg(cameToWrite);
-                                CardToolsGetter.WriteCardCancel();
                             });
                         });
                     }
@@ -166,10 +167,8 @@ namespace DimensionalTag
 
                 case null:
                     {
-                        await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong.", "Ok.", "", false));
-                        cameToWrite = false;
-                        SwapBg(cameToWrite);
-                        CardToolsGetter.WriteCardCancel();
+                        //If navigating here from write, then to the opposite type (ie character to vehicle) 
+                        // It throws null since the other info clears.
                     }
                     break;
             }
@@ -219,6 +218,7 @@ namespace DimensionalTag
 
                 case false:
                     {
+                        img_write.IsVisible = false;
                         Lbl_scan.Text = "Place phone on tag to scan.";
                         await Lbl_scan.FadeTo(1, 1000);
 

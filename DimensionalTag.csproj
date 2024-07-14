@@ -128,6 +128,7 @@
 	  <None Remove="Resources\Images\Animation\scan_one.png" />
 	  <None Remove="Resources\Images\Animation\scan_three.png" />
 	  <None Remove="Resources\Images\Animation\scan_two.png" />
+	  <None Remove="Resources\Images\Character.png" />
 	  <None Remove="Resources\Images\characters.png" />
 	  <None Remove="Resources\Images\Char_Icons\abby_yates.png" />
 	  <None Remove="Resources\Images\Char_Icons\acu_trooper.png" />
@@ -212,6 +213,7 @@
 	  <None Remove="Resources\Images\Tab_Icons\search_icon.png" />
 	  <None Remove="Resources\Images\Tab_Icons\vehi_ico.png" />
 	  <None Remove="Resources\Images\Tab_Icons\world_ico.png" />
+	  <None Remove="Resources\Images\vehicle.png" />
 	  <None Remove="Resources\Images\vehicles.png" />
 	  <None Remove="Resources\Images\Vehicle_Icons\aqua_watercraft.png" />
 	  <None Remove="Resources\Images\Vehicle_Icons\arcade_machine.png" />
@@ -294,6 +296,7 @@
 	  <None Remove="Resources\Images\Vehicle_Icons\velociraptor.png" />
 	  <None Remove="Resources\Images\Vehicle_Icons\winged_monkey.png" />
 	  <None Remove="Resources\Images\vortex.png" />
+	  <None Remove="Resources\Images\world.png" />
 	  <None Remove="Resources\Images\worlds.png" />
 	  <None Remove="Resources\Images\Worlds_Icons\adventure.png" />
 	  <None Remove="Resources\Images\Worlds_Icons\a_team.png" />
@@ -326,6 +329,11 @@
 	  <None Remove="Resources\Images\Worlds_Icons\teen_titans.png" />
 	  <None Remove="Resources\Images\Worlds_Icons\wizardofoz.png" />
 	  <None Remove="Resources\Images\world_blank.png" />
+	  <None Remove="Resources\Raw\click.mp3" />
+	  <None Remove="Resources\Raw\Lego_Pieces.ogx" />
+	  <None Remove="Resources\Raw\page_turned.mp3" />
+	  <None Remove="Resources\Raw\swish.ogx" />
+	  <None Remove="Resources\Raw\swoosh.wav" />
 	  <None Remove="Resources\Splash\blnk_splash.png" />
 	</ItemGroup>
 
@@ -601,10 +609,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.1" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.2" />
+		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="4.0.1" />
 		<PackageReference Include="M.BindableProperty.Generator" Version="0.11.1" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.61" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.61" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.70" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.70" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 	</ItemGroup>
 

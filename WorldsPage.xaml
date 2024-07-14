@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="DimensionalTag.WorldsPage"
              BackgroundColor="Black" BackgroundImageSource="galaxy.png"
              NavigatedTo="OnArrival" NavigatedFrom="OnGoodbye">
@@ -11,14 +12,19 @@
               Spacing="5">
 
         <Image x:Name="world_title"                           
-               Source="worlds.png"             
+               Source="world.png"             
                Margin="0,30,0,0"
                WidthRequest="300"
                HeightRequest="100" 
                Opacity="0">
         </Image>
 
-            <StackLayout 
+        <toolkit:MediaElement
+            x:Name="mediaElement"
+            IsVisible="Hidden"
+            />
+
+        <StackLayout 
                 HeightRequest="260"
                 Spacing="0">
                 <CarouselView x:Name="World_Carousel" 
@@ -27,12 +33,13 @@
                               PeekAreaInsets="70" 
                               CurrentItemChanged="world_carousel_CurrentItemChanged" 
                               HeightRequest="250"
-                              Opacity="0">
+                              Opacity="0"
+                              PositionChanged="OnWorld_Position_Changed">
                     <CarouselView.ItemsLayout>
                         <LinearItemsLayout 
                             Orientation="Horizontal"
                             SnapPointsAlignment="Center"
-                            SnapPointsType="MandatorySingle"/>
+                            SnapPointsType="Mandatory"/>
                     </CarouselView.ItemsLayout>
 
                     <CarouselView.ItemTemplate>
@@ -122,7 +129,8 @@
                               BackgroundColor="Transparent" 
                               PeekAreaInsets="70" 
                               HeightRequest="180" 
-                              Opacity="0">
+                              Opacity="0"
+                              PositionChanged="OnItem_Position_Changed">
                 <CarouselView.ItemsLayout>
                     <LinearItemsLayout
                               Orientation="Horizontal"

@@ -77,7 +77,7 @@ public partial class PopupPage : Popup
 				await Shell.Current.GoToAsync($"///ScanPage", navParam);
 				Close();
 			}
-
+			
         }
     }
 

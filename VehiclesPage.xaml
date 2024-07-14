@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="DimensionalTag.VehiclesPage"             
              BackgroundColor="Black"
              BackgroundImageSource="galaxy.png" 
@@ -16,19 +17,26 @@
 
         <Image x:Name="vehi_title"             
                Grid.Row="0"
-               Source="vehicles.png"
+               Source="vehicle.png"
                Margin="0,0,0,10"
                WidthRequest="300"
                HeightRequest="100"
                Opacity="0">
         </Image>
 
+        <toolkit:MediaElement
+            x:Name="mediaElement"
+            Source="Embed://swish.ogx"
+            IsVisible="Hidden"
+            />
+        
         <CarouselView x:Name="vehicle_carousel" 
                       BackgroundColor="Transparent" 
                       PeekAreaInsets="80" 
                       VerticalOptions="Center" 
                       Grid.Row="1" Margin="0,50,0,0"
-                      Opacity="0">
+                      Opacity="0"
+                      PositionChanged="OnPosition_Changed">
             <CarouselView.ItemsLayout>
                 <LinearItemsLayout 
                             Orientation="Horizontal"

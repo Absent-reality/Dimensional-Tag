@@ -16,6 +16,7 @@ public partial class VehiclesPage : ContentPage
     public VehiclesPage()
 	{
 		InitializeComponent();
+        mediaElement.Source = MediaSource.FromResource("swish.ogx");
         this.Loaded += Page_Loaded;
         var veh = Vehicle.Vehicles.FindAll(x => x.Form == 1);
 		vehicle_carousel.ItemsSource = veh;       
@@ -33,12 +34,16 @@ public partial class VehiclesPage : ContentPage
 
     public async void PoppingIn()
     {
+        mediaElement.Source = MediaSource.FromResource("swish.ogx");
         var width = (DeviceDisplay.MainDisplayInfo.Width)/2;
         await Task.Delay(500);
         await vehi_title.TranslateTo(width, 0, 100);
         await vehi_title.FadeTo(1);
         await vehi_title.TranslateTo(0, 0, 250);
-        
+        mediaElement.Play();
+        await Task.Delay(500);
+        mediaElement.Stop();
+
         await Task.Delay(500);
         await vehicle_carousel.FadeTo(1);
 
@@ -49,9 +54,9 @@ public partial class VehiclesPage : ContentPage
         await Task.Delay(800);
         var check = Vehicle.Vehicles.FirstOrDefault(x => x.Name == vehicle.Name);
         if (check != null)
-        {    
+        {
             int start = vehicle_carousel.Position;
-            var number = Vehicle.Vehicles.IndexOf(check);
+            var number = Vehicle.Vehicles.FindAll(x => x.Form == 1).IndexOf(check);
 
             if (vehicle_carousel.Position == number)
             {
@@ -61,7 +66,7 @@ public partial class VehiclesPage : ContentPage
             {
                 for (int idc = 0; idc < number - start; idc++)
                 {
-                    await Task.Delay(250);
+                    await Task.Delay(400);
                     vehicle_carousel.Position++;
                 }
             }
@@ -82,11 +87,21 @@ public partial class VehiclesPage : ContentPage
         PoppingIn();
     }
 
-    private void OnGoodbye(object sender, NavigatedFromEventArgs e)
+    private async void OnGoodbye(object sender, NavigatedFromEventArgs e)
     {
         DeviceDisplay.KeepScreenOn = false;
-        vehi_title.FadeTo(0);
-        vehicle_carousel.FadeTo(0);
+
+        if (mediaElement.CurrentState == CommunityToolkit.Maui.Core.Primitives.MediaElementState.Playing)
+        {
+            mediaElement.Stop();
+        }
+        mediaElement.Source = MediaSource.FromResource("page_turned.mp3");
+        mediaElement.Play();
+        await Task.Delay(80);
+        mediaElement.Stop();
+
+        await vehi_title.FadeTo(0);
+        await vehicle_carousel.FadeTo(0);
     }
 
     private async void Vehicle_Tapped(object sender, TappedEventArgs e)
@@ -115,4 +130,16 @@ public partial class VehiclesPage : ContentPage
 #endif        
 
     }
+
+    private async void OnPosition_Changed(object sender, PositionChangedEventArgs e)
+    {
+        if (mediaElement.CurrentState == CommunityToolkit.Maui.Core.Primitives.MediaElementState.Playing)
+        {
+            mediaElement.Stop();
+        }
+        mediaElement.Source = MediaSource.FromResource("click.mp3");
+        mediaElement.Play();
+        await Task.Delay(80);
+    }
+
 }

@@ -33,6 +33,7 @@ namespace DimensionalTag.Tools
             {
                 cdtools.OnAfterNfcWrite = null;
                 task.SetResult("");
+                
             };            
             cdtools.WriteItemType = text;
             cdtools.WriteItemId = Id;
