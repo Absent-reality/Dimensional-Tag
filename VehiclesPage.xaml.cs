@@ -16,7 +16,7 @@ public partial class VehiclesPage : ContentPage
     public VehiclesPage()
 	{
 		InitializeComponent();
-        mediaElement.Source = MediaSource.FromResource("swish.ogx");
+        mediaElement.Source = MediaSource.FromResource("swish_rev.mp3");
         this.Loaded += Page_Loaded;
         var veh = Vehicle.Vehicles.FindAll(x => x.Form == 1);
 		vehicle_carousel.ItemsSource = veh;       
@@ -34,7 +34,7 @@ public partial class VehiclesPage : ContentPage
 
     public async void PoppingIn()
     {
-        mediaElement.Source = MediaSource.FromResource("swish.ogx");
+        mediaElement.Source = MediaSource.FromResource("swish_rev.mp3");
         var width = (DeviceDisplay.MainDisplayInfo.Width)/2;
         await Task.Delay(500);
         await vehi_title.TranslateTo(width, 0, 100);
@@ -95,10 +95,6 @@ public partial class VehiclesPage : ContentPage
         {
             mediaElement.Stop();
         }
-        mediaElement.Source = MediaSource.FromResource("page_turned.mp3");
-        mediaElement.Play();
-        await Task.Delay(80);
-        mediaElement.Stop();
 
         await vehi_title.FadeTo(0);
         await vehicle_carousel.FadeTo(0);
@@ -107,6 +103,7 @@ public partial class VehiclesPage : ContentPage
     private async void Vehicle_Tapped(object sender, TappedEventArgs e)
     {
 #if ANDROID
+        
         Vehicle? current = vehicle_carousel.CurrentItem as Vehicle;
         if (current != null)
         {

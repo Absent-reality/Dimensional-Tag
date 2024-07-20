@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="DimensionalTag.ScanPage"
              BackgroundColor="Black" NavigatedTo="On_Arrived" NavigatedFrom="On_Goodbye">
 
@@ -46,6 +47,10 @@
             HeightRequest="100"              
             HorizontalOptions="CenterAndExpand" 
             Opacity="0"/>
-       
+
+        <toolkit:MediaElement
+            x:Name="mediaElement"
+            IsVisible="Hidden"
+            />
     </Grid>
 </ContentPage>

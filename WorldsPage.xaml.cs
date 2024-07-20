@@ -17,7 +17,7 @@ public partial class WorldsPage : ContentPage
 	public WorldsPage()
 	{
 		InitializeComponent();
-        mediaElement.Source = MediaSource.FromResource("swoosh.wav");
+        mediaElement.Source = MediaSource.FromResource("swish.mp3");
         World_Carousel.ItemsSource = World.Worlds;
         this.Loaded += Page_Loaded;
     }
@@ -34,7 +34,7 @@ public partial class WorldsPage : ContentPage
 
     public async void PoppingIn()
     {
-        mediaElement.Source = MediaSource.FromResource("swoosh.wav");
+        mediaElement.Source = MediaSource.FromResource("swish.mp3");
         //measure the display size to know how far to translate.
         var width = (DeviceDisplay.MainDisplayInfo.Width) / 2;
 
@@ -130,10 +130,6 @@ public partial class WorldsPage : ContentPage
         {
             mediaElement.Stop();
         }
-        mediaElement.Source = MediaSource.FromResource("page_turned.mp3");
-        mediaElement.Play();
-        await Task.Delay(80);
-        mediaElement.Stop();
 
         await world_title.FadeTo(0);
         await World_Carousel.FadeTo(0);

@@ -6,8 +6,8 @@
              BackgroundColor="Black" 
              BackgroundImageSource="galaxy.png"
              NavigatedTo="OnArrival"
-             NavigatedFrom="OnGoodbye">
-                        
+             NavigatedFrom="OnGoodbye" >
+
     <Grid 
         x:Name="theGrid"
         Margin="0,30,0,0">
@@ -30,7 +30,14 @@
             </Image>
 
         <toolkit:MediaElement
-            x:Name="mediaElement"
+            x:Name="sfx"
+            IsVisible="Hidden"
+            />
+
+        <toolkit:MediaElement
+            x:Name="bgm"          
+            ShouldAutoPlay="True"
+            ShouldLoopPlayback="True"
             IsVisible="Hidden"
             />
 

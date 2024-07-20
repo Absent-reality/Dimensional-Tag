@@ -8,8 +8,17 @@ public partial class Loading : ContentPage
 	public Loading()
 	{
 		InitializeComponent();
-
-	}
+        var window = App.Window;
+        window.Deactivated += (s, e) =>
+        {           
+            bgm.Volume = 0;
+        };
+        window.Resumed += (s, e) => 
+        {
+            bgm.Volume += 1;
+        };
+ 
+    }
 
 	private async void OnArrival(object sender, NavigatedToEventArgs e)
 	{
@@ -81,8 +90,9 @@ public partial class Loading : ContentPage
     }
 
     private void OnGoodbye(object sender, NavigatedFromEventArgs e)
-    {
-            
-        mediaElement.Handler?.DisconnectHandler();
+    {           
+        
+        bgm.Handler?.DisconnectHandler();
     }
+
 }

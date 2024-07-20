@@ -1,3 +1,4 @@
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Views;
 
 namespace DimensionalTag;
@@ -12,14 +13,32 @@ public partial class CharacterPage : ContentPage
     }
 
     public CharacterPage()
-	{       
+	{
+
 		InitializeComponent();
         carousel.ItemsSource = Character.Characters;
-        mediaElement.Source = MediaSource.FromResource("swoosh.wav");
-        this.Loaded += Page_Loaded;       
-    }
+        sfx.Source = MediaSource.FromResource("swish.mp3");
+        bgm.Source = MediaSource.FromResource("Defender.mp3");
+        this.Loaded += Page_Loaded;
 
-     void Page_Loaded(object? sender, EventArgs e)
+        var window = App.Window;
+        window.Deactivated += (s, e) =>
+        {
+            bgm.Volume = 0;
+        };
+        window.Resumed += (s, e) => //need to suspend all animations
+        {
+            bgm.Volume += 1;
+        };
+        window.Destroying += (s, e) =>
+        {
+            bgm.Handler?.DisconnectHandler();
+        };
+
+    }
+   
+
+    void Page_Loaded(object? sender, EventArgs e)
     {
         //Only need to fire this once then we can forget it.
         this.Loaded -= Page_Loaded;
@@ -31,7 +50,7 @@ public partial class CharacterPage : ContentPage
 
     public async void PoppingIn()
     {
-       mediaElement.Source =  MediaSource.FromResource("swoosh.wav");
+       sfx.Source =  MediaSource.FromResource("swish.mp3");
          //measure the display size to know how far to translate.
         var width = (DeviceDisplay.MainDisplayInfo.Width)/2;
 
@@ -40,9 +59,9 @@ public partial class CharacterPage : ContentPage
         await char_title.FadeTo(1);
         char_title.IsVisible = true;
         await char_title.TranslateTo(0, 0, 250);
-        mediaElement.Play();
+        sfx.Play();
         await Task.Delay(500);
-        mediaElement.Stop();
+        sfx.Stop();
 
         await Task.Delay(500);
         await carousel.FadeTo(1);
@@ -90,14 +109,10 @@ public partial class CharacterPage : ContentPage
     private async void OnGoodbye(object sender, NavigatedFromEventArgs e)
     {
         DeviceDisplay.KeepScreenOn = false;
-        if (mediaElement.CurrentState == CommunityToolkit.Maui.Core.Primitives.MediaElementState.Playing)
+        if (sfx.CurrentState == CommunityToolkit.Maui.Core.Primitives.MediaElementState.Playing)
         {
-            mediaElement.Stop();
+            sfx.Stop();
         }
-        mediaElement.Source = MediaSource.FromResource("page_turned.mp3");
-        mediaElement.Play();
-        await Task.Delay(80);
-        mediaElement.Stop();
 
         await char_title.FadeTo(0);
         await carousel.FadeTo(0);
@@ -107,6 +122,7 @@ public partial class CharacterPage : ContentPage
     private async void Character_Tapped(object sender, TappedEventArgs e)
     {
 #if ANDROID
+
         Character? current = carousel.CurrentItem as Character;
         if (current != null) 
         { 
@@ -133,12 +149,14 @@ public partial class CharacterPage : ContentPage
 
     private async void OnPosition_Changed(object sender, PositionChangedEventArgs e) 
     {
-        if (mediaElement.CurrentState == CommunityToolkit.Maui.Core.Primitives.MediaElementState.Playing)
+        if (sfx.CurrentState == CommunityToolkit.Maui.Core.Primitives.MediaElementState.Playing)
         {
-            mediaElement.Stop();
+            sfx.Stop();
         }
-        mediaElement.Source = MediaSource.FromResource("click.mp3");
-        mediaElement.Play();
+        sfx.Source = MediaSource.FromResource("click.mp3");
+        sfx.Play();
         await Task.Delay(80);
+        
     }
+
 }

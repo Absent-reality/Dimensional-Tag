@@ -4,6 +4,7 @@ using Android.Nfc;
 using Android.OS;
 using Android.Content;
 using AndroidX.Core.Content;
+using CommunityToolkit.Maui.Alerts;
 
 namespace DimensionalTag
 {
@@ -11,7 +12,7 @@ namespace DimensionalTag
     [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize  | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density | ConfigChanges.Orientation, ScreenOrientation = ScreenOrientation.Portrait )]
     public class MainActivity : MauiAppCompatActivity
     {
-        public CardTools cardTools;
+        public CardTools cardTools;       
 
         protected override void OnCreate(Bundle? savedInstanceState)
         {
@@ -23,6 +24,12 @@ namespace DimensionalTag
         {
             base.OnResume();
             cardTools.OnResume();
+        }
+
+        protected override void OnPause()
+        {
+            base.OnPause();         
+
         }
 
         protected override void OnNewIntent(Intent? intent)

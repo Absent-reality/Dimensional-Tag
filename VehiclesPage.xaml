@@ -25,8 +25,7 @@
         </Image>
 
         <toolkit:MediaElement
-            x:Name="mediaElement"
-            Source="Embed://swish.ogx"
+            x:Name="mediaElement"          
             IsVisible="Hidden"
             />
         
