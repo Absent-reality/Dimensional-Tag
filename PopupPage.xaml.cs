@@ -66,6 +66,8 @@ public partial class PopupPage : Popup
 
 	private async void Form2_Tapped(object sender, TappedEventArgs e)
 	{
+        HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
+
         var alert = new AlertPopup(" Alert! ", " Are you sure you want to write this data? ", " Cancel?", " Write? ", true);
         var confirm = await Shell.Current.ShowPopupAsync(alert);
 		var current = Vehicle.Vehicles.FirstOrDefault(x => x.Name == lbl_Form2.Text);
@@ -83,6 +85,8 @@ public partial class PopupPage : Popup
 
 	private async void Form3_Tapped(object sender, TappedEventArgs e)
 	{
+        HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
+
         var alert = new AlertPopup(" Alert! ", " Are you sure you want to write this data? ", " Cancel?", " Write? ", true);
         var confirm = await Shell.Current.ShowPopupAsync(alert);
         var current = Vehicle.Vehicles.FirstOrDefault(x => x.Name == lbl_Form3.Text);
@@ -100,12 +104,14 @@ public partial class PopupPage : Popup
 
     private void CancelButton_Clicked(object sender, EventArgs e)
     {
-		Close();
+        HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
+        Close();
     }
 
     private void WriteButton_Clicked(object sender, EventArgs e)
     {
-		CloseAsync(true);
+        HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
+        CloseAsync(true);
     }
 
 }

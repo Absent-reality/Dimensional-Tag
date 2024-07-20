@@ -142,6 +142,7 @@ public partial class SearchPage : ContentPage
 
     private async void BtnCancel_Clicked(object sender, EventArgs e)
     {
+        HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
         await Close();
     }
 
@@ -163,7 +164,7 @@ public partial class SearchPage : ContentPage
 
     private async void SearchResults_ItemSelected(object sender, SelectedItemChangedEventArgs e)
     {
-              
+        HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
         if (e.SelectedItem != null)
         {          
             var check = e.SelectedItem as LegoTag.SearchItems;

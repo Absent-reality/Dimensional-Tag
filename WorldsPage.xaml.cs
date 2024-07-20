@@ -138,6 +138,7 @@ public partial class WorldsPage : ContentPage
 
     private async void Item_Tapped(object sender, TappedEventArgs e)
     {
+        HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
 
         if ( Item_Carousel.CurrentItem != null)
         {

@@ -24,10 +24,12 @@ public partial class AlertPopup : Popup
 
     private async void BtnWrite_Clicked(object sender, EventArgs e)
     {
+        HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
         await CloseAsync(true);
     }
     private void BtnCancel_Clicked(object sender, EventArgs e)
     {
+        HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
         Close();
     }
 }

@@ -26,7 +26,7 @@ public partial class CharacterPage : ContentPage
         {
             bgm.Volume = 0;
         };
-        window.Resumed += (s, e) => //need to suspend all animations
+        window.Resumed += (s, e) => 
         {
             bgm.Volume += 1;
         };
@@ -122,7 +122,7 @@ public partial class CharacterPage : ContentPage
     private async void Character_Tapped(object sender, TappedEventArgs e)
     {
 #if ANDROID
-
+        HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
         Character? current = carousel.CurrentItem as Character;
         if (current != null) 
         { 
