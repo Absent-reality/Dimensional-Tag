@@ -49,7 +49,7 @@
             Opacity="0"/>
 
         <toolkit:MediaElement
-            x:Name="mediaElement"
+            x:Name="sfx"
             IsVisible="Hidden"
             />
     </Grid>

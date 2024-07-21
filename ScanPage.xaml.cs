@@ -26,7 +26,7 @@ namespace DimensionalTag
         public ScanPage()
         {
             InitializeComponent();
-            mediaElement.Source = MediaSource.FromResource("lego_pieces.mp3");
+            sfx.Source = MediaSource.FromResource("lego_pieces.mp3");
 
 #if ANDROID
             CardToolsGetter.SetOnCardReceive(async (cardInfo) =>
@@ -138,15 +138,15 @@ namespace DimensionalTag
 
                             MainThread.BeginInvokeOnMainThread(async () =>
                             {
-                                mediaElement.Play();
+                                sfx.Play();
                                 await Task.Delay(100);
-                                mediaElement.Stop();
                                 cameToWrite = false;
                                 SwapBg(cameToWrite);
                               
                             });
 
                         });
+
                     }
                     break;
 
@@ -161,9 +161,8 @@ namespace DimensionalTag
 
                             MainThread.BeginInvokeOnMainThread(async () =>
                             {
-                                mediaElement.Play();
+                                sfx.Play();
                                 await Task.Delay(100);
-                                mediaElement.Stop();
                                 cameToWrite = false;
                                 SwapBg(cameToWrite);
                             });
