@@ -1,4 +1,5 @@
-﻿(https://github.com/Absent-reality/Dimensional-Tag/blob/master/Resources/Images/Animation/logo65.png?raw=true)
+﻿![TitleImg](https://github.com/Absent-reality/Dimensional-Tag/blob/master/Resources/Images/Animation/logo65.png?raw=true)
+
 #**Dimensional Tag:**
 ------------------
 An Android port for reading Lego Dimensions® tags. 
