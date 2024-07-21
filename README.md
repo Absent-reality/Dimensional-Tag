@@ -13,8 +13,9 @@ Definately a work in progress. Use at your own risk. Music and images are copywr
 -----------------------
 
 ### Use:
-*REQUIRES NFC CAPABLE DEVICE*
-It's really rather user friendly in my opinion. Scroll through each item and tap on them for more info. The search function will direct you to the location of the 
+!!!*REQUIRES AN NFC CAPABLE DEVICE*!!!!
+
+This app is really rather user friendly in my opinion. Scroll through each item and tap on them for more info. The search function will direct you to the location of the 
 searched for item. At this time each vehicle has a placeholder picture of the first form, and links to the other builds in the popup when they are clicked on. 
 The app is mostly designed with NTAG213 or 215 tags in mind. Currently this is only designed for android. I may port it over to ios when i feel like paying for it. 
 
