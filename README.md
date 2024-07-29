@@ -2,10 +2,10 @@
 
 #**Dimensional Tag:**
 ------------------
-An Android port for reading Lego Dimensions® tags. 
+An Android port for reading LEGO Dimensions® tags. 
 
 ## Disclaimer:
-This project was started purely as a "proof of concept".
+This project was started purely as a "proof of concept", and is in no way endorsed, sponsored or affiliated with the LEGO group.
 I am building this project for personal use and, above all else, as a learning tool. The designs are aimed at what I wanted to achieve, thus may not work for everyone. 
 Definately a work in progress. Use at your own risk. Music and images are copywrite of their respective brands and companies.
 

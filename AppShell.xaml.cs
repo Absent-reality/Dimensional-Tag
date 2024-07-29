@@ -11,5 +11,6 @@ namespace DimensionalTag
         }
 
         public ICommand CenterViewCommand { get; } = new Command(async () => await Current.Navigation.PushModalAsync(new SearchPage()));
+
     }
 }

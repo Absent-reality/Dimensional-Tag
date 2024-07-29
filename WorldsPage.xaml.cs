@@ -138,6 +138,7 @@ public partial class WorldsPage : ContentPage
 
     private async void Item_Tapped(object sender, TappedEventArgs e)
     {
+        Item_Carousel.IsEnabled = false;
         HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
 
         if ( Item_Carousel.CurrentItem != null)
@@ -202,7 +203,9 @@ public partial class WorldsPage : ContentPage
                     }
                 }
             }
-        }     
+        }
+
+        Item_Carousel.IsEnabled = true;
     }
 
     private async void OnWorld_Position_Changed(object sender, PositionChangedEventArgs e)

@@ -9,15 +9,17 @@ public partial class Loading : ContentPage
 	{
 		InitializeComponent();
         var window = App.Window;
+
         window.Deactivated += (s, e) =>
-        {           
+        {
             bgm.Volume = 0;
         };
-        window.Resumed += (s, e) => 
+
+        window.Activated += (s, e) =>
         {
-            bgm.Volume += 1;
+            bgm.Volume = 1;
         };
- 
+
     }
 
 	private async void OnArrival(object sender, NavigatedToEventArgs e)

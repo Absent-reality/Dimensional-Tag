@@ -1,4 +1,5 @@
 using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core.Primitives;
 using CommunityToolkit.Maui.Views;
 
 namespace DimensionalTag;
@@ -26,10 +27,12 @@ public partial class CharacterPage : ContentPage
         {
             bgm.Volume = 0;
         };
-        window.Resumed += (s, e) => 
+
+        window.Activated += (s, e) =>
         {
-            bgm.Volume += 1;
+            bgm.Volume = 1;
         };
+
         window.Destroying += (s, e) =>
         {
             bgm.Handler?.DisconnectHandler();
@@ -65,7 +68,7 @@ public partial class CharacterPage : ContentPage
 
         await Task.Delay(500);
         await carousel.FadeTo(1);
-
+        
     }
 
     private async void SpinTo(Character character)
@@ -103,13 +106,13 @@ public partial class CharacterPage : ContentPage
     private void OnArrival(object sender, NavigatedToEventArgs e)
     {
         DeviceDisplay.KeepScreenOn = true;
-        PoppingIn();
+        PoppingIn();        
     }
 
     private async void OnGoodbye(object sender, NavigatedFromEventArgs e)
     {
         DeviceDisplay.KeepScreenOn = false;
-        if (sfx.CurrentState == CommunityToolkit.Maui.Core.Primitives.MediaElementState.Playing)
+        if (sfx.CurrentState == MediaElementState.Playing)
         {
             sfx.Stop();
         }
@@ -121,6 +124,7 @@ public partial class CharacterPage : ContentPage
 
     private async void Character_Tapped(object sender, TappedEventArgs e)
     {
+        carousel.IsEnabled = false;
 #if ANDROID
         HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
         Character? current = carousel.CurrentItem as Character;
@@ -144,12 +148,12 @@ public partial class CharacterPage : ContentPage
                
         }
 #endif        
-
+        carousel.IsEnabled = true;
     }
 
     private async void OnPosition_Changed(object sender, PositionChangedEventArgs e) 
     {
-        if (sfx.CurrentState == CommunityToolkit.Maui.Core.Primitives.MediaElementState.Playing)
+        if (sfx.CurrentState == MediaElementState.Playing)
         {
             sfx.Stop();
         }

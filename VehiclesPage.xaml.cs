@@ -102,6 +102,7 @@ public partial class VehiclesPage : ContentPage
 
     private async void Vehicle_Tapped(object sender, TappedEventArgs e)
     {
+        vehicle_carousel.IsEnabled = false;
 #if ANDROID
         HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
         Vehicle? current = vehicle_carousel.CurrentItem as Vehicle;
@@ -125,7 +126,7 @@ public partial class VehiclesPage : ContentPage
 
         }
 #endif        
-
+        vehicle_carousel.IsEnabled = true;
     }
 
     private async void OnPosition_Changed(object sender, PositionChangedEventArgs e)

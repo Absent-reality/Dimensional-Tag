@@ -1,6 +1,8 @@
 ﻿
+using CommunityToolkit.Maui.Core.Primitives;
 using CommunityToolkit.Maui.Views;
 using DimensionalTag.Tools;
+using System.Security.Cryptography.X509Certificates;
 
 
 namespace DimensionalTag
@@ -10,7 +12,7 @@ namespace DimensionalTag
   
     public partial class ScanPage : ContentPage
     {
-
+        
         public Character WriteCharacter
         {
             set => BeginWrite(value);
@@ -38,8 +40,9 @@ namespace DimensionalTag
                 }
              
             });
-            
-#endif         
+
+#endif
+
             
         }
 
@@ -122,31 +125,21 @@ namespace DimensionalTag
         private async void BeginWrite(object item)
         {
 #if ANDROID
-            await Task.Delay(500);
+            await Task.Delay(300);
             switch (item)
             {
                 case Character:
                     {
                         cameToWrite = true;
                         Character c = (Character)item;
-
-                        await Task.Run(async () =>
-                        {
-                            
+                        
                           await CardToolsGetter.WriteCard("Character", c.Id);
-                            
 
-                            MainThread.BeginInvokeOnMainThread(async () =>
-                            {
                                 sfx.Play();
                                 await Task.Delay(100);
                                 cameToWrite = false;
                                 SwapBg(cameToWrite);
-                              
-                            });
-
-                        });
-
+                   
                     }
                     break;
 
@@ -155,18 +148,13 @@ namespace DimensionalTag
                         cameToWrite = true;
                         Vehicle v = (Vehicle)item;
 
-                        await Task.Run(async () =>
-                        {
                             await CardToolsGetter.WriteCard("Vehicle", v.Id);
 
-                            MainThread.BeginInvokeOnMainThread(async () =>
-                            {
                                 sfx.Play();
                                 await Task.Delay(100);
                                 cameToWrite = false;
                                 SwapBg(cameToWrite);
-                            });
-                        });
+
                     }
                     break;
 
@@ -196,6 +184,7 @@ namespace DimensionalTag
             cameToWrite = false;
 #if ANDROID
             CardToolsGetter.WriteCardCancel();
+           
 #endif
         }
 

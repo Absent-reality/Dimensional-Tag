@@ -50,7 +50,7 @@
 
         <toolkit:MediaElement
             x:Name="sfx"
-            IsVisible="Hidden"
+            IsVisible="Hidden"          
             />
     </Grid>
 </ContentPage>
