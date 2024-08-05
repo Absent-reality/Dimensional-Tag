@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DimensionalTag.SettingsPage"
+             xmlns:viewmodel ="clr-namespace:DimensionalTag"
+             x:DataType="viewmodel:SettingsViewModel"
+             Title="Settings" BackgroundColor="Transparent"
+             NavigatedTo="On_Arrived"  >
+
+    <Grid>
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Tapped="Tapped_Outside" />
+        </Grid.GestureRecognizers>
+
+        <Border
+            VerticalOptions="Start"
+            Background="#161616"
+            StrokeShape="{RoundRectangle CornerRadius=20}"
+            Margin="30"
+            Padding="10">
+            <VerticalStackLayout>
+
+                <Label
+                    HorizontalOptions="CenterAndExpand"
+                    FontSize="Large"
+                    TextColor="White"                    
+                    FontAttributes="Bold"
+                    Text="Settings." 
+                    Margin="0,0,0,10">
+                    <Label.Shadow>
+                        <Shadow
+                          Brush="DimGray"
+                          Offset="10,10"
+                          Radius="20"
+                          Opacity=".8" />
+                    </Label.Shadow>
+                </Label>
+
+                <Border
+                    VerticalOptions="Start"
+                    StrokeShape="{RoundRectangle CornerRadius=5}"
+                    Background="#161616"            
+                    Padding="2" >
+                    <VerticalStackLayout>
+                        <HorizontalStackLayout>
+                            <Switch
+                            IsToggled="{Binding Save}"
+                            OnColor="#01a7d3"                              
+                            ThumbColor="#01a7d3"                           
+                            Toggled="Switch_Toggled"
+                            />
+
+                            <Label
+                            BackgroundColor="Transparent"
+                            Text=" Skip Loading Screen?"
+                            TextColor="#01a7d3"
+                            FontAttributes="Bold"
+                            VerticalOptions="Center" />
+
+                        </HorizontalStackLayout>
+
+                        <Label
+                            BackgroundColor="Transparent"
+                            TextColor="#01a7d3"
+                            Text="Music volume:"
+                            FontAttributes="Bold"
+                            HorizontalOptions="StartAndExpand"
+                            Margin="10"
+                        />
+
+                        <Slider
+                            Maximum="1"
+                            WidthRequest="150"
+                            HorizontalOptions="Start"
+                            Value="{Binding BgmVol}"
+                            ThumbColor="#01a7d3"
+                            BackgroundColor="Transparent"
+                            MinimumTrackColor="#01a7d3"
+                            ValueChanged="BgmSlider_ValueChanged"
+                        />
+
+                        <Label
+                            BackgroundColor="Transparent"
+                            TextColor="#01a7d3"
+                            Text="Sfx volume:"
+                            FontAttributes="Bold"
+                            HorizontalOptions="StartAndExpand"
+                            Margin="10"
+                        />
+
+                        <Slider                   
+                            Maximum="1"
+                            WidthRequest="150"
+                            HorizontalOptions="Start"
+                            Value="{Binding SfxVol}"
+                            ThumbColor="#01a7d3"
+                            BackgroundColor="Transparent"
+                            MinimumTrackColor="#01a7d3"
+                            ValueChanged="SfxSlider_ValueChanged"
+                            Margin="0,0,0,20"
+                        />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Button x:Name="btnCancel"
+                    HeightRequest="40"
+                    VerticalOptions="End"
+                    HorizontalOptions="CenterAndExpand"
+                    BackgroundColor="#01a7d3"
+                    Text=" Close "               
+                    FontSize="Small"
+                    FontAttributes="Bold"
+                    TextColor="Black"
+                    CornerRadius="20"
+                    Clicked="BtnCancel_Clicked" 
+                    Padding="10"
+                    Margin="15">
+                    <Button.Shadow>
+                        <Shadow
+                          Brush="DimGray"
+                          Offset="10,10"
+                          Radius="20"
+                          Opacity=".8" />
+                    </Button.Shadow>
+                </Button>
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+</ContentPage>

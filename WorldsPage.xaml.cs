@@ -14,10 +14,13 @@ public partial class WorldsPage : ContentPage
     }
 
     
-	public WorldsPage()
+	public WorldsPage(SettingsViewModel vm)
 	{
 		InitializeComponent();
-        mediaElement.Source = MediaSource.FromResource("swish.mp3");
+
+        BindingContext = vm;
+        sfx.BindingContext = vm;
+        sfx.Source = MediaSource.FromResource("swish.mp3");
         World_Carousel.ItemsSource = World.Worlds;
         this.Loaded += Page_Loaded;
     }
@@ -27,6 +30,12 @@ public partial class WorldsPage : ContentPage
         //Only need to fire this once then we can forget it.
         this.Loaded -= Page_Loaded;
 
+        if (Preferences.Default.ContainsKey("Sfx"))
+        {
+            double sfxVol = Preferences.Default.Get<double>("Sfx", 0);
+            sfx.Volume = sfxVol;
+        }
+
         //Call our animation.
         PoppingIn();
 
@@ -34,7 +43,7 @@ public partial class WorldsPage : ContentPage
 
     public async void PoppingIn()
     {
-        mediaElement.Source = MediaSource.FromResource("swish.mp3");
+        sfx.Source = MediaSource.FromResource("swish.mp3");
         //measure the display size to know how far to translate.
         var width = (DeviceDisplay.MainDisplayInfo.Width) / 2;
 
@@ -42,9 +51,9 @@ public partial class WorldsPage : ContentPage
         await world_title.TranslateTo(-width, 0, 100);
         await world_title.FadeTo(1);
         await world_title.TranslateTo(0, 0, 250);
-        mediaElement.Play();
+        sfx.Play();
         await Task.Delay(500);
-        mediaElement.Stop();
+        sfx.Stop();
 
         await Task.Delay(500);
         await World_Carousel.FadeTo(1);
@@ -126,9 +135,9 @@ public partial class WorldsPage : ContentPage
     private async void OnGoodbye(object sender, NavigatedFromEventArgs e)
     {
         DeviceDisplay.KeepScreenOn = false;
-        if (mediaElement.CurrentState == CommunityToolkit.Maui.Core.Primitives.MediaElementState.Playing)
+        if (sfx.CurrentState == CommunityToolkit.Maui.Core.Primitives.MediaElementState.Playing)
         {
-            mediaElement.Stop();
+            sfx.Stop();
         }
 
         await world_title.FadeTo(0);
@@ -210,23 +219,23 @@ public partial class WorldsPage : ContentPage
 
     private async void OnWorld_Position_Changed(object sender, PositionChangedEventArgs e)
     {
-        if (mediaElement.CurrentState == CommunityToolkit.Maui.Core.Primitives.MediaElementState.Playing)
+        if (sfx.CurrentState == CommunityToolkit.Maui.Core.Primitives.MediaElementState.Playing)
         {
-            mediaElement.Stop();
+            sfx.Stop();
         }
-        mediaElement.Source = MediaSource.FromResource("click.mp3");
-        mediaElement.Play();
+        sfx.Source = MediaSource.FromResource("click.mp3");
+        sfx.Play();
         await Task.Delay(80);
     }
 
     private async void OnItem_Position_Changed(object sender, PositionChangedEventArgs e)
     {
-        if (mediaElement.CurrentState == CommunityToolkit.Maui.Core.Primitives.MediaElementState.Playing)
+        if (sfx.CurrentState == CommunityToolkit.Maui.Core.Primitives.MediaElementState.Playing)
         {
-            mediaElement.Stop();
+            sfx.Stop();
         }
-        mediaElement.Source = MediaSource.FromResource("click.mp3");
-        mediaElement.Play();
+        sfx.Source = MediaSource.FromResource("click.mp3");
+        sfx.Play();
         await Task.Delay(80);
     }
 }

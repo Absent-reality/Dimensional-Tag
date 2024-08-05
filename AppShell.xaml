@@ -5,13 +5,30 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:DimensionalTag"
     Shell.FlyoutBehavior="Disabled"
-    Title="DimensionalTag">
- 
-        <ShellContent   
-        Shell.NavBarIsVisible="False"
+    Title="DimensionalTag" BackgroundColor="Transparent">
+
+    <Shell.TitleView>
+        <Image Source="settings_icon.png"
+                   BackgroundColor="Transparent"
+                   HorizontalOptions="End"
+                   VerticalOptions="Center"
+                   HeightRequest="20"
+                   WidthRequest="20">
+            <Image.GestureRecognizers>
+                <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+            </Image.GestureRecognizers>
+        </Image>
+
+    </Shell.TitleView>
+
+    <ShellContent  
+        Shell.NavBarIsVisible="False"       
         ContentTemplate="{DataTemplate local:Loading}" 
-        Route="Loading" />
-    
+        Route="Loading" >
+
+    </ShellContent>
+
+
     <local:CustomTabBar 
                         x:DataType="local:AppShell"                                              
                         CenterViewVisible="True"
@@ -19,33 +36,34 @@
                         CenterViewCommand="{Binding CenterViewCommand}">
         <local:CustomTabBar.CenterViewImageSource>
             <FileImageSource File="search_icon.png"></FileImageSource>
-        </local:CustomTabBar.CenterViewImageSource>        
-    
+        </local:CustomTabBar.CenterViewImageSource>
 
         <Tab Title="Characters" Icon="char_ico.png">
-            <ShellContent                
+            <ShellContent  
+                Shell.NavBarIsVisible ="True"                
                 ContentTemplate="{DataTemplate local:CharacterPage}"
-                Route="CharacterPage" />
+                Route="CharacterPage">
+            </ShellContent>
         </Tab>
-        
+
         <Tab Title="Vehicles" Icon="vehi_ico.png">
             <ShellContent                
                 ContentTemplate="{DataTemplate local:VehiclesPage}"
                 Route="VehiclesPage" />
         </Tab>
-        
+
         <Tab Title="Worlds" Icon="world_ico.png">
             <ShellContent
                 ContentTemplate="{DataTemplate local:WorldsPage}"
                 Route="WorldsPage" />
         </Tab>
-        
-        <Tab Title="Scan" Icon="scan_ico.png">   
+
+        <Tab Title="Scan" Icon="scan_ico.png">
             <ShellContent                                
                 ContentTemplate="{DataTemplate local:ScanPage}"
                 Route="ScanPage" />
         </Tab>
-    
+
     </local:CustomTabBar>
 
 </Shell>

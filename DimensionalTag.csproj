@@ -207,6 +207,7 @@
 	  <None Remove="Resources\Images\Char_Icons\zane.png" />
 	  <None Remove="Resources\Images\galaxy.png" />
 	  <None Remove="Resources\Images\Info.png" />
+	  <None Remove="Resources\Images\settings_icon.png" />
 	  <None Remove="Resources\Images\Tab_Icons\char_ico.png" />
 	  <None Remove="Resources\Images\Tab_Icons\scan_ico.png" />
 	  <None Remove="Resources\Images\Tab_Icons\search_icon.png" />
@@ -327,7 +328,7 @@
 	  <None Remove="Resources\Images\Worlds_Icons\wizardofoz.png" />
 	  <None Remove="Resources\Images\world_blank.png" />
 	  <None Remove="Resources\Raw\click.mp3" />
-	  <None Remove="Resources\Raw\Defender.mp3" />
+	  <None Remove="Resources\Raw\Defender_Main.mp3" />
 	  <None Remove="Resources\Raw\Lego_Pieces.mp3" />
 	  <None Remove="Resources\Raw\swish.mp3" />
 	  <None Remove="Resources\Raw\swish_rev.mp3" />
@@ -609,6 +610,7 @@
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.2" />
 		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="4.0.1" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 		<PackageReference Include="M.BindableProperty.Generator" Version="0.11.1" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.70" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.70" />
@@ -621,6 +623,9 @@
 	  </Compile>
 	  <Compile Update="ScanPage.xaml.cs">
 	    <DependentUpon>ScanPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="SettingsPage.xaml.cs">
+	    <DependentUpon>SettingsPage.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
@@ -638,6 +643,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="SearchPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="SettingsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="VehiclesPage.xaml">

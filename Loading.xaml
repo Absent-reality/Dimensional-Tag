@@ -5,8 +5,7 @@
              x:Class="DimensionalTag.Loading"
              Title="Loading" BackgroundColor="Black" NavigatedTo="OnArrival"
              NavigatedFrom="OnGoodbye" >
-             
-    
+                 
     <Grid BackgroundColor="Transparent" x:Name="Stuff" Opacity="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="100*" />
@@ -29,7 +28,7 @@
             WidthRequest="350" />
 
         <Label 
-               x:Name="lbl_txt"
+               x:Name="lbl_txt"            
                Text="- An Absent project..."
                FontSize="Medium"               
                HorizontalTextAlignment="Center"

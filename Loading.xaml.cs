@@ -8,23 +8,54 @@ public partial class Loading : ContentPage
 	public Loading()
 	{
 		InitializeComponent();
+
         var window = App.Window;
 
         window.Deactivated += (s, e) =>
         {
-            bgm.Volume = 0;
+            bgm.ShouldMute = true;
         };
 
         window.Activated += (s, e) =>
         {
-            bgm.Volume = 1;
+            bgm.ShouldMute = false;
         };
 
+        this.Loaded += Page_Loaded;
     }
 
-	private async void OnArrival(object sender, NavigatedToEventArgs e)
-	{
-        
+    private async void Page_Loaded(object? sender, EventArgs e)
+    {
+        //Only need to fire this once then we can forget it.
+        this.Loaded -= Page_Loaded;
+
+        if (!Preferences.Default.ContainsKey("save"))
+        {
+          PoppingIn();
+        }
+        else
+        {
+            bool isSaved = Preferences.Default.Get("save", false);
+            if (!isSaved) 
+            { 
+                PoppingIn(); 
+            }            
+            else
+            {
+                await Shell.Current.GoToAsync($"///CharacterPage");
+            }
+        }  
+    }
+
+    private async void PoppingIn()
+    {
+
+        if (Preferences.Default.ContainsKey("Bgm"))
+        {
+            double bgmVol = Preferences.Default.Get<double>("Bgm", 0);
+            bgm.Volume = bgmVol;
+        }
+
         await Task.Delay(1000);
         await Img_grd.FadeTo(1, 1000); // Fade out
         lbl_txt.IsVisible = false;
@@ -91,9 +122,14 @@ public partial class Loading : ContentPage
         await Shell.Current.GoToAsync($"///CharacterPage");
     }
 
+    private void OnArrival(object sender, NavigatedToEventArgs e)
+	{
+        DeviceDisplay.KeepScreenOn = true;
+    }
+
     private void OnGoodbye(object sender, NavigatedFromEventArgs e)
-    {           
-        
+    {
+        DeviceDisplay.KeepScreenOn = false;
         bgm.Handler?.DisconnectHandler();
     }
 

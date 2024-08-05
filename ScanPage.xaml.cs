@@ -24,12 +24,17 @@ namespace DimensionalTag
         }
 
         public bool cameToWrite = false;
+        public bool isNotBusy = true;
 
-        public ScanPage()
+        public ScanPage(SettingsViewModel vm)
         {
             InitializeComponent();
-            sfx.Source = MediaSource.FromResource("lego_pieces.mp3");
 
+            BindingContext = vm;
+            sfx.BindingContext = vm;
+
+            sfx.Source = MediaSource.FromResource("lego_pieces.mp3");
+            this.Loaded += ScanPage_Loaded;
 #if ANDROID
             CardToolsGetter.SetOnCardReceive(async (cardInfo) =>
             {
@@ -46,6 +51,16 @@ namespace DimensionalTag
             
         }
 
+        private void ScanPage_Loaded(object? sender, EventArgs e)
+        {
+            this.Loaded -= ScanPage_Loaded;
+
+            if (Preferences.Default.ContainsKey("Sfx"))
+            {
+                double sfxVol = Preferences.Default.Get<double>("Sfx", 0);
+                sfx.Volume = sfxVol;
+            }
+        }
 
         public async void LoadTo(object obj)
         {
@@ -171,8 +186,9 @@ namespace DimensionalTag
         private async void On_Arrived(object sender, NavigatedToEventArgs e)
         {
             DeviceDisplay.KeepScreenOn = true;
-            await Task.Delay(600);
-            SwapBg(cameToWrite);
+                   
+                await Task.Delay(600);
+                SwapBg(cameToWrite);           
 
         }
 
@@ -190,28 +206,36 @@ namespace DimensionalTag
 
         private async void SwapBg(bool switchItUp)
         {
+            if (!isNotBusy)
+            {
+                return;
+            }
             switch (switchItUp)
             {
                 case true:
-                    {
+                    {               
+                            isNotBusy = false;
 
-                        Lbl_scan.Text = "Hold phone on empty tag to write.";
-                        await Lbl_scan.FadeTo(1, 1000);
-                        img_write.IsVisible = true;
-                        await Task.Delay(200);
-                        await img_scan.TranslateTo(0, -50, 500);
-                        await Task.Delay(600);
-                        await img_scan.TranslateTo(0, 0, 500);
-                        await Task.Delay(500);
-                        await img_scan.TranslateTo(0, -50, 500);
-                        await Task.Delay(600);
-                        await img_scan.TranslateTo(0, 0, 500);
+                            Lbl_scan.Text = "Hold phone on empty tag to write.";
+                            await Lbl_scan.FadeTo(1, 1000);
+                            img_write.IsVisible = true;
+                            await Task.Delay(200);
+                            await img_scan.TranslateTo(0, -50, 500);
+                            await Task.Delay(600);
+                            await img_scan.TranslateTo(0, 0, 500);
+                            await Task.Delay(500);
+                            await img_scan.TranslateTo(0, -50, 500);
+                            await Task.Delay(600);
+                            await img_scan.TranslateTo(0, 0, 500);
 
+                            isNotBusy = true;
                     }
                     break;
 
                 case false:
                     {
+                        isNotBusy = false;
+
                         img_write.IsVisible = false;
                         Lbl_scan.Text = "Place phone on tag to scan.";
                         await Lbl_scan.FadeTo(1, 1000);
@@ -226,6 +250,8 @@ namespace DimensionalTag
                             await Task.Delay(200);
                             img_scan.Source = "scan_four.png";
                             await Task.Delay(200);
+
+                            isNotBusy = true;
                         }
                     }
                     break;

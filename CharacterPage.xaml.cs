@@ -13,24 +13,30 @@ public partial class CharacterPage : ContentPage
         set { SpinTo(value); }
     }
 
-    public CharacterPage()
+    
+    public CharacterPage(SettingsViewModel vm)
 	{
 
 		InitializeComponent();
+
+        BindingContext = vm; 
+        sfx.BindingContext = vm;
+        bgm.BindingContext = vm;       
+
         carousel.ItemsSource = Character.Characters;
         sfx.Source = MediaSource.FromResource("swish.mp3");
-        bgm.Source = MediaSource.FromResource("Defender.mp3");
+        bgm.Source = MediaSource.FromResource("Defender_Main.mp3");
         this.Loaded += Page_Loaded;
 
         var window = App.Window;
         window.Deactivated += (s, e) =>
         {
-            bgm.Volume = 0;
+            bgm.ShouldMute = true;
         };
 
         window.Activated += (s, e) =>
         {
-            bgm.Volume = 1;
+            bgm.ShouldMute = false;
         };
 
         window.Destroying += (s, e) =>
@@ -45,6 +51,17 @@ public partial class CharacterPage : ContentPage
     {
         //Only need to fire this once then we can forget it.
         this.Loaded -= Page_Loaded;
+
+        if (Preferences.Default.ContainsKey("Bgm"))
+        {
+            double bgmVol = Preferences.Default.Get<double>("Bgm", 0);
+            bgm.Volume = bgmVol;
+        }
+        if (Preferences.Default.ContainsKey("Sfx"))
+        {
+            double sfxVol = Preferences.Default.Get<double>("Sfx", 0);
+            sfx.Volume = sfxVol;
+        }
 
         //Call our animation.
         PoppingIn();

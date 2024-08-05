@@ -13,10 +13,13 @@ public partial class VehiclesPage : ContentPage
         set { SpinTo(value); }
     }
 
-    public VehiclesPage()
+    public VehiclesPage(SettingsViewModel vm)
 	{
 		InitializeComponent();
-        mediaElement.Source = MediaSource.FromResource("swish_rev.mp3");
+        
+        BindingContext = vm;
+        sfx.BindingContext = vm;
+        sfx.Source = MediaSource.FromResource("swish_rev.mp3");
         this.Loaded += Page_Loaded;
         var veh = Vehicle.Vehicles.FindAll(x => x.Form == 1);
 		vehicle_carousel.ItemsSource = veh;       
@@ -27,6 +30,11 @@ public partial class VehiclesPage : ContentPage
         //Only need to fire this once then we can forget it.
         this.Loaded -= Page_Loaded;
 
+        if (Preferences.Default.ContainsKey("Sfx"))
+        {
+            double sfxVol = Preferences.Default.Get<double>("Sfx", 0);
+            sfx.Volume = sfxVol;
+        }
         //Call our animation.
         PoppingIn();
 
@@ -34,15 +42,15 @@ public partial class VehiclesPage : ContentPage
 
     public async void PoppingIn()
     {
-        mediaElement.Source = MediaSource.FromResource("swish_rev.mp3");
+        sfx.Source = MediaSource.FromResource("swish_rev.mp3");
         var width = (DeviceDisplay.MainDisplayInfo.Width)/2;
         await Task.Delay(500);
         await vehi_title.TranslateTo(width, 0, 100);
         await vehi_title.FadeTo(1);
         await vehi_title.TranslateTo(0, 0, 250);
-        mediaElement.Play();
+        sfx.Play();
         await Task.Delay(500);
-        mediaElement.Stop();
+        sfx.Stop();
 
         await Task.Delay(500);
         await vehicle_carousel.FadeTo(1);
@@ -91,9 +99,9 @@ public partial class VehiclesPage : ContentPage
     {
         DeviceDisplay.KeepScreenOn = false;
 
-        if (mediaElement.CurrentState == CommunityToolkit.Maui.Core.Primitives.MediaElementState.Playing)
+        if (sfx.CurrentState == CommunityToolkit.Maui.Core.Primitives.MediaElementState.Playing)
         {
-            mediaElement.Stop();
+            sfx.Stop();
         }
 
         await vehi_title.FadeTo(0);
@@ -131,12 +139,12 @@ public partial class VehiclesPage : ContentPage
 
     private async void OnPosition_Changed(object sender, PositionChangedEventArgs e)
     {
-        if (mediaElement.CurrentState == CommunityToolkit.Maui.Core.Primitives.MediaElementState.Playing)
+        if (sfx.CurrentState == CommunityToolkit.Maui.Core.Primitives.MediaElementState.Playing)
         {
-            mediaElement.Stop();
+            sfx.Stop();
         }
-        mediaElement.Source = MediaSource.FromResource("click.mp3");
-        mediaElement.Play();
+        sfx.Source = MediaSource.FromResource("click.mp3");
+        sfx.Play();
         await Task.Delay(80);
     }
 

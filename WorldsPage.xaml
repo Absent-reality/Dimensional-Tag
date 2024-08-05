@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:viewmodel="clr-namespace:DimensionalTag"
              x:Class="DimensionalTag.WorldsPage"
              BackgroundColor="Black" BackgroundImageSource="galaxy.png"
              NavigatedTo="OnArrival" NavigatedFrom="OnGoodbye">
@@ -20,14 +21,16 @@
         </Image>
 
         <toolkit:MediaElement
-            x:Name="mediaElement"
+            x:DataType="viewmodel:SettingsViewModel"
+            x:Name="sfx"
             IsVisible="Hidden"
+            Volume="{Binding SfxVol}"
             />
 
         <StackLayout 
                 HeightRequest="260"
                 Spacing="0">
-                <CarouselView x:Name="World_Carousel" 
+                <CarouselView x:Name="World_Carousel"
                               BackgroundColor="Transparent"
                               Loop="True"
                               PeekAreaInsets="70" 

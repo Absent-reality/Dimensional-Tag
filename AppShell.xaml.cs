@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using CommunityToolkit.Maui.Alerts;
+using System.Windows.Input;
 
 namespace DimensionalTag
 {
@@ -11,6 +12,12 @@ namespace DimensionalTag
         }
 
         public ICommand CenterViewCommand { get; } = new Command(async () => await Current.Navigation.PushModalAsync(new SearchPage()));
+
+        private async void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
+        {
+            var vm = Current.CurrentPage.BindingContext as SettingsViewModel;
+            await vm!.ShowIt();
+        }
 
     }
 }

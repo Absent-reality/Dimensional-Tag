@@ -23,6 +23,14 @@ namespace DimensionalTag
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
+                
+            builder.Services.AddSingleton<SettingsViewModel>();
+            builder.Services.AddTransient<SettingsPage>();
+            builder.Services.AddSingleton<CharacterPage>();
+            builder.Services.AddSingleton<VehiclesPage>();
+            builder.Services.AddSingleton<WorldsPage>();
+            builder.Services.AddSingleton<ScanPage>();
+            builder.Services.AddTransient<SearchPage>();
 
 #if DEBUG
             builder.Logging.AddDebug();
