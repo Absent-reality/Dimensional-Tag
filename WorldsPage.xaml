@@ -24,6 +24,7 @@
             x:DataType="viewmodel:SettingsViewModel"
             x:Name="sfx"
             IsVisible="Hidden"
+            ShouldMute="{Binding SfxIsMuted}"
             Volume="{Binding SfxVol}"
             />
 

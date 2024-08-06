@@ -25,7 +25,7 @@ namespace DimensionalTag
                 });
                 
             builder.Services.AddSingleton<SettingsViewModel>();
-            builder.Services.AddTransient<SettingsPage>();
+            builder.Services.AddSingleton<SettingsPage>();
             builder.Services.AddSingleton<CharacterPage>();
             builder.Services.AddSingleton<VehiclesPage>();
             builder.Services.AddSingleton<WorldsPage>();

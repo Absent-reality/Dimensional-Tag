@@ -52,8 +52,9 @@
         <toolkit:MediaElement
             x:DataType="viewmodel:SettingsViewModel"
             x:Name="sfx"
-            IsVisible="Hidden" 
-            Volume="{Binding SfxVolume}"
+            IsVisible="Hidden"
+            ShouldMute="{Binding SfxIsMuted}"
+            Volume="{Binding SfxVol}"
             />
     </Grid>
 </ContentPage>

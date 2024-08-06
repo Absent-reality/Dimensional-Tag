@@ -20,6 +20,7 @@ public partial class VehiclesPage : ContentPage
         BindingContext = vm;
         sfx.BindingContext = vm;
         sfx.Source = MediaSource.FromResource("swish_rev.mp3");
+
         this.Loaded += Page_Loaded;
         var veh = Vehicle.Vehicles.FindAll(x => x.Form == 1);
 		vehicle_carousel.ItemsSource = veh;       
@@ -35,7 +36,8 @@ public partial class VehiclesPage : ContentPage
             double sfxVol = Preferences.Default.Get<double>("Sfx", 0);
             sfx.Volume = sfxVol;
         }
-        //Call our animation.
+
+        //Call our animation. 
         PoppingIn();
 
     }

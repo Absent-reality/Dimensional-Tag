@@ -26,7 +26,7 @@
                     TextColor="White"                    
                     FontAttributes="Bold"
                     Text="Settings." 
-                    Margin="0,0,0,10">
+                    Margin="0,10,0,20">
                     <Label.Shadow>
                         <Shadow
                           Brush="DimGray"
@@ -40,13 +40,11 @@
                     VerticalOptions="Start"
                     StrokeShape="{RoundRectangle CornerRadius=5}"
                     Background="#161616"            
-                    Padding="2" >
+                    Padding="5" >
                     <VerticalStackLayout>
                         <HorizontalStackLayout>
                             <Switch
-                            IsToggled="{Binding Save}"
-                            OnColor="#01a7d3"                              
-                            ThumbColor="#01a7d3"                           
+                            IsToggled="{Binding Save}"                        
                             Toggled="Switch_Toggled"
                             />
 
@@ -67,18 +65,29 @@
                             HorizontalOptions="StartAndExpand"
                             Margin="10"
                         />
-
-                        <Slider
-                            Maximum="1"
-                            WidthRequest="150"
-                            HorizontalOptions="Start"
-                            Value="{Binding BgmVol}"
-                            ThumbColor="#01a7d3"
-                            BackgroundColor="Transparent"
-                            MinimumTrackColor="#01a7d3"
-                            ValueChanged="BgmSlider_ValueChanged"
-                        />
-
+                        <HorizontalStackLayout>
+                            
+                            <Button
+                                HorizontalOptions="Start"
+                                ImageSource="{Binding BgmImg}"
+                                HeightRequest="40"
+                                BackgroundColor="Transparent"
+                                Command="{Binding MuteBgmCommand}"
+                            />
+                            
+                            <Slider
+                                Maximum="1"
+                                WidthRequest="150"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center"
+                                Value="{Binding BgmVol}"
+                                ThumbColor="#01a7d3"
+                                BackgroundColor="Transparent"
+                                MinimumTrackColor="#01a7d3"
+                                ValueChanged="BgmSlider_ValueChanged"
+                             />
+                        </HorizontalStackLayout>
+                        
                         <Label
                             BackgroundColor="Transparent"
                             TextColor="#01a7d3"
@@ -88,17 +97,29 @@
                             Margin="10"
                         />
 
-                        <Slider                   
-                            Maximum="1"
-                            WidthRequest="150"
-                            HorizontalOptions="Start"
-                            Value="{Binding SfxVol}"
-                            ThumbColor="#01a7d3"
-                            BackgroundColor="Transparent"
-                            MinimumTrackColor="#01a7d3"
-                            ValueChanged="SfxSlider_ValueChanged"
-                            Margin="0,0,0,20"
-                        />
+                        <HorizontalStackLayout>
+                            
+                            <Button
+                                HorizontalOptions="Start"
+                                ImageSource="{Binding SfxImg}"
+                                HeightRequest="40"
+                                BackgroundColor="Transparent"
+                                Command="{Binding MuteSfxCommand}"
+                            />
+
+                            <Slider                   
+                                Maximum="1"
+                                WidthRequest="150"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center"
+                                Value="{Binding SfxVol}"
+                                ThumbColor="#01a7d3"
+                                BackgroundColor="Transparent"
+                                MinimumTrackColor="#01a7d3"
+                                ValueChanged="SfxSlider_ValueChanged"
+                                Margin="0,0,0,0"
+                            />
+                        </HorizontalStackLayout>
                     </VerticalStackLayout>
                 </Border>
 

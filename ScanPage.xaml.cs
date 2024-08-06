@@ -31,10 +31,10 @@ namespace DimensionalTag
             InitializeComponent();
 
             BindingContext = vm;
-            sfx.BindingContext = vm;
-
+            sfx.BindingContext = vm;          
             sfx.Source = MediaSource.FromResource("lego_pieces.mp3");
             this.Loaded += ScanPage_Loaded;
+
 #if ANDROID
             CardToolsGetter.SetOnCardReceive(async (cardInfo) =>
             {
@@ -60,6 +60,7 @@ namespace DimensionalTag
                 double sfxVol = Preferences.Default.Get<double>("Sfx", 0);
                 sfx.Volume = sfxVol;
             }
+
         }
 
         public async void LoadTo(object obj)

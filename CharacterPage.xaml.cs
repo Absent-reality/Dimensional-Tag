@@ -28,6 +28,8 @@ public partial class CharacterPage : ContentPage
         bgm.Source = MediaSource.FromResource("Defender_Main.mp3");
         this.Loaded += Page_Loaded;
 
+
+
         var window = App.Window;
         window.Deactivated += (s, e) =>
         {

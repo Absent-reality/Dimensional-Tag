@@ -11,6 +11,7 @@ public partial class SettingsPage : ContentPage
         InitializeComponent();
         BindingContext = vm;
         this.Loaded += Page_Loaded;
+
         if (Preferences.Default.ContainsKey("save"))
         {
             bool isSaved = Preferences.Default.Get("save", false);

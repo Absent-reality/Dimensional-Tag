@@ -207,6 +207,7 @@
 	  <None Remove="Resources\Images\Char_Icons\zane.png" />
 	  <None Remove="Resources\Images\galaxy.png" />
 	  <None Remove="Resources\Images\Info.png" />
+	  <None Remove="Resources\Images\mute_icon.png" />
 	  <None Remove="Resources\Images\settings_icon.png" />
 	  <None Remove="Resources\Images\Tab_Icons\char_ico.png" />
 	  <None Remove="Resources\Images\Tab_Icons\scan_ico.png" />
@@ -294,6 +295,7 @@
 	  <None Remove="Resources\Images\Vehicle_Icons\t_car.png" />
 	  <None Remove="Resources\Images\Vehicle_Icons\velociraptor.png" />
 	  <None Remove="Resources\Images\Vehicle_Icons\winged_monkey.png" />
+	  <None Remove="Resources\Images\volume_icon.png" />
 	  <None Remove="Resources\Images\vortex.png" />
 	  <None Remove="Resources\Images\world.png" />
 	  <None Remove="Resources\Images\Worlds_Icons\adventure.png" />
