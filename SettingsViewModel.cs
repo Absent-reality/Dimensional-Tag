@@ -14,13 +14,13 @@ namespace DimensionalTag
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(BgmVolume))]
-        double bgmVol = 0;
+        double bgmVol = 1;
         
         public double BgmVolume { get { return BgmVol; } }
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(SfxVolume))]
-        double sfxVol = 0;
+        double sfxVol = 1;
 
         public double SfxVolume { get { return SfxVol; } }
 
