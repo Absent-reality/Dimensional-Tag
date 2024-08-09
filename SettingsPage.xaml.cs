@@ -12,30 +12,12 @@ public partial class SettingsPage : ContentPage
         BindingContext = vm;
         this.Loaded += Page_Loaded;
 
-        if (Preferences.Default.ContainsKey("save"))
-        {
-            bool isSaved = Preferences.Default.Get("save", false);
-            if (isSaved) { vm.Save = true; }
-            else { vm.Save = false; }
-        }
-        if (Preferences.Default.ContainsKey("Bgm"))
-        {
-            double bgmVol = Preferences.Default.Get<double>("Bgm", 0);
-            vm.BgmVol = bgmVol;
-        }
-        if (Preferences.Default.ContainsKey("Sfx"))
-        {
-            double sfxVol = Preferences.Default.Get<double>("Sfx", 0);
-            vm.SfxVol = sfxVol;
-        }
-
     }
 
     void Page_Loaded(object? sender, EventArgs e)
     {
         //Only need to fire this once then we can forget it.
         this.Loaded -= Page_Loaded;
-
 
         //Call our animation.
         PoppingIn();
@@ -152,6 +134,8 @@ public partial class SettingsPage : ContentPage
     private void Switch_Toggled(object sender, ToggledEventArgs e)
     {
         var save = sender as Switch;
-        Preferences.Default.Set("save", save!.IsToggled);      
+        Preferences.Default.Set("save", save!.IsToggled); 
+              
     }
+
 }

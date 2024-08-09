@@ -55,11 +55,8 @@ namespace DimensionalTag
         {
             this.Loaded -= ScanPage_Loaded;
 
-            if (Preferences.Default.ContainsKey("Sfx"))
-            {
-                double sfxVol = Preferences.Default.Get<double>("Sfx", 0);
-                sfx.Volume = sfxVol;
-            }
+            var vm = this.BindingContext as SettingsViewModel;
+            sfx.Volume = vm!.SfxVol;
 
         }
 

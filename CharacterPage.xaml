@@ -35,7 +35,7 @@
             x:Name="sfx"          
             IsVisible="Hidden"
             ShouldMute="{Binding SfxIsMuted}"
-            Volume="{Binding SfxVol}"
+            Volume="{Binding SfxVolume}"
             />
 
         <toolkit:MediaElement
@@ -45,7 +45,7 @@
             ShouldLoopPlayback="True"
             IsVisible="Hidden"
             ShouldMute="{Binding BgmIsMuted}"
-            Volume="{Binding BgmVol}"
+            Volume="{Binding BgmVolume}"
             />
 
         <CarouselView x:Name="carousel"

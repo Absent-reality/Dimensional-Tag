@@ -62,6 +62,8 @@
                     />
                 
                 <ListView x:Name="searchResults"
+                          VerticalOptions="StartAndExpand"
+                          MaximumHeightRequest="400"
                           ItemSelected="SearchResults_ItemSelected">
                         
                     <ListView.ItemTemplate>

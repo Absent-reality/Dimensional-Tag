@@ -54,7 +54,7 @@
             x:Name="sfx"
             IsVisible="Hidden"
             ShouldMute="{Binding SfxIsMuted}"
-            Volume="{Binding SfxVol}"
+            Volume="{Binding SfxVolume}"
             />
     </Grid>
 </ContentPage>

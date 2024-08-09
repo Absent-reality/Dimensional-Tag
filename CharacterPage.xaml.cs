@@ -1,4 +1,4 @@
-using CommunityToolkit.Maui.Alerts;
+
 using CommunityToolkit.Maui.Core.Primitives;
 using CommunityToolkit.Maui.Views;
 
@@ -21,7 +21,25 @@ public partial class CharacterPage : ContentPage
 
         BindingContext = vm; 
         sfx.BindingContext = vm;
-        bgm.BindingContext = vm;       
+        bgm.BindingContext = vm;
+
+        if (Preferences.Default.ContainsKey("save"))
+        {
+            bool isSaved = Preferences.Default.Get("save", false);
+            if (isSaved) { vm.Save = true; }
+            else { vm.Save = false; }
+        }
+        if (Preferences.Default.ContainsKey("Bgm"))
+        {
+            double bgmVol = Preferences.Default.Get<double>("Bgm", 0);
+            vm.BgmVol = bgmVol;
+           
+        }
+        if (Preferences.Default.ContainsKey("Sfx"))
+        {
+            double sfxVol = Preferences.Default.Get<double>("Sfx", 0);
+            vm.SfxVol = sfxVol;
+        }       
 
         carousel.ItemsSource = Character.Characters;
         sfx.Source = MediaSource.FromResource("swish.mp3");
@@ -47,8 +65,7 @@ public partial class CharacterPage : ContentPage
         };
 
     }
-   
-
+      
     void Page_Loaded(object? sender, EventArgs e)
     {
         //Only need to fire this once then we can forget it.
@@ -63,10 +80,7 @@ public partial class CharacterPage : ContentPage
         {
             double sfxVol = Preferences.Default.Get<double>("Sfx", 0);
             sfx.Volume = sfxVol;
-        }
-
-        //Call our animation.
-        PoppingIn();
+        } 
 
     }
 

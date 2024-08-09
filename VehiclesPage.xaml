@@ -30,7 +30,7 @@
             x:Name="sfx"          
             IsVisible="Hidden"
             ShouldMute="{Binding SfxIsMuted}"
-            Volume="{Binding SfxVol}"
+            Volume="{Binding SfxVolume}"
             />
         
         <CarouselView x:Name="vehicle_carousel" 

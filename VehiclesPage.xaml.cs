@@ -1,5 +1,6 @@
 using CommunityToolkit.Maui.Views;
 using System.Collections.ObjectModel;
+using System.Text;
 
 
 namespace DimensionalTag;
@@ -16,34 +17,29 @@ public partial class VehiclesPage : ContentPage
     public VehiclesPage(SettingsViewModel vm)
 	{
 		InitializeComponent();
-        
         BindingContext = vm;
         sfx.BindingContext = vm;
         sfx.Source = MediaSource.FromResource("swish_rev.mp3");
-
         this.Loaded += Page_Loaded;
         var veh = Vehicle.Vehicles.FindAll(x => x.Form == 1);
-		vehicle_carousel.ItemsSource = veh;       
+		vehicle_carousel.ItemsSource = veh;   
+        
 	}
 
     void Page_Loaded(object? sender, EventArgs e)
     {
+
         //Only need to fire this once then we can forget it.
         this.Loaded -= Page_Loaded;
 
-        if (Preferences.Default.ContainsKey("Sfx"))
-        {
-            double sfxVol = Preferences.Default.Get<double>("Sfx", 0);
-            sfx.Volume = sfxVol;
-        }
-
-        //Call our animation. 
-        PoppingIn();
-
+        var vm = this.BindingContext as SettingsViewModel;
+        sfx.Volume = vm!.SfxVol;
+        
     }
 
     public async void PoppingIn()
     {
+  
         sfx.Source = MediaSource.FromResource("swish_rev.mp3");
         var width = (DeviceDisplay.MainDisplayInfo.Width)/2;
         await Task.Delay(500);
@@ -53,9 +49,9 @@ public partial class VehiclesPage : ContentPage
         sfx.Play();
         await Task.Delay(500);
         sfx.Stop();
-
         await Task.Delay(500);
         await vehicle_carousel.FadeTo(1);
+
 
     }
 

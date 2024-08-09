@@ -5,6 +5,7 @@ namespace DimensionalTag
 {
      public partial class SettingsViewModel : ObservableObject
     {
+        
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(Saved))]
         bool save;       
@@ -12,10 +13,16 @@ namespace DimensionalTag
         public bool Saved => Save;
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(BgmVolume))]
         double bgmVol = 0;
+        
+        public double BgmVolume { get { return BgmVol; } }
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(SfxVolume))]
         double sfxVol = 0;
+
+        public double SfxVolume { get { return SfxVol; } }
 
         [ObservableProperty]
         ImageSource bgmImg = "volume_icon.png";
@@ -62,6 +69,28 @@ namespace DimensionalTag
                 SfxImg = "volume_icon.png";
                 SfxIsMuted = false;
             }
+        }
+
+        [RelayCommand]
+        public void RestoreSettings()
+        {
+            if (Preferences.Default.ContainsKey("save"))
+            {
+                bool isSaved = Preferences.Default.Get("save", false);
+                if (isSaved) { Save = true; }
+                else { Save = false; }
+            }
+            if (Preferences.Default.ContainsKey("Bgm"))
+            {
+                double bgmVol = Preferences.Default.Get<double>("Bgm", 0);
+                BgmVol = bgmVol;
+            }
+            if (Preferences.Default.ContainsKey("Sfx"))
+            {
+                double sfxVol = Preferences.Default.Get<double>("Sfx", 0);
+                SfxVol = sfxVol;
+            }
+
         }
 
     }

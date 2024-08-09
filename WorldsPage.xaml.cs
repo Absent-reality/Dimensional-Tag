@@ -30,15 +30,8 @@ public partial class WorldsPage : ContentPage
         //Only need to fire this once then we can forget it.
         this.Loaded -= Page_Loaded;
 
-        if (Preferences.Default.ContainsKey("Sfx"))
-        {
-            double sfxVol = Preferences.Default.Get<double>("Sfx", 0);
-            sfx.Volume = sfxVol;
-        }
-
-        //Call our animation.
-        PoppingIn();
-
+        var vm = this.BindingContext as SettingsViewModel;
+        sfx.Volume = vm!.SfxVol;
     }
 
     public async void PoppingIn()
