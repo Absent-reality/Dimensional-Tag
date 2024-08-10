@@ -138,6 +138,7 @@ namespace DimensionalTag
         private async void BeginWrite(object item)
         {
 #if ANDROID
+
             await Task.Delay(300);
             switch (item)
             {
@@ -147,7 +148,7 @@ namespace DimensionalTag
                         Character c = (Character)item;
                         
                           await CardToolsGetter.WriteCard("Character", c.Id);
-
+                                sfx.Source = MediaSource.FromResource("lego_pieces.mp3");
                                 sfx.Play();
                                 await Task.Delay(100);
                                 cameToWrite = false;
