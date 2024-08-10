@@ -2,8 +2,6 @@
 using CommunityToolkit.Maui.Core.Primitives;
 using CommunityToolkit.Maui.Views;
 using DimensionalTag.Tools;
-using System.Security.Cryptography.X509Certificates;
-
 
 namespace DimensionalTag
 {
@@ -32,7 +30,6 @@ namespace DimensionalTag
 
             BindingContext = vm;
             sfx.BindingContext = vm;          
-            sfx.Source = MediaSource.FromResource("lego_pieces.mp3");
             this.Loaded += ScanPage_Loaded;
 
 #if ANDROID
@@ -45,10 +42,7 @@ namespace DimensionalTag
                 }
              
             });
-
-#endif
-
-            
+#endif          
         }
 
         private void ScanPage_Loaded(object? sender, EventArgs e)
@@ -57,7 +51,6 @@ namespace DimensionalTag
 
             var vm = this.BindingContext as SettingsViewModel;
             sfx.Volume = vm!.SfxVol;
-
         }
 
         public async void LoadTo(object obj)
@@ -72,8 +65,7 @@ namespace DimensionalTag
 
                         if (character == null) 
                         {
-                            await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong with character.", "Ok.", "", false));
-                            
+                            await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong with character.", "Ok.", "", false));                           
                         }
                         else
                         {
@@ -109,8 +101,6 @@ namespace DimensionalTag
                                     var navParam = new Dictionary<string, object> { { "VehicleParam", veh } };
                                     await Shell.Current.GoToAsync($"///VehiclesPage", navParam);
                                 }
-
-
                             }
                             else if (vehicle.Form == 3)
                             {
