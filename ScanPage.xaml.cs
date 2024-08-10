@@ -138,6 +138,7 @@ namespace DimensionalTag
         private async void BeginWrite(object item)
         {
 #if ANDROID
+            sfx.Source = MediaSource.FromResource("lego_pieces.mp3");
             await Task.Delay(300);
             switch (item)
             {
