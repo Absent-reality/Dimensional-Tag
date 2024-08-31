@@ -21,8 +21,8 @@ public partial class VehiclesPage : ContentPage
         sfx.BindingContext = vm;
         sfx.Source = MediaSource.FromResource("swish_rev.mp3");
         this.Loaded += Page_Loaded;
-        var veh = Vehicle.Vehicles.FindAll(x => x.Form == 1);
-		vehicle_carousel.ItemsSource = veh;   
+        var vehi = Vehicle.Vehicles.FindAll(x => x.Form == 1);
+		vehicle_carousel.ItemsSource = vehi;   
         
 	}
 
@@ -55,35 +55,13 @@ public partial class VehiclesPage : ContentPage
 
     }
 
-    private async void SpinTo(Vehicle vehicle)
+    private void SpinTo(Vehicle vehicle)
     {
-        await Task.Delay(800);
         var check = Vehicle.Vehicles.FirstOrDefault(x => x.Name == vehicle.Name);
         if (check != null)
         {
             int start = vehicle_carousel.Position;
-            var number = Vehicle.Vehicles.FindAll(x => x.Form == 1).IndexOf(check);
-
-            if (vehicle_carousel.Position == number)
-            {
-                vehicle_carousel.Position = number;
-            }
-            else if (start < number)
-            {
-                for (int idc = 0; idc < number - start; idc++)
-                {
-                    await Task.Delay(400);
-                    vehicle_carousel.Position++;
-                }
-            }
-            else if (start > number)
-            {
-                for (int idc = start; idc > number; idc--)
-                {
-                    await Task.Delay(250);
-                    vehicle_carousel.Position--;
-                }
-            }
+            vehicle_carousel.Position = Vehicle.Vehicles.FindAll(x => x.Form == 1).IndexOf(check);
         }
     }
 
@@ -135,7 +113,7 @@ public partial class VehiclesPage : ContentPage
         vehicle_carousel.IsEnabled = true;
     }
 
-    private async void OnPosition_Changed(object sender, PositionChangedEventArgs e)
+    private void OnPosition_Changed(object sender, PositionChangedEventArgs e)
     {
         if (sfx.CurrentState == CommunityToolkit.Maui.Core.Primitives.MediaElementState.Playing)
         {
@@ -143,7 +121,6 @@ public partial class VehiclesPage : ContentPage
         }
         sfx.Source = MediaSource.FromResource("click.mp3");
         sfx.Play();
-        await Task.Delay(80);
     }
 
 }

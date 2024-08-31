@@ -8,15 +8,15 @@
                  
     <Grid BackgroundColor="Transparent" x:Name="Stuff" Opacity="0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="100*" />
-            <RowDefinition Height="200*" />
-            <RowDefinition Height="100*" />
-            <RowDefinition Height="50*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height=".5*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="50*" />
-            <ColumnDefinition Width="300*" />
-            <ColumnDefinition Width="50*" />
+            <ColumnDefinition Width=".5*" />
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width=".5*" />
         </Grid.ColumnDefinitions>
         <Image           
             x:Name="Img_grd"
@@ -46,7 +46,7 @@
             HorizontalOptions="Center"
             TextColor="White"
             FontSize="Micro"
-            Text="Ver: 1.0.0"
+            Text="Ver: 1.0.1"
             VerticalOptions="End"
             />
         <toolkit:MediaElement

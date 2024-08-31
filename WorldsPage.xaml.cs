@@ -54,35 +54,13 @@ public partial class WorldsPage : ContentPage
 
     }
 
-    private async void SpinTo(World world)
+    private void SpinTo(World world)
     {
-        await Task.Delay(600);
         var check = World.Worlds.FirstOrDefault(x => x.Name == world.Name);
         if (check != null) 
         {
             int start = World_Carousel.Position;
-            var number = World.Worlds.IndexOf(check);
-
-            if (World_Carousel.Position == number)
-            {
-                World_Carousel.Position = number;
-            }
-            else if (start < number)
-            {
-                for (int idc = 0; idc < number - start; idc++)
-                {
-                    await Task.Delay(200);
-                    World_Carousel.Position ++;
-                }
-            }
-            else if (start > number)
-            {
-                for (int idc = start; idc > number; idc-- ) 
-                { 
-                    await Task.Delay(200);
-                    World_Carousel.Position --; 
-                }
-            }                           
+            World_Carousel.Position = World.Worlds.IndexOf(check);                     
         }
     }
 
@@ -210,7 +188,7 @@ public partial class WorldsPage : ContentPage
         Item_Carousel.IsEnabled = true;
     }
 
-    private async void OnWorld_Position_Changed(object sender, PositionChangedEventArgs e)
+    private void OnWorld_Position_Changed(object sender, PositionChangedEventArgs e)
     {
         if (sfx.CurrentState == CommunityToolkit.Maui.Core.Primitives.MediaElementState.Playing)
         {
@@ -218,10 +196,10 @@ public partial class WorldsPage : ContentPage
         }
         sfx.Source = MediaSource.FromResource("click.mp3");
         sfx.Play();
-        await Task.Delay(80);
+
     }
 
-    private async void OnItem_Position_Changed(object sender, PositionChangedEventArgs e)
+    private void OnItem_Position_Changed(object sender, PositionChangedEventArgs e)
     {
         if (sfx.CurrentState == CommunityToolkit.Maui.Core.Primitives.MediaElementState.Playing)
         {
@@ -229,6 +207,5 @@ public partial class WorldsPage : ContentPage
         }
         sfx.Source = MediaSource.FromResource("click.mp3");
         sfx.Play();
-        await Task.Delay(80);
     }
 }

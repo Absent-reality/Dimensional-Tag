@@ -8,10 +8,10 @@
 
    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="200*" />
-            <RowDefinition Height="400*" />
-            <RowDefinition Height="200*" />
-            <RowDefinition Height="200*" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="4*" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
 
         <Image x:Name="img_write"

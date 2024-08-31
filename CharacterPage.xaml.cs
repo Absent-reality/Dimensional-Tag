@@ -104,35 +104,14 @@ public partial class CharacterPage : ContentPage
         
     }
 
-    private async void SpinTo(Character character)
+    private void SpinTo(Character character)
     {
-        await Task.Delay(800);
+       
         var check = Character.Characters.FirstOrDefault(x => x.Name == character.Name);
         if (check != null)
         {
             int start = carousel.Position;
-            var number = Character.Characters.IndexOf(check);
-
-            if (carousel.Position == number)
-            {
-                carousel.Position = number;
-            }
-            else if (start < number)
-            {
-                for (int idc = 0; idc < number - start; idc++)
-                {
-                    await Task.Delay(250);
-                    carousel.Position++;
-                }
-            }
-            else if (start > number)
-            {
-                for (int idc = start; idc > number; idc--)
-                {
-                    await Task.Delay(250);
-                    carousel.Position--;
-                }
-            }
+            carousel.Position = Character.Characters.IndexOf(check);
         }
     }
 
@@ -184,7 +163,7 @@ public partial class CharacterPage : ContentPage
         carousel.IsEnabled = true;
     }
 
-    private async void OnPosition_Changed(object sender, PositionChangedEventArgs e) 
+    private void OnPosition_Changed(object sender, PositionChangedEventArgs e) 
     {
         if (sfx.CurrentState == MediaElementState.Playing)
         {
@@ -192,8 +171,7 @@ public partial class CharacterPage : ContentPage
         }
         sfx.Source = MediaSource.FromResource("click.mp3");
         sfx.Play();
-        await Task.Delay(80);
-        
+       
     }
 
 }
