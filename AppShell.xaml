@@ -3,22 +3,44 @@
     x:Class="DimensionalTag.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:DimensionalTag"    
+    xmlns:local="clr-namespace:DimensionalTag" 
     Shell.FlyoutBehavior="Disabled"
     Title="DimensionalTag" BackgroundColor="Transparent">
 
     <Shell.TitleView>
-        <Image     x:Name="Img_Set"
-                   Source="settings_icon.png"
-                   BackgroundColor="Transparent"
-                   HorizontalOptions="End"
-                   VerticalOptions="Center"
-                   HeightRequest="20"
-                   WidthRequest="20" >
-            <Image.GestureRecognizers>
-                <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
-            </Image.GestureRecognizers>
-        </Image>
+
+        <Grid
+            Padding="10,0,10,0"
+            HorizontalOptions="FillAndExpand"
+            ColumnDefinitions="20,4*,20">
+            <Image
+                x:Name="Img_Port"
+                Grid.Column="0"
+                Source="portal_ico.png"
+                BackgroundColor="Transparent"
+                HeightRequest="30"
+                WidthRequest="30"
+                HorizontalOptions="Start"
+                VerticalOptions="Center">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="Portal_Tapped" />
+                </Image.GestureRecognizers>
+            </Image>
+
+            <Image    
+                x:Name="Img_Set"
+                Grid.Column="2"
+                Source="settings_icon.png"
+                BackgroundColor="Transparent"
+                HorizontalOptions="End"
+                VerticalOptions="Center"
+                HeightRequest="30"
+                WidthRequest="30" >
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="Settings_Tapped"/>
+                </Image.GestureRecognizers>
+            </Image>
+        </Grid>
 
     </Shell.TitleView>
 
@@ -29,12 +51,11 @@
 
     </ShellContent>
 
-
     <local:CustomTabBar 
-                        x:DataType="local:AppShell"                                              
+                        x:DataType="local:AppShell"                          
                         CenterViewVisible="True"
                         CenterViewBackgroundColor="Black"
-                        CenterViewCommand="{Binding CenterViewCommand}">
+                        CenterViewCommand="{Binding Search_TappedCommand}" >
         <local:CustomTabBar.CenterViewImageSource>
             <FileImageSource File="search_icon.png"></FileImageSource>
         </local:CustomTabBar.CenterViewImageSource>
@@ -51,6 +72,12 @@
             <ShellContent                
                 ContentTemplate="{DataTemplate local:VehiclesPage}"
                 Route="VehiclesPage" />
+        </Tab>
+
+        <Tab>
+            <ShellContent
+                ContentTemplate="{DataTemplate local:PortalPage}"
+                Route="PortalPage" />
         </Tab>
 
         <Tab Title="Worlds" Icon="world_ico.png">

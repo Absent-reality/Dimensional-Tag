@@ -13,34 +13,33 @@ namespace DimensionalTag
         
         public Character WriteCharacter
         {
-            set => BeginWrite(value);
+            set => SendToWrite(value);
         }
 
         public Vehicle WriteVehicle
         {
-            set => BeginWrite(value);
+            set => SendToWrite(value);
         }
 
         public bool cameToWrite = false;
         public bool isNotBusy = true;
 
-        public ScanPage(SettingsViewModel vm)
+        public ScanViewModel Vm { get; set; }
+        public ScanPage(ScanViewModel vm)
         {
             InitializeComponent();
-
             BindingContext = vm;
-            sfx.BindingContext = vm;          
+            Vm = vm;
+            
             this.Loaded += ScanPage_Loaded;
 
 #if ANDROID
             CardToolsGetter.SetOnCardReceive(async (cardInfo) =>
-            {
-               
+            {              
                 if (cardInfo != null)
                 {
-                    LoadTo(cardInfo);                   
-                }
-             
+                   Vm.LoadTo(cardInfo);                   
+                }             
             });
 #endif          
         }
@@ -48,148 +47,35 @@ namespace DimensionalTag
         private void ScanPage_Loaded(object? sender, EventArgs e)
         {
             this.Loaded -= ScanPage_Loaded;
-
-            var vm = this.BindingContext as SettingsViewModel;
-            sfx.Volume = vm!.SfxVol;
+            sfx.Volume = Vm.CheckValue("Sfx", sfx.Volume);
         }
 
-        public async void LoadTo(object obj)
+        private async void SendToWrite(object item)
         {
-#if ANDROID
-            switch (obj)
-            {
-                case Character:
-                    {
-                        Character c = (Character)obj;
-                        Character? character = Character.Characters.FirstOrDefault(m => m.Id == c.Id);
-
-                        if (character == null) 
-                        {
-                            await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong with character.", "Ok.", "", false));                           
-                        }
-                        else
-                        {
-                            var navParam = new Dictionary<string, object> { { "CharacterParam", character } };
-
-                            await Shell.Current.GoToAsync($"///CharacterPage", navParam);
-                        }
-                    }
-                    break;
-
-                case Vehicle:
-                    {
-                        Vehicle v = (Vehicle)obj;                       
-                        Vehicle? vehicle = Vehicle.Vehicles.FirstOrDefault(m => m.Id == v.Id);
-
-                        if (vehicle == null)
-                        {
-                            await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong with vehicle.", "Ok.", "", false));
-                        }
-                        else
-                        {
-                            if (vehicle.Form == 1)
-                            {
-                                var navParam = new Dictionary<string, object> { { "VehicleParam", vehicle } };
-
-                                await Shell.Current.GoToAsync($"///VehiclesPage", navParam);
-                            }
-                            else if (vehicle.Form == 2)
-                            {
-                                var veh = Vehicle.Vehicles.FirstOrDefault(v => v.Id == vehicle.Id - 1);
-                                if (veh != null)
-                                {
-                                    var navParam = new Dictionary<string, object> { { "VehicleParam", veh } };
-                                    await Shell.Current.GoToAsync($"///VehiclesPage", navParam);
-                                }
-                            }
-                            else if (vehicle.Form == 3)
-                            {
-                                var V = Vehicle.Vehicles.FirstOrDefault(x => x.Id == vehicle.Id - 2);
-                                if (V != null)
-                                {
-                                    var navParam = new Dictionary<string, object> { { "VehicleParam", V } };
-                                    await Shell.Current.GoToAsync($"///VehiclesPage", navParam);
-                                }
-
-                            }                         
-                        }
-                    }
-                    break;
-
-                case null:
-                    {
-                        await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong.", "Ok.", "", false));
-                    }
-                    break;
-            }
-#endif
-        }
-
-        private async void BeginWrite(object item)
-        {
-#if ANDROID
+            SwapBg(cameToWrite = true);
             sfx.Source = MediaSource.FromResource("lego_pieces.mp3");
-            await Task.Delay(300);
-            switch (item)
-            {
-                case Character:
-                    {
-                        cameToWrite = true;
-                        Character c = (Character)item;
-                        
-                          await CardToolsGetter.WriteCard("Character", c.Id);
 
-                                sfx.Play();
-                                await Task.Delay(100);
-                                cameToWrite = false;
-                                SwapBg(cameToWrite);
-                   
-                    }
-                    break;
+            bool result = await Vm.BeginWrite(item);
+           
+            sfx.Play();               
+            cameToWrite = false;
+            SwapBg(cameToWrite);
 
-                case Vehicle:
-                    {
-                        cameToWrite = true;
-                        Vehicle v = (Vehicle)item;
-
-                            await CardToolsGetter.WriteCard("Vehicle", v.Id);
-
-                                sfx.Play();
-                                await Task.Delay(100);
-                                cameToWrite = false;
-                                SwapBg(cameToWrite);
-
-                    }
-                    break;
-
-                case null:
-                    {
-                        //If navigating here from write, then to the opposite type (ie character to vehicle) 
-                        // It throws null since the other info clears.
-                    }
-                    break;
-            }
-#endif
         }
 
         private async void On_Arrived(object sender, NavigatedToEventArgs e)
-        {
-            DeviceDisplay.KeepScreenOn = true;
-                   
+        {        
                 await Task.Delay(600);
                 SwapBg(cameToWrite);           
-
         }
 
         private async void On_Goodbye(object sender, NavigatedFromEventArgs e)
         {
             await Lbl_scan.FadeTo(0,250);
-            DeviceDisplay.KeepScreenOn = false;
             img_write.IsVisible = false;
             cameToWrite = false;
 #if ANDROID
-            CardToolsGetter.WriteCardCancel();
-           
+            CardToolsGetter.WriteCardCancel();          
 #endif
         }
 

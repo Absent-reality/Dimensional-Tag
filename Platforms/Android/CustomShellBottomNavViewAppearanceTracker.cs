@@ -37,7 +37,7 @@ internal class CustomShellBottomNavViewAppearanceTracker(IShellContext shellCont
 		}
 	}
 
-	protected override void SetBackgroundColor(BottomNavigationView bottomView, Color color)
+	protected override void SetBackgroundColor(BottomNavigationView bottomView, Microsoft.Maui.Graphics.Color color)
 	{
 		base.SetBackgroundColor(bottomView, color);
 		bottomView.RootView?.SetBackgroundColor(shellContext.Shell.CurrentPage.BackgroundColor.ToPlatform());

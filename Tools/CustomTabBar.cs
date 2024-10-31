@@ -18,7 +18,7 @@ namespace DimensionalTag
         private bool? centerViewVisible;
 
         [AutoBindable]
-        public Color? centerViewBackgroundColor;
+        public Microsoft.Maui.Graphics.Color? centerViewBackgroundColor;
 
     }
 }

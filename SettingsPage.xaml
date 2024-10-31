@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"    
+             xmlns:viewmodel="clr-namespace:DimensionalTag"             
              x:Class="DimensionalTag.SettingsPage"
-             xmlns:viewmodel ="clr-namespace:DimensionalTag"
              x:DataType="viewmodel:SettingsViewModel"
-             Title="Settings" BackgroundColor="Transparent"
-             NavigatedTo="On_Arrived"  >
-
+             Title="Settings" BackgroundColor="Transparent" >
+              
     <Grid>
         <Grid.GestureRecognizers>
             <TapGestureRecognizer Tapped="Tapped_Outside" />
@@ -30,8 +30,8 @@
                     <Label.Shadow>
                         <Shadow
                           Brush="DimGray"
-                          Offset="10,10"
-                          Radius="20"
+                          Offset="5,5"
+                          Radius="5"
                           Opacity=".8" />
                     </Label.Shadow>
                 </Label>
@@ -42,10 +42,45 @@
                     Background="#161616"            
                     Padding="5" >
                     <VerticalStackLayout>
+                       
+                        <Border> 
+                            <HorizontalStackLayout HorizontalOptions="CenterAndExpand">
+                            
+                            <Label                               
+                            BackgroundColor="Transparent"
+                            TextColor="#01a7d3"
+                            Text="Activate write:   "
+                            FontAttributes="Bold"
+                            VerticalOptions="Center"
+                             />
+
+                            <Label
+                            BackgroundColor="Transparent"
+                            Text="Nfc "
+                            TextColor="#01a7d3"
+                            FontAttributes="Bold"
+                            VerticalOptions="Center" />
+
+                                <Switch 
+                                IsToggled="{Binding Path= Settings.WritingType}"
+                                Toggled="WriteSwitch_Toggled"
+                                IsEnabled="{Binding Path= Settings.NfcEnabled}" >
+                                </Switch>
+
+                            <Label
+                            BackgroundColor="Transparent"
+                            Text=" Portal"
+                            TextColor="#01a7d3"
+                            FontAttributes="Bold"
+                            VerticalOptions="Center" />
+                            
+                        </HorizontalStackLayout>
+                        </Border>
+
                         <HorizontalStackLayout>
                             <Switch
-                            IsToggled="{Binding Save}"                        
-                            Toggled="Switch_Toggled"
+                            IsToggled="{Binding Path= Settings.Save}"                        
+                            Toggled="SkipSwitch_Toggled"
                             />
 
                             <Label
@@ -80,7 +115,7 @@
                                 WidthRequest="150"
                                 HorizontalOptions="Start"
                                 VerticalOptions="Center"
-                                Value="{Binding BgmVol}"
+                                Value="{Binding Path= Settings.Bgm_Volume, Mode=TwoWay}"
                                 ThumbColor="#01a7d3"
                                 BackgroundColor="Transparent"
                                 MinimumTrackColor="#01a7d3"
@@ -98,7 +133,7 @@
                         />
 
                         <HorizontalStackLayout>
-                            
+
                             <Button
                                 HorizontalOptions="Start"
                                 ImageSource="{Binding SfxImg}"
@@ -112,14 +147,15 @@
                                 WidthRequest="150"
                                 HorizontalOptions="Start"
                                 VerticalOptions="Center"
-                                Value="{Binding SfxVol}"
+                                Value="{Binding Path= Settings.Sfx_Volume, Mode=TwoWay}"
                                 ThumbColor="#01a7d3"
                                 BackgroundColor="Transparent"
                                 MinimumTrackColor="#01a7d3"
-                                ValueChanged="SfxSlider_ValueChanged"
                                 Margin="0,0,0,0"
+                                ValueChanged="SfxSlider_ValueChanged"
                             />
                         </HorizontalStackLayout>
+
                     </VerticalStackLayout>
                 </Border>
 
@@ -139,8 +175,8 @@
                     <Button.Shadow>
                         <Shadow
                           Brush="DimGray"
-                          Offset="10,10"
-                          Radius="20"
+                          Offset="5,5"
+                          Radius="5"
                           Opacity=".8" />
                     </Button.Shadow>
                 </Button>

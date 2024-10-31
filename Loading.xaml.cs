@@ -1,25 +1,17 @@
-using CommunityToolkit.Maui;
-using CommunityToolkit.Maui.Views;
 
 namespace DimensionalTag;
 
 public partial class Loading : ContentPage
 {
-	public Loading()
+
+    public LoadingViewModel Vm;
+	public Loading(LoadingViewModel vm)
 	{
 		InitializeComponent();
-
+        Vm = vm;
         var window = App.Window;
-
-        window.Deactivated += (s, e) =>
-        {
-            bgm.ShouldMute = true;
-        };
-
-        window.Activated += (s, e) =>
-        {
-            bgm.ShouldMute = false;
-        };
+        window.Deactivated += (s, e) => vm.OnDeactivated();
+        window.Activated += (s, e) => vm.OnActivated();
 
         this.Loaded += Page_Loaded;
     }
@@ -28,6 +20,8 @@ public partial class Loading : ContentPage
     {
         //Only need to fire this once then we can forget it.
         this.Loaded -= Page_Loaded;
+        bgm.Volume = Vm.CheckValue("Bgm", bgm.Volume);
+        sfx.Volume = Vm.CheckValue("Sfx", sfx.Volume);
 
         if (!Preferences.Default.ContainsKey("save"))
         {
@@ -35,9 +29,8 @@ public partial class Loading : ContentPage
         }
         else
         {
-            bool isSaved = Preferences.Default.Get("save", false);
-            if (!isSaved) 
-            { 
+            if (!Vm.Settings.Save) 
+            {
                 PoppingIn(); 
             }            
             else
@@ -50,15 +43,12 @@ public partial class Loading : ContentPage
     private async void PoppingIn()
     {
 
-        if (Preferences.Default.ContainsKey("Bgm"))
-        {
-            double bgmVol = Preferences.Default.Get<double>("Bgm", 0);
-            bgm.Volume = bgmVol;
-        }
-
         await Task.Delay(1000);
         await Img_grd.FadeTo(1, 1000); // Fade out
         lbl_txt.IsVisible = false;
+
+
+#if ANDROID
         await Stuff.FadeTo(1, 1000);
         for (int idc = 1; idc < 24; idc++)
         {
@@ -103,9 +93,17 @@ public partial class Loading : ContentPage
             await Task.Delay(100);
 
         }
-
-        await Task.Delay(2000);
+            await Task.Delay(2000);
+            await Img_grd.FadeTo(0, 1000);
+#endif
+#if WINDOWS
+        Img_grd.Source = $"logoani.gif";
+        await Stuff.FadeTo(1, 1000);
+        Img_grd.IsAnimationPlaying = true;      
+        await Task.Delay(9600);
         await Img_grd.FadeTo(0, 1000);
+#endif
+
         Img_grd.Source = "gear_logo.png";
         Img_grd.Scale = .50;
         await Img_grd.FadeTo(1, 1000);
@@ -122,15 +120,10 @@ public partial class Loading : ContentPage
         await Shell.Current.GoToAsync($"///CharacterPage");
     }
 
-    private void OnArrival(object sender, NavigatedToEventArgs e)
-	{
-        DeviceDisplay.KeepScreenOn = true;
-    }
-
     private void OnGoodbye(object sender, NavigatedFromEventArgs e)
     {
-        DeviceDisplay.KeepScreenOn = false;
         bgm.Handler?.DisconnectHandler();
+        sfx.Handler?.DisconnectHandler();
     }
 
 }

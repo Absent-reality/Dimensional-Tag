@@ -2,8 +2,9 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             xmlns:viewmodel="clr-namespace:DimensionalTag"
+             xmlns:viewmodel="clr-namespace:DimensionalTag"             
              x:Class="DimensionalTag.ScanPage"
+             x:DataType="viewmodel:ScanViewModel"
              BackgroundColor="Black" NavigatedTo="On_Arrived" NavigatedFrom="On_Goodbye">
 
    <Grid>
@@ -38,7 +39,7 @@
         </Image>
 
         <Label 
-            Grid.Row="3"
+            Grid.Row="2"
             x:Name="Lbl_scan"                                                                             
             BackgroundColor="Transparent"            
             FontSize="Medium"
@@ -53,8 +54,8 @@
             x:DataType="viewmodel:SettingsViewModel"
             x:Name="sfx"
             IsVisible="Hidden"
-            ShouldMute="{Binding SfxIsMuted}"
-            Volume="{Binding SfxVolume}"
+            ShouldMute="{Binding Path= Settings.Sfx_isMute}"
+            Volume="{Binding Path= Settings.Get_SfxVolume}"
             />
     </Grid>
 </ContentPage>

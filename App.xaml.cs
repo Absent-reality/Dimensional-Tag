@@ -1,15 +1,17 @@
 ﻿using CommunityToolkit.Maui.Views;
+using DimensionalTag.Tools;
 
 namespace DimensionalTag
 {
     public partial class App : Application
     {
+
         public App()
         {
             InitializeComponent();
-            UserAppTheme = AppTheme.Dark;
+            UserAppTheme = AppTheme.Dark;        
             MainPage = new AppShell();
- 
+
         }
 
         public static Window Window { get; private set; }

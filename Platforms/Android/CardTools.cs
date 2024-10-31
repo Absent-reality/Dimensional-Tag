@@ -3,6 +3,7 @@ using Android.Content;
 using Android.Nfc;
 using CommunityToolkit.Maui.Views;
 using DimensionalTag.Tools;
+using DimensionalTag.Enums;
 
 namespace DimensionalTag
 {
@@ -13,7 +14,7 @@ namespace DimensionalTag
 
         public delegate void AfterNFCwrite();
         public AfterNFCwrite OnAfterNfcWrite;
-
+        public Settings? Settings;
         public ushort WriteItemId;
         public string WriteItemType;
         public CardTools(Activity actIn)
@@ -24,13 +25,19 @@ namespace DimensionalTag
 
         public NfcDataReceive OnNfcDataRecieve;
 
-        public void OnResume()
+        public void OnCreate()
         {
             if (_nfcAdaper == null)
             {
-                ErrorReport("Nfc Unavailable", "Nfc is not supported on this device.");
+                Settings = Settings.GetInstance();
+                ErrorReport("Nfc Unavailable", "Nfc is not supported on this device. Please connect portal to usb port.");
+                Settings.SetWritingDevice = WritingDevice.Portal;
+                Settings.NfcEnabled = false;
             }
-            else
+        }
+        public void OnResume()
+        {
+            if (_nfcAdaper != null)
             {
                 //Set events and filters
                 var tagDetected = new IntentFilter(NfcAdapter.ActionTagDiscovered);
@@ -42,6 +49,7 @@ namespace DimensionalTag
 
                 //Gives your current foreground activity priority in receving Nfc events over all other activities.
                 _nfcAdaper.EnableForegroundDispatch(act, pendingIntent, filters, null);
+                if (!_nfcAdaper.IsEnabled) { ErrorReport("Oops.", "Nfc is not enabled. Please enable from your device settings."); }
             }
         }
 
@@ -57,12 +65,8 @@ namespace DimensionalTag
             }
 
             var cardInfo = Card_Play.TryRead(intent);
-                       
-            if (OnNfcDataRecieve != null)
-            {
-                OnNfcDataRecieve(cardInfo: cardInfo);
-                
-            }
+
+            OnNfcDataRecieve?.Invoke(cardInfo: cardInfo);
         }
 
         private static Task ErrorReport(string title, string message) => Shell.Current.ShowPopupAsync(new AlertPopup( title, message, "Ok", "", false));

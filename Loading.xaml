@@ -3,9 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="DimensionalTag.Loading"
-             Title="Loading" BackgroundColor="Black" NavigatedTo="OnArrival"
+             xmlns:viewmodel="clr-namespace:DimensionalTag"
+             x:DataType="viewmodel:LoadingViewModel"
+             Title="Loading" BackgroundColor="Black"
              NavigatedFrom="OnGoodbye" >
-                 
+
     <Grid BackgroundColor="Transparent" x:Name="Stuff" Opacity="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />
@@ -50,11 +52,22 @@
             VerticalOptions="End"
             />
         <toolkit:MediaElement
+            x:DataType="viewmodel:LoadingViewModel"
             x:Name="bgm"
             Source="Embed://Free_Fall.mp3"
             IsVisible="Hidden"
             ShouldAutoPlay="True"
+            ShouldMute="{Binding Path= Settings.Bgm_isMute}"
+            Volume="{Binding Path= Settings.Get_BgmVolume}"
             ShouldLoopPlayback="False"
+            />
+
+        <toolkit:MediaElement    
+            x:DataType="viewmodel:LoadingViewModel"
+            x:Name="sfx"          
+            IsVisible="Hidden"
+            ShouldMute="{Binding Path= Settings.Sfx_isMute}"
+            Volume="{Binding Path= Settings.Get_SfxVolume}"
             />
 
     </Grid>

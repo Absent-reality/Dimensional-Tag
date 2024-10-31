@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:viewmodel="clr-namespace:DimensionalTag"
              x:Class="DimensionalTag.SearchPage"
+             x:DataType="viewmodel:SearchViewModel"
              Title="SearchPage" BackgroundColor="Transparent"
-             NavigatedTo="On_Arrived"  >
+             NavigatedTo="On_Arrived" HideSoftInputOnTapped="True" >
 
     <Grid>
         <Grid.GestureRecognizers>
@@ -42,41 +45,41 @@
 
                     <SearchBar 
                         x:Name="searchBar"                    
-                        Placeholder="Search..."                    
+                        Placeholder="Search..."
+                        Text="{Binding Query}"
                         HorizontalTextAlignment="Start"
                         TextColor="White"                   
                         BackgroundColor="#161616"
                         PlaceholderColor="LightGray"
-                        CancelButtonColor="#01a7d3"                      
-                        TextChanged="SearchBar_TextChanged" >
-                        
+                        CancelButtonColor="#01a7d3" >
+
                     </SearchBar>
                 </Border>
                 <Label
                     x:Name="lbl_results"
+                    Text="{Binding Results}"
                     Padding="10"
                     TextDecorations="Underline"
                     HorizontalTextAlignment="Start"
                     BackgroundColor="Transparent"
-                    TextColor="White"
-                    />
-                
+                    TextColor="White" />
+                                   
                 <ListView x:Name="searchResults"
+                          ItemsSource="{Binding ListItems}"
                           VerticalOptions="StartAndExpand"
-                          MaximumHeightRequest="400"
-                          ItemSelected="SearchResults_ItemSelected">
-                        
+                          MaximumHeightRequest="400"  
+                          SelectedItem="{Binding SelectedItem}" >
+                                                                       
                     <ListView.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="viewmodel:SearchItems">
                             <TextCell 
-                                   Height="50"  
-                                   Text="{x:Binding ItemName}"
-                                   Detail=""/>
+                                Height="50"  
+                                Text="{x:Binding ItemName}"
+                                Detail="" 
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SearchViewModel}}, Path= ItemSelectedCommand}"/>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-                   
-                    
 
                 <Button x:Name="btnCancel"
                     HeightRequest="40"

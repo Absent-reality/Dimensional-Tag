@@ -4,6 +4,7 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:viewmodel="clr-namespace:DimensionalTag"
              x:Class="DimensionalTag.WorldsPage"
+             x:DataType="viewmodel:WorldsViewModel"
              BackgroundColor="Black" BackgroundImageSource="galaxy.png"
              NavigatedTo="OnArrival" NavigatedFrom="OnGoodbye">
 
@@ -29,34 +30,37 @@
         </Image>
 
         <toolkit:MediaElement
-            x:DataType="viewmodel:SettingsViewModel"
             x:Name="sfx"
             IsVisible="Hidden"
-            ShouldMute="{Binding SfxIsMuted}"
-            Volume="{Binding SfxVolume}"
+            ShouldMute="{Binding Path= Settings.Sfx_isMute}"
+            Volume="{Binding Path= Settings.Get_SfxVolume}"
             />
 
         <Grid
             Grid.Row="1" >
 
-            <CarouselView x:Name="World_Carousel"
-                          Margin="0,25,0,0"
-                              BackgroundColor="Transparent"
-                              Loop="True"
-                              PeekAreaInsets="70" 
-                              CurrentItemChanged="world_carousel_CurrentItemChanged" 
-                              VerticalOptions="Center"
-                              Opacity="0"
-                              PositionChanged="OnWorld_Position_Changed">
+            <CarouselView
+                x:Name="World_Carousel" Loop="True"
+                ItemsSource="{Binding AllWorlds}"
+                Position="{Binding Position}"
+                CurrentItem="{Binding CurrentWorld}"
+                IsEnabled="{Binding IsEnabled}"
+                Opacity="0"
+                BackgroundColor="Transparent"
+                PeekAreaInsets="70" 
+                VerticalOptions="Center"
+                Margin="0,25,0,0"
+                CurrentItemChangedCommand="{Binding WorldChangedCommand}"
+                PositionChanged="On_Position_Changed">
                 <CarouselView.ItemsLayout>
                     <LinearItemsLayout 
-                            Orientation="Horizontal"
-                            SnapPointsAlignment="Center"
-                            SnapPointsType="Mandatory"/>
+                        Orientation="Horizontal"
+                        SnapPointsAlignment="Center"
+                        SnapPointsType="Mandatory"/>
                 </CarouselView.ItemsLayout>
 
                 <CarouselView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="viewmodel:World">
                         <StackLayout>
                             <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
@@ -127,24 +131,26 @@
         <Grid
             Grid.Row="2" >
 
-            <CarouselView x:Name="Item_Carousel" 
-                          BackgroundColor="Transparent" 
-                          PeekAreaInsets="80" 
-                          VerticalOptions="Center"
-                          Loop="True"
-                          Opacity="0"
-                          PositionChanged="OnItem_Position_Changed">
+            <CarouselView 
+                x:Name="Item_Carousel" Loop="True"
+                ItemsSource="{Binding SortedItems}"
+                CurrentItem="{Binding CurrentItem}"
+                IsEnabled="{Binding IsEnabled}"
+                Opacity="0"
+                BackgroundColor="Transparent" 
+                PeekAreaInsets="80" 
+                VerticalOptions="Center"                
+                PositionChanged="On_Position_Changed">
                 <CarouselView.ItemsLayout>
                     <LinearItemsLayout
-                              Orientation="Horizontal"
-                              SnapPointsAlignment="Center"
-                              SnapPointsType="Mandatory"/>
+                        Orientation="Horizontal"
+                        SnapPointsAlignment="Center"
+                        SnapPointsType="Mandatory"/>
                 </CarouselView.ItemsLayout>
 
                 <CarouselView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="viewmodel:SearchItems" >
                         <StackLayout>
-
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
                                     <VisualState x:Name="PreviousItem">
@@ -191,7 +197,7 @@
                                     VerticalOptions="Center"
                                     HorizontalOptions="Center">
                                     <Image.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="Item_Tapped" />
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:WorldsViewModel}}, Path=Item_TappedCommand}" />
                                     </Image.GestureRecognizers>
                                 </Image>
 

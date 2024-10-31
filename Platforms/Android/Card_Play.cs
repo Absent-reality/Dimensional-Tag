@@ -4,7 +4,6 @@ using Android.Nfc.Tech;
 using AndroidX.Core.Content;
 using CommunityToolkit.Maui.Views;
 using DimensionalTag.Enums;
-using DimensionalTag.Tools;
 using System.Text;
 
 namespace DimensionalTag
@@ -179,7 +178,7 @@ namespace DimensionalTag
                                 CardCommand = UltralightCommand.Read16Bytes; //Reads 4 pages starting at BlockNumber
                                 dataFromCard = SendAway(nfcA);
 
-                                if (IsEmptyCard(dataFromCard.AsSpan(8, 4).ToArray()))
+                                if (IsEmptyCard(dataFromCard.AsSpan(0, 16).ToArray()))
                                 {
                                     ForDebug.AppendLine("Tag doesnt contain lego data or may be empty.");
                                 }
@@ -269,8 +268,9 @@ namespace DimensionalTag
             }
             catch (Exception e)
             {
-                ErrorReport("Failed to read tag. Tag maybe empty, or incompatible.");
+                ErrorReport($"Failed to read tag. Tag maybe empty, or incompatible. \n {e.Message}");
                 ForDebug.AppendLine(e.Message);
+
             }
             // return CardInfo;
             return SomeCard;
@@ -625,10 +625,11 @@ namespace DimensionalTag
         /// <returns>True if the tag is empty.</returns>
         public static bool IsEmptyCard(byte[] data)
         {
-            return data.SequenceEqual(new byte[] { 0x00, 0x00, 0x00, 0x00,
+            var a = data.SequenceEqual(new byte[] { 0x00, 0x00, 0x00, 0x00,
                                                    0x00, 0x00, 0x00, 0x00,
                                                    0x00, 0x00, 0x00, 0x00,
                                                    0x00, 0x00, 0x00, 0x00 });
+            return a;
         }
 
         /// <summary>

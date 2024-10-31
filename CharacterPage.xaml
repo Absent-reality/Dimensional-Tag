@@ -4,10 +4,10 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:viewmodel="clr-namespace:DimensionalTag"           
              x:Class="DimensionalTag.CharacterPage"
+             x:DataType="viewmodel:CharacterViewModel"
              BackgroundColor="Black" 
              BackgroundImageSource="galaxy.png"
-             NavigatedTo="OnArrival"
-             NavigatedFrom="OnGoodbye" >
+             NavigatedTo="OnArrival" NavigatedFrom="OnGoodbye" >
 
     <Grid 
         x:Name="theGrid"
@@ -22,7 +22,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-            <Image x:Name="char_title"             
+        <Image x:Name="char_title"             
                Grid.Row="0"
                Grid.Column="0"
                Source="character.png"
@@ -31,41 +31,46 @@
                Scale=".85"
                IsVisible="Hidden"
                Opacity="0">
-            </Image>
+        </Image>
 
         <toolkit:MediaElement    
-            x:DataType="viewmodel:SettingsViewModel"
             x:Name="sfx"          
             IsVisible="Hidden"
-            ShouldMute="{Binding SfxIsMuted}"
-            Volume="{Binding SfxVolume}"
+            ShouldAutoPlay="False"
+            ShouldLoopPlayback="False"
+            ShouldMute="{Binding Path= Settings.Sfx_isMute}"
+            Volume="{Binding Path= Settings.Get_SfxVolume}"
             />
 
-        <toolkit:MediaElement
-            x:DataType="viewmodel:SettingsViewModel"            
+        <toolkit:MediaElement           
             x:Name="bgm"          
             ShouldAutoPlay="True"
             ShouldLoopPlayback="True"
             IsVisible="Hidden"
-            ShouldMute="{Binding BgmIsMuted}"
-            Volume="{Binding BgmVolume}"
+            ShouldMute="{Binding Path= Settings.Bgm_isMute}"
+            Volume="{Binding Path= Settings.Get_BgmVolume}"
             />
 
-        <CarouselView x:Name="carousel" Loop="True"
-                      Opacity="0"
-                      BackgroundColor="Transparent" 
-                      PeekAreaInsets="80" 
-                      VerticalOptions="Center" 
-                      Grid.Row="1" Margin="0,50,0,0" 
-                      PositionChanged="OnPosition_Changed">
+        <CarouselView 
+            x:Name="carousel" Loop="True"
+            ItemsSource="{Binding AllCharacters}"
+            Position="{Binding Position}"
+            CurrentItem="{Binding CurrentItem}"
+            IsEnabled="{Binding IsEnabled}"
+            Opacity="0"                      
+            BackgroundColor="Transparent" 
+            PeekAreaInsets="80" 
+            VerticalOptions="Center" 
+            Grid.Row="1" Margin="0,50,0,0" 
+            PositionChanged="OnPosition_Changed" >
             <CarouselView.ItemsLayout>
                 <LinearItemsLayout 
-                            Orientation="Horizontal"
-                            SnapPointsAlignment="Center"
-                            SnapPointsType="Mandatory" />
+                    Orientation="Horizontal"                   
+                    SnapPointsAlignment="Center"
+                    SnapPointsType="Mandatory" />
             </CarouselView.ItemsLayout>
             <CarouselView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="viewmodel:Character">
                     <StackLayout>
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
@@ -113,7 +118,7 @@
                                HorizontalOptions="Center"
                                VerticalOptions="Center">
                                 <Image.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="Character_Tapped" />
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:CharacterViewModel}}, Path= Character_TappedCommand}" />
                                 </Image.GestureRecognizers>
                             </Image>
 
@@ -136,6 +141,5 @@
                 </DataTemplate>
             </CarouselView.ItemTemplate>
         </CarouselView>
-
     </Grid>
 </ContentPage>

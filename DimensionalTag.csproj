@@ -36,6 +36,7 @@
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 		<RootNamespace>DimensionalTag</RootNamespace>
+		<DefaultLanguage>en</DefaultLanguage>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -43,7 +44,6 @@
 
 		<!-- Splash Screen -->
 		<MauiSplashScreen Include="Resources\Splash\blnk_splash.png" resize="true" Color="#000000" BaseSize="128,128" />
-		<MauiSplashScreen Include="Resources\Splash\blnk_splash.png" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -124,10 +124,12 @@
 	  <None Remove="Resources\Images\Animation\logo7.png" />
 	  <None Remove="Resources\Images\Animation\logo8.png" />
 	  <None Remove="Resources\Images\Animation\logo9.png" />
+	  <None Remove="Resources\Images\Animation\logoani.gif" />
 	  <None Remove="Resources\Images\Animation\scan_four.png" />
 	  <None Remove="Resources\Images\Animation\scan_one.png" />
 	  <None Remove="Resources\Images\Animation\scan_three.png" />
 	  <None Remove="Resources\Images\Animation\scan_two.png" />
+	  <None Remove="Resources\Images\centerpad.png" />
 	  <None Remove="Resources\Images\Character.png" />
 	  <None Remove="Resources\Images\Char_Icons\abby_yates.png" />
 	  <None Remove="Resources\Images\Char_Icons\acu_trooper.png" />
@@ -207,9 +209,12 @@
 	  <None Remove="Resources\Images\Char_Icons\zane.png" />
 	  <None Remove="Resources\Images\galaxy.png" />
 	  <None Remove="Resources\Images\Info.png" />
+	  <None Remove="Resources\Images\lefthalf.png" />
 	  <None Remove="Resources\Images\mute_icon.png" />
+	  <None Remove="Resources\Images\righthalf.png" />
 	  <None Remove="Resources\Images\settings_icon.png" />
 	  <None Remove="Resources\Images\Tab_Icons\char_ico.png" />
+	  <None Remove="Resources\Images\Tab_Icons\portal_ico.png" />
 	  <None Remove="Resources\Images\Tab_Icons\scan_ico.png" />
 	  <None Remove="Resources\Images\Tab_Icons\search_icon.png" />
 	  <None Remove="Resources\Images\Tab_Icons\vehi_ico.png" />
@@ -409,6 +414,7 @@
 	  <MauiImage Include="Resources\Images\Animation\logo7.png" />
 	  <MauiImage Include="Resources\Images\Animation\logo8.png" />
 	  <MauiImage Include="Resources\Images\Animation\logo9.png" />
+	  <MauiImage Include="Resources\Images\Animation\logoani.gif" />
 	  <MauiImage Include="Resources\Images\Animation\scan_four.png" />
 	  <MauiImage Include="Resources\Images\Animation\scan_one.png" />
 	  <MauiImage Include="Resources\Images\Animation\scan_three.png" />
@@ -490,6 +496,7 @@
 	  <MauiImage Include="Resources\Images\Char_Icons\wyldstyle.png" />
 	  <MauiImage Include="Resources\Images\Char_Icons\zane.png" />
 	  <MauiImage Include="Resources\Images\Tab_Icons\char_ico.png" />
+	  <MauiImage Include="Resources\Images\Tab_Icons\portal_ico.png" />
 	  <MauiImage Include="Resources\Images\Tab_Icons\scan_ico.png" />
 	  <MauiImage Include="Resources\Images\Tab_Icons\search_icon.png" />
 	  <MauiImage Include="Resources\Images\Tab_Icons\vehi_ico.png" />
@@ -610,13 +617,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.2" />
-		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="4.0.1" />
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="9.1.0" />
+		<PackageReference Include="CommunityToolkit.Maui.Core" Version="9.1.0" />
+		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="4.1.2" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+		<PackageReference Include="LibUsbDotNet" Version="3.0.102-alpha" />
 		<PackageReference Include="M.BindableProperty.Generator" Version="0.11.1" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.70" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.70" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.92" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.92" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
+		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.0.0-preview.4.1" />
+		<PackageReference Include="SkiaSharp.Views.Maui.Core" Version="3.0.0-preview.4.1" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -642,6 +653,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="PopupPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="PortalPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="SearchPage.xaml">

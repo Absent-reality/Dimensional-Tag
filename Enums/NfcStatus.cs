@@ -1,4 +1,4 @@
-﻿using System;
+﻿
 namespace DimensionalTag.Enums
 {
     public enum NfcStatus

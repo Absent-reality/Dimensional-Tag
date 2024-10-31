@@ -1,17 +1,15 @@
 using CommunityToolkit.Maui.Views;
 using System.Collections.ObjectModel;
 
-
 namespace DimensionalTag;
 
 public partial class SearchPage : ContentPage
 {
-	public SearchPage()
+	public SearchPage(SearchViewModel vm)
 	{
 		InitializeComponent();
-
+        BindingContext = vm;
         this.Loaded += Page_Loaded;
-
 	}
 
     void Page_Loaded(object? sender, EventArgs e)
@@ -97,49 +95,6 @@ public partial class SearchPage : ContentPage
         await Navigation.PopModalAsync(animated: false);
     }
 
-    private ObservableCollection<LegoTag.SearchItems> ListItems = [];
-   
-    private void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
-    {
-       //Begin the digging for matches. 
-        ListItems.Clear();
-
-        bool notFound = false;
-		string query = e.NewTextValue;
-
-        if (query != "")
-        {
-            var items = LegoTag.SearchTags(query);
-
-            if (items == null || items.Count == 0)
-            {
-                notFound = true;
-                ListItems.Add(new LegoTag.SearchItems() { ItemName = "Name not found." });
-            }
-            else
-            {
-                notFound = false;
-                foreach(var item in items)
-                ListItems.Add(new LegoTag.SearchItems() { ItemName = item.ItemName, Id = item.Id });
-            }
- 
-            if (notFound) { lbl_results.Text = $" Results: {0} "; }
-            else
-            {    
-               var count = ListItems.Where(x => !string.IsNullOrWhiteSpace(x.ItemName)).Count();
-               lbl_results.Text = $" Results: {count} ";
-            }           
-                 searchResults.ItemsSource = ListItems;
-            
-        }
-        else 
-        {
-            lbl_results.Text = "";
-            searchResults.ItemsSource = null;  
-        }
-            
-    }
-
     private async void BtnCancel_Clicked(object sender, EventArgs e)
     {
         HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
@@ -148,106 +103,11 @@ public partial class SearchPage : ContentPage
 
     private void On_Arrived(object sender, NavigatedToEventArgs e)
     {
-        DeviceDisplay.KeepScreenOn = true;
         searchBar.Text = string.Empty;
     }
 
     private async void Tapped_Outside(object sender, TappedEventArgs e)
     {
         await Close();
-    }
-
-    private void On_Goodbye(object sender, NavigatedFromEventArgs e)
-    {
-        DeviceDisplay.KeepScreenOn = false;
-    }
-
-    private async void SearchResults_ItemSelected(object sender, SelectedItemChangedEventArgs e)
-    {
-        HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
-        if (e.SelectedItem != null)
-        {          
-            var check = e.SelectedItem as LegoTag.SearchItems;
-            if ( check == null )
-            {
-                await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong.", "Ok.", "", false));
-            }
-            else
-            {                
-                if ( check.Id == null & check.ItemName != null )
-                {
-                    World? world = World.Worlds.FirstOrDefault( m => m.Name == check.ItemName );
-                    if ( world == null )
-                    {                     
-                        await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong with world.", "Ok.", "", false));
-                    }
-                    else
-                    {
-                        var navParam = new Dictionary<string, object> { { "WorldParam", world } };
-
-                        await Shell.Current.GoToAsync($"///WorldsPage", navParam);
-                    }
-                    
-                }
-                else if ( check.Id != null )
-                {
-                    if ( check.Id.Value <= 800 )
-                    {
-                       Character? character = Character.Characters.FirstOrDefault( m => m.Id == check.Id );
-                       if ( character == null ) 
-                        {
-                            await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong with character.", "Ok.", "", false));
-                        }
-                        else
-                        {
-                            var navParam = new Dictionary<string, object> { { "CharacterParam", character } };
-
-                            await Shell.Current.GoToAsync( $"///CharacterPage", navParam );                           
-                        }
-                    }
-                    else if ( check.Id.Value > 800 )
-                    {                  
-                       Vehicle? vehicle = Vehicle.Vehicles.FirstOrDefault( m => m.Id == check.Id );
-                        if ( vehicle == null ) 
-                        {
-                            await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong with vehicle.", "Ok.", "", false));
-                        }
-                        else
-                        {
-                            if ( vehicle.Form == 1 )
-                            {
-                               var navParam = new Dictionary<string, object> { { "VehicleParam", vehicle } };
-
-                               await Shell.Current.GoToAsync( $"///VehiclesPage", navParam );
-                            }
-                            else if ( vehicle.Form == 2 )
-                            {
-                                var veh = Vehicle.Vehicles.FirstOrDefault(v => v.Id == vehicle.Id - 1);
-                                if ( veh != null)
-                                { 
-                                var navParam = new Dictionary<string, object> { { "VehicleParam", veh } };
-                                await Shell.Current.GoToAsync($"///VehiclesPage", navParam);
-                                }
-                            }
-                            else if ( vehicle.Form == 3 )
-                            {
-                                var V = Vehicle.Vehicles.FirstOrDefault(x => x.Id == vehicle.Id - 2);
-                                if (V != null)
-                                {
-                                    var navParam = new Dictionary<string, object> { { "VehicleParam", V } };
-                                    await Shell.Current.GoToAsync($"///VehiclesPage", navParam);
-                                }
-
-                            }
-
-                        }
-                    }
-                    else
-                    {
-                        await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong with Id.", "Ok.", "", false));
-                    }                    
-                }               
-            }
-        }
     }
 }

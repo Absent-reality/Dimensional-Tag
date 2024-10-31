@@ -1,26 +1,46 @@
-﻿using System.Windows.Input;
+﻿using CommunityToolkit.Mvvm.Input;
+using System.Windows.Input;
 
 namespace DimensionalTag
 {
     public partial class AppShell : Shell
-    {
+    {   
+        public SettingsViewModel SettingsVM { get; private set; }
+        public SettingsPage SettingsPage { get; private set; }
+        public SearchViewModel SearchVM { get; private set; }
         public AppShell()
         {
             InitializeComponent();
-            BindingContext = this;           
+            BindingContext = this;
+            SettingsVM = new SettingsViewModel();
+            SettingsPage = new SettingsPage(SettingsVM); 
+            SearchVM = new SearchViewModel();
         }
 
-        public ICommand CenterViewCommand { get; } = new Command(async () => await Current.Navigation.PushModalAsync(new SearchPage()));
-
-        private async void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
+        private async void Settings_Tapped(object sender, TappedEventArgs e)
         {
             if (Img_Set.IsEnabled)
             {
                 Img_Set.IsEnabled = false;
-                var vm = Current.CurrentPage.BindingContext as SettingsViewModel;
-                await vm!.ShowIt();
+                await Navigation.PushModalAsync(SettingsPage);
                 Img_Set.IsEnabled = true;
             }
+        }
+
+        private async void Portal_Tapped(object sender, TappedEventArgs e)
+        {
+            if (Img_Port.IsEnabled)
+            {
+                Img_Port.IsEnabled = false;
+                await Shell.Current.GoToAsync($"///PortalPage");
+                Img_Port.IsEnabled = true;
+            } 
+        }
+
+         [RelayCommand]
+         async void Search_Tapped()
+        {
+            await Current.Navigation.PushModalAsync(new SearchPage(SearchVM));
         }
 
     }
