@@ -1,5 +1,9 @@
 using CommunityToolkit.Maui.Core.Primitives;
 using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
+using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace DimensionalTag;
 
@@ -9,10 +13,47 @@ public partial class CharacterPage : ContentPage
 {
     public Character CharacterParam
     {
-        set { Vm.SpinTo(value); }
+        set { SpinTo(value); }
     }
 
     public CharacterViewModel Vm {  get; set; }
+    private int _firstIndex = 0;
+    public int FirstIndex 
+    {
+        get { return _firstIndex; }
+        set
+        {
+            if (_firstIndex == value)
+                return;
+            _firstIndex = value;
+            OnPropertyChanged(nameof(FirstIndex));
+            OnPosition_Changed();
+        }
+    }
+
+    public int LastIndex
+    {
+        get { return Vm.LastIndex; }
+        set
+        {
+            if (Vm.LastIndex == value)
+                return;
+            Vm.LastIndex = value;
+            OnPropertyChanged(nameof(FirstIndex));
+        }
+    }
+
+    public int CenterIndex
+    {
+        get { return Vm.CenterIndex; }
+        set
+        {
+            if (Vm.CenterIndex == value)
+                return;
+            Vm.CenterIndex = value;
+            OnPropertyChanged(nameof(CenterIndex));
+        }
+    }
 
     public CharacterPage(CharacterViewModel vm)
     {
@@ -20,6 +61,7 @@ public partial class CharacterPage : ContentPage
         BindingContext = vm;
         Vm = vm;
         vm.GetList();
+        LastIndex = vm.AllCharacters.Count - 1;
 
         sfx.Source = MediaSource.FromResource("swish.mp3");
         bgm.Source = MediaSource.FromResource("Defender_Main.mp3");
@@ -32,13 +74,15 @@ public partial class CharacterPage : ContentPage
         };
 
         this.Loaded += Page_Loaded;
+        
     }
-      
+
     void Page_Loaded(object? sender, EventArgs e)
     {
         this.Loaded -= Page_Loaded;      
         bgm.Volume = Vm.CheckValue("Bgm", bgm.Volume);
         sfx.Volume = Vm.CheckValue("Sfx", sfx.Volume);
+        collection.ScrollTo(1);
     }
 
     public async void PoppingIn()
@@ -51,13 +95,27 @@ public partial class CharacterPage : ContentPage
         await char_title.TranslateTo(-width, 0, 100);
         await char_title.FadeTo(1);
         char_title.IsVisible = true;
-        await char_title.TranslateTo(0, 0, 250);
+        await char_title.TranslateTo(0, 0, 250); 
+        char_title.Shadow = new Shadow
+        {
+            Brush = Colors.DimGray,
+            Offset = new(5, 5),
+            Radius = 5,
+            Opacity = .8f
+        };
+
         sfx.Play();
         await Task.Delay(500);
         sfx.Stop();
 
         await Task.Delay(500);
-        await carousel.FadeTo(1);       
+        View[] views = [];
+        if (FirstIndex != 0 && LastIndex != Vm.AllCharacters.Count - 1)
+        { views = [collection, rightArrow, leftArrow]; }
+        else if (FirstIndex == 0) { views = [collection, rightArrow]; }
+        else if (LastIndex == Vm.AllCharacters.Count - 1) { views = [collection, leftArrow]; }
+        await FadeGroup(views, 1);
+
     }
 
     private void OnArrival(object sender, NavigatedToEventArgs e)
@@ -71,18 +129,89 @@ public partial class CharacterPage : ContentPage
         {
             sfx.Stop();
         }
-
-        await char_title.FadeTo(0);
-        await carousel.FadeTo(0);
+        
+        await FadeGroup([char_title, collection, rightArrow, leftArrow], 0);
     }
 
-    private void OnPosition_Changed(object sender, PositionChangedEventArgs e) 
+    private void OnPosition_Changed() 
     {
         if (sfx.CurrentState == MediaElementState.Playing)
         {
             sfx.Stop();
         }
         sfx.Source = MediaSource.FromResource("click.mp3");
-        sfx.Play();             
+        sfx.Play();           
+    }
+
+    private void OnScrolled(object sender, ItemsViewScrolledEventArgs e)
+    {
+        var a = collection.ItemsSource as ObservableCollection<Character>;
+        if (a != null)
+        {
+            var total = a.Count;
+            if (e.FirstVisibleItemIndex == 0)
+            {
+                leftArrow.Opacity = 0;
+            }
+            else
+            {
+                leftArrow.Opacity = 1;
+                leftArrow.Shadow = new Shadow
+                {
+                    Brush = Colors.DimGray,
+                    Offset = new(-5, 5),
+                    Radius = 5,
+                    Opacity = .8f
+                };
+            }
+
+            if (e.LastVisibleItemIndex == total -1)
+            {
+                rightArrow.Opacity = 0;
+            }
+            else {  rightArrow.Opacity = 1; }
+
+            FirstIndex = e.FirstVisibleItemIndex;
+            LastIndex = e.LastVisibleItemIndex;
+            CenterIndex = e.CenterItemIndex;
+
+        }
+       
+    }
+
+    public void SpinTo(Character character)
+    {
+        collection.ScrollTo(Vm.GetCharacterPosition(character), position: ScrollToPosition.Center);
+    }
+
+    private void Arrow_Tapped(object sender, TappedEventArgs e)
+    {
+        var img = (Image)sender;
+        switch (img.AutomationId)
+        {
+            case "Left":
+                collection.ScrollTo(1);
+                break;
+
+            case "Right":
+                collection.ScrollTo(Vm.AllCharacters.Count -2);
+                break;             
+        }       
+    }
+
+    public async Task FadeGroup(View[] views, double opacity)
+    {
+        if (views == null)
+        {
+            ArgumentNullException.ThrowIfNull(nameof(views)); 
+            return;
+        }
+        if (views.Length != 0)
+        {
+            foreach (var v in views)
+            {
+                await v.FadeTo(opacity);
+            }
+        }
     }
 }

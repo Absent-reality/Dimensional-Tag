@@ -42,53 +42,51 @@
                     Background="#161616"            
                     Padding="5" >
                     <VerticalStackLayout>
-                       
-                        <Border> 
-                            <HorizontalStackLayout HorizontalOptions="CenterAndExpand">
-                            
-                            <Label                               
-                            BackgroundColor="Transparent"
-                            TextColor="#01a7d3"
-                            Text="Activate write:   "
-                            FontAttributes="Bold"
-                            VerticalOptions="Center"
-                             />
 
-                            <Label
-                            BackgroundColor="Transparent"
-                            Text="Nfc "
-                            TextColor="#01a7d3"
-                            FontAttributes="Bold"
-                            VerticalOptions="Center" />
+                        <Border>
+                            <HorizontalStackLayout HorizontalOptions="CenterAndExpand">
+
+                                <Label                               
+                                    BackgroundColor="Transparent"
+                                    TextColor="#01a7d3"
+                                    Text="Activate write:   "
+                                    FontAttributes="Bold"
+                                    VerticalOptions="Center" />
+
+                                <Label
+                                    BackgroundColor="Transparent"
+                                    Text="Nfc "
+                                    TextColor="#01a7d3"
+                                    FontAttributes="Bold"
+                                    VerticalOptions="Center" />
 
                                 <Switch 
-                                IsToggled="{Binding Path= Settings.WritingType}"
-                                Toggled="WriteSwitch_Toggled"
-                                IsEnabled="{Binding Path= Settings.NfcEnabled}" >
-                                </Switch>
+                                    IsToggled="{Binding Path= Settings.WritingType}"
+                                    Toggled="WriteSwitch_Toggled"
+                                    IsEnabled="{Binding Path= Settings.NfcEnabled}" 
+                                    ThumbColor="#ff00bfff" />
 
-                            <Label
-                            BackgroundColor="Transparent"
-                            Text=" Portal"
-                            TextColor="#01a7d3"
-                            FontAttributes="Bold"
-                            VerticalOptions="Center" />
-                            
-                        </HorizontalStackLayout>
+                                <Label
+                                    BackgroundColor="Transparent"
+                                    Text=" Portal"
+                                    TextColor="#01a7d3"
+                                    FontAttributes="Bold"
+                                    VerticalOptions="Center" />
+
+                            </HorizontalStackLayout>
                         </Border>
 
                         <HorizontalStackLayout>
                             <Switch
-                            IsToggled="{Binding Path= Settings.Save}"                        
-                            Toggled="SkipSwitch_Toggled"
-                            />
+                                IsToggled="{Binding Path= Settings.Save}"                        
+                                Toggled="SkipSwitch_Toggled"/>
 
                             <Label
-                            BackgroundColor="Transparent"
-                            Text=" Skip Loading Screen?"
-                            TextColor="#01a7d3"
-                            FontAttributes="Bold"
-                            VerticalOptions="Center" />
+                                BackgroundColor="Transparent"
+                                Text=" Skip Loading Screen?"
+                                TextColor="#01a7d3"
+                                FontAttributes="Bold"
+                                VerticalOptions="Center" />
 
                         </HorizontalStackLayout>
 

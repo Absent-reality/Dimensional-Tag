@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             x:Class="DimensionalTag.PopupPage" Color="Transparent" >
-
+             xmlns:viewmodel="clr-namespace:DimensionalTag"
+             x:DataType="viewmodel:PopupViewModel"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"            
+             x:Class="DimensionalTag.PopupPage" Color="Transparent">
     <Grid>
 
         <Border
@@ -13,7 +14,7 @@
             Margin="30"
             Padding="10">
 
-            <VerticalStackLayout Visual="">
+            <VerticalStackLayout>
 
                 <Label
                     x:Name="lbl_Name"
@@ -22,6 +23,7 @@
                     TextColor="White"                    
                     FontAttributes="Bold"
                     TextDecorations="Underline"
+                    Text="{Binding Name}"
                     Margin="0,0,0,10">
                     <Label.Shadow>
                         <Shadow
@@ -35,7 +37,8 @@
                 <Image
                     x:Name="Img_Character"                 
                     BackgroundColor="Transparent"
-                    HeightRequest="70"                  
+                    HeightRequest="70"         
+                    Source="{Binding ImgSource}"
                     HorizontalOptions="Center" />
 
                 <Label
@@ -43,59 +46,65 @@
                     Padding="10"
                     HorizontalTextAlignment="Center"
                     BackgroundColor="Transparent"
-                    TextColor="White" />
-                    
-                <HorizontalStackLayout
-                                  x:Name="stack1"
-                                  IsVisible="False">
-                
-                <Label
-                    x:Name="lbl_Form_Two"
-                    Padding="5"
-                    Text=" Form 2: "
-                    HorizontalTextAlignment="Center"
-                    FontAttributes="Bold"
-                    BackgroundColor="Transparent"
+                    Text="{Binding World}"
                     TextColor="White" />
 
+                <HorizontalStackLayout
+                                  x:Name="stack1"
+                                  IsVisible="{Binding Visible}">
+
                     <Label
-                    x:Name="lbl_Form2"
-                    Padding="5"                    
-                    HorizontalTextAlignment="Center"
-                    FontAttributes="Bold"
-                    BackgroundColor="Transparent"
-                    TextColor="#01a7d3" >
+                        x:Name="lbl_Form_Two"
+                        Padding="5"
+                        Text=" Form 2: "
+                        HorizontalTextAlignment="Center"
+                        FontAttributes="Bold"
+                        BackgroundColor="Transparent"
+                        TextColor="White" />
+
+                    <Label
+                        x:Name="lbl_Form2"
+                        Padding="5"                    
+                        HorizontalTextAlignment="Center"
+                        FontAttributes="Bold"
+                        Text="{Binding Form2}"
+                        BackgroundColor="Transparent"
+                        TextColor="#01a7d3" 
+                        IsEnabled="{Binding HereToWrite}">
+
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer
-                                Tapped="Form2_Tapped"  />
+                                Command="{Binding TappedCommand}" CommandParameter="Form2" />
                         </Label.GestureRecognizers>
                     </Label>
 
                 </HorizontalStackLayout>
                 <HorizontalStackLayout
                                  x:Name="stack2"
-                                  IsVisible="False">
-                    
-                    <Label
-                    x:Name="lbl_Form_Three"
-                    Padding="5"
-                    Text=" Form 3: "
-                    HorizontalTextAlignment="Center"
-                    FontAttributes="Bold"
-                    BackgroundColor="Transparent"
-                    TextColor="White" />
+                                  IsVisible="{Binding Visible}">
 
                     <Label
-                    x:Name="lbl_Form3"
-                    Padding="5"                    
-                    HorizontalTextAlignment="Center"
-                    FontAttributes="Bold"
-                    BackgroundColor="Transparent"
-                    TextColor="#01a7d3">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer
-                                Tapped="Form3_Tapped" />
-                        </Label.GestureRecognizers>
+                        x:Name="lbl_Form_Three"
+                        Padding="5"
+                        Text=" Form 3: "
+                        HorizontalTextAlignment="Center"
+                        FontAttributes="Bold"
+                        BackgroundColor="Transparent"
+                        TextColor="White" />
+
+                    <Label
+                        x:Name="lbl_Form3"
+                        Padding="5"                    
+                        HorizontalTextAlignment="Center"
+                        FontAttributes="Bold"
+                        Text="{Binding Form3}"
+                        BackgroundColor="Transparent"
+                        TextColor="#01a7d3"
+                        IsEnabled="{Binding HereToWrite}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding TappedCommand}" CommandParameter="Form3" />
+                            </Label.GestureRecognizers>
                     </Label>
 
                 </HorizontalStackLayout>
@@ -104,6 +113,7 @@
                     x:Name="lbl_Abilities"
                     Padding="10"
                     TextDecorations="Underline"
+                    Text="Abilities"
                     FontSize="Medium"
                     FontAttributes="Bold"
                     HorizontalTextAlignment="Center"
@@ -117,10 +127,11 @@
                     HorizontalTextAlignment="Center"
                     BackgroundColor="Transparent"                        
                     TextColor="White"
+                    Text="{Binding Abilities}"
                     HorizontalOptions="CenterAndExpand"
                     IsReadOnly="True" />
 
-                <HorizontalStackLayout >
+                <HorizontalStackLayout HorizontalOptions="Center">
 
                     <Button 
                         x:Name="btn_Write"
@@ -134,8 +145,9 @@
                         TextColor="Black"
                         CornerRadius="20"
                         Clicked="WriteButton_Clicked"
+                        IsVisible="{Binding HereToWrite}"
                         Padding="10"
-                        Margin="15">
+                        Margin="15" >
                         <Button.Shadow>
                             <Shadow
                                  Brush="DimGray"
@@ -167,9 +179,8 @@
                                  Opacity=".8" />
                         </Button.Shadow>
                     </Button>
-                    
                 </HorizontalStackLayout>
             </VerticalStackLayout>
         </Border>
     </Grid>
-</toolkit:Popup>
+    </toolkit:Popup>

@@ -97,7 +97,7 @@ namespace DimensionalTag
                             Character? character = Character.Characters.FirstOrDefault(m => m.Id == CurrentItem.Id);
                             if (character != null)
                             {
-                                var popup = new PopupPage(character);
+                                var popup = new PopupPage(true, character);
                                 var result = await Shell.Current.ShowPopupAsync(popup);
                                 if (result is bool sure)
                                 {
@@ -117,7 +117,7 @@ namespace DimensionalTag
                             Vehicle? vehicle = Vehicle.Vehicles.FirstOrDefault(m => m.Id == CurrentItem.Id);
                             if (vehicle != null)
                             {
-                                var popup = new PopupPage(vehicle);
+                                var popup = new PopupPage(true, vehicle);
                                 var result = await Shell.Current.ShowPopupAsync(popup);
                                 if (result is bool meh)
                                 {

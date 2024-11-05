@@ -8,7 +8,8 @@ using CommunityToolkit.Maui.Views;
 namespace DimensionalTag
 {
     public partial class PortalViewModel : SettingsViewModel
-    {        
+    {
+#if ANDROID || WINDOWS
 
         int PadNumber = 0;
 
@@ -192,14 +193,11 @@ namespace DimensionalTag
         [ObservableProperty]
         Microsoft.Maui.Graphics.Color pickedColor = Colors.Black;
 
-#if ANDROID || WINDOWS
-
         [ObservableProperty]
         LegoPortal? portal1;
 
-#endif
-       
-         private string _tagged = "Please connect portal.";
+
+        private string _tagged = "Please connect portal.";
          public string Tagged
         {
             get { if (!IsConnected) { _tagged = "Please connect portal."; }               
@@ -306,9 +304,9 @@ namespace DimensionalTag
         {
             if (!IsConnected) { return; }
 
-#if ANDROID || WINDOWS
 
-            var newColor = DimensionalTag.Color.FromHex(MauiColor.ToArgbHex());
+
+            var newColor = Color.FromHex(MauiColor.ToArgbHex());
 
             if (Portal1 != null)
             {
@@ -327,12 +325,99 @@ namespace DimensionalTag
                         break;
                 }
             }
-#endif
-
 
         }
 
-#if ANDROID || WINDOWS
+        [RelayCommand]
+        void CloseIt()
+        {
+            if (IsConnected && Portal1 != null)
+            {
+                Portal1.SetColor(Pad.Center, Color.Black);
+                Portal1.SetColor(Pad.Left, Color.Black);
+                Portal1.SetColor(Pad.Right, Color.Black);
+                Thread.Sleep(200);
+                Portal1.Dispose();
+                IsConnected = false;
+            }
+        }
+
+        [RelayCommand]
+        void TestFade()
+        {
+            if (Portal1 != null && IsConnected)
+            Portal1.FadeAll(new FadePad(75, 2, Color.Purple), new FadePad(50, 2, Color.Cyan), new FadePad(50, 2, Color.Green));   
+
+
+               /*      
+               Portal1.Fade(Pad.Center, new FadePad(50, 5, Color.Green));
+               Thread.Sleep(200);
+               Portal1.Fade(Pad.Left, new FadePad(255, 1, Color.Purple));
+               Thread.Sleep(200);
+               Portal1.Fade(Pad.Right, new FadePad(200, 5, Color.LightBlue));
+               Thread.Sleep(2000);
+               Portal1.FadeAll(new FadePad(200, 5, Color.Cyan), new FadePad(200, 5, Color.Cyan), new FadePad(200, 5, Color.Cyan));
+               */
+
+        }
+
+        [RelayCommand]
+         async Task DisplayItem(string item)
+        {
+            HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
+           object? tag = null;
+            switch (item)
+            {
+                case "RightTag0":
+                    if (RightTag0 is null) { return; }
+                    tag = GetItem(RightTag0);
+                    break;
+
+                case "RightTag1":
+                    if (RightTag1 is null) { return; }
+                    tag = GetItem(RightTag1);
+                    break;
+
+                case "RightTag2":
+                    if (RightTag2 is null) { return; }
+                    tag = GetItem(RightTag2);
+                    break;
+
+                case "RightTag3":
+                    if (RightTag3 is null) { return; }
+                    tag = GetItem(RightTag3);
+                    break;
+
+                case "LeftTag0":
+                    if (LeftTag0 is null) { return; }
+                    tag = GetItem(LeftTag0);
+                    break;
+
+                case "LeftTag1":
+                    if (LeftTag1 is null) { return; }
+                    tag = GetItem(LeftTag1);
+                    break;
+
+                case "LeftTag2":
+                    if (LeftTag2 is null) { return; }
+                    tag = GetItem(LeftTag2);
+                    break;
+
+                case "LeftTag3":
+                    if (LeftTag3 is null) { return; }
+                    tag = GetItem(LeftTag3);
+                    break;
+
+                case "CenterTag":
+                    if (CenterTag is null) { return; }
+                    tag = GetItem(CenterTag);
+                break;
+
+            }
+            if (tag is null) { return; }
+               var popup = new PopupPage(false, tag);
+               await Shell.Current.ShowPopupAsync(popup);
+        }
 
         [RelayCommand]
         void GrabPortal()
@@ -417,7 +502,7 @@ namespace DimensionalTag
 
                     Console.WriteLine($"Tag is a {e.LegoTag?.GetType().Name} - Name= {e.LegoTag?.Name}");
                     tagInfo = $"Pad: {e.Pad} \n Tag is a {e.LegoTag?.GetType().Name} \n Name= {e.LegoTag?.Name}";
-
+                    
                 }
 
             }
@@ -465,42 +550,6 @@ namespace DimensionalTag
                         break;
                 }
             }
-        }
-
-        [RelayCommand]
-        void CloseIt()
-        {
-            if (IsConnected && Portal1 != null)
-            {
-                Portal1.SetColor(Pad.Center, Color.Black);
-                Portal1.SetColor(Pad.Left, Color.Black);
-                Portal1.SetColor(Pad.Right, Color.Black);
-                Thread.Sleep(200);
-                Portal1.Dispose();
-                IsConnected = false;
-            }
-        }
-#endif
-
-
-#if ANDROID || WINDOWS
-
-        [RelayCommand]
-        void TestFade()
-        {
-            if (Portal1 != null && IsConnected)
-            Portal1.FadeAll(new FadePad(75, 2, Color.Purple), new FadePad(50, 2, Color.Cyan), new FadePad(50, 2, Color.Green));   
-
-
-            /*       Portal1.Fade(Pad.Center, new FadePad(50, 5, Color.Green));
-               Thread.Sleep(200);
-               Portal1.Fade(Pad.Left, new FadePad(255, 1, Color.Purple));
-               Thread.Sleep(200);
-               Portal1.Fade(Pad.Right, new FadePad(200, 5, Color.LightBlue));
-               Thread.Sleep(2000);
-               Portal1.FadeAll(new FadePad(200, 5, Color.Cyan), new FadePad(200, 5, Color.Cyan), new FadePad(200, 5, Color.Cyan));
-               */
-
         }
 
         public async Task<bool> BeginWrite(object tagType)
@@ -662,7 +711,7 @@ namespace DimensionalTag
             return bytes;
 
         }
-#endif
+
         /// <summary>
         /// Checks if the data is empty for a given 16 blocks.
         /// </summary>
@@ -679,8 +728,7 @@ namespace DimensionalTag
 
 
         public string ThisTagInfo(LegoTagEventArgs legoTag)
-        {
-
+        {           
             if (legoTag == null) { return ""; }
             if (legoTag.LegoTag?.GetType().Name == "Character")
             { 
@@ -694,11 +742,31 @@ namespace DimensionalTag
                 if (vehicle == null) { return ""; }
                 return (vehicle.Images);
             }
+
             else { return ""; }
 
         }
 
-    }
+        public object? GetItem(LegoTagEventArgs legoTag)
+        {
+            if(legoTag is null) { return null; }
+            if (legoTag.LegoTag?.GetType().Name == "Character")
+            {
+                Character? character = Character.Characters.FirstOrDefault(x => x.Id.Equals(legoTag.LegoTag.Id));
+                if (character == null) { return null; }
+                return (character);
+            }
+            else if (legoTag.LegoTag?.GetType().Name == "Vehicle")
+            {
+                Vehicle? vehicle = Vehicle.Vehicles.FirstOrDefault(x => x.Id.Equals(legoTag.LegoTag.Id));
+                if (vehicle == null) { return null; }
+                return (vehicle);
+            }
 
+            else { return null; }          
+        }
+#endif
+
+    }
 }
     

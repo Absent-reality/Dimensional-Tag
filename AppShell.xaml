@@ -51,7 +51,7 @@
 
     </ShellContent>
 
-    <local:CustomTabBar 
+    <local:CustomTabBar x:Name="Tabby"
                         x:DataType="local:AppShell"                          
                         CenterViewVisible="True"
                         CenterViewBackgroundColor="Black"
@@ -74,23 +74,24 @@
                 Route="VehiclesPage" />
         </Tab>
 
-        <Tab>
-            <ShellContent
-                ContentTemplate="{DataTemplate local:PortalPage}"
-                Route="PortalPage" />
-        </Tab>
+        <Tab x:Name="CenterTab">
+          <!--  <ShellContent 
+            ContentTemplate="{DataTemplate local:PortalPage}"
+                Route="PortalPage" /> -->
+        </Tab> 
 
         <Tab Title="Worlds" Icon="world_ico.png">
+
             <ShellContent
-                ContentTemplate="{DataTemplate local:WorldsPage}"
+                ContentTemplate="{DataTemplate local:WorldsPage }"
                 Route="WorldsPage" />
         </Tab>
 
-        <Tab Title="Scan" Icon="scan_ico.png">
+        <!--  <Tab Title="{OnPlatform Android= Portal, WinUI=Scan}" Icon="{OnPlatform Android=scan_ico.png, WinUI=scan_ico.png}">
             <ShellContent                                
-                ContentTemplate="{DataTemplate local:ScanPage}"
-                Route="ScanPage" />
-        </Tab>
+                ContentTemplate="{OnPlatform Android={DataTemplate local:PortalPage}, WinUI={DataTemplate local:ScanPage}}"
+                Route="{OnPlatform Android=PortalPage, WinUI=ScanPage}" />
+        </Tab> -->
 
     </local:CustomTabBar>
 

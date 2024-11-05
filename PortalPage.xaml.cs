@@ -4,6 +4,7 @@ using SkiaSharp;
 
 namespace DimensionalTag
 {
+#if ANDROID || WINDOWS
     [QueryProperty(nameof(WriteCharacter), nameof(WriteCharacter))]
     [QueryProperty(nameof(WriteVehicle), nameof(WriteVehicle))]
 
@@ -39,7 +40,7 @@ namespace DimensionalTag
             InitializeComponent();
             BindingContext = vm;
             Vm = vm;
-
+            
             this.Loaded += Page_Loaded;
         }
 
@@ -152,9 +153,7 @@ namespace DimensionalTag
 
         public async void SendToWrite(object item)
         {
-#if ANDROID || WINDOWS
            bool result = await Vm.BeginWrite(item);
-#endif
         }
 
         private void OnGoodbye(object sender, NavigatedFromEventArgs e)
@@ -162,4 +161,5 @@ namespace DimensionalTag
             CameHereToWrite = false;
         }
     }
+#endif
 }

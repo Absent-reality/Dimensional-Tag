@@ -47,7 +47,7 @@ namespace DimensionalTag
 
             if (CurrentItem != null)
             {
-                var popup = new PopupPage(CurrentItem);
+                var popup = new PopupPage(true, CurrentItem);
                 var result = await Shell.Current.ShowPopupAsync(popup);
 
                 if (result is bool sure)

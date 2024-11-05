@@ -4,17 +4,53 @@ using System.Windows.Input;
 namespace DimensionalTag
 {
     public partial class AppShell : Shell
-    {   
+    {
         public SettingsViewModel SettingsVM { get; private set; }
         public SettingsPage SettingsPage { get; private set; }
         public SearchViewModel SearchVM { get; private set; }
+
         public AppShell()
         {
             InitializeComponent();
             BindingContext = this;
             SettingsVM = new SettingsViewModel();
-            SettingsPage = new SettingsPage(SettingsVM); 
+            SettingsPage = new SettingsPage(SettingsVM);
             SearchVM = new SearchViewModel();
+
+            if (SettingsVM.Settings.NfcEnabled)
+            {
+                Tabby.Items.Add(new Tab()
+                {
+                    Title = "Scan",
+                    Icon = "scan_ico.png",
+                    Items = {  new ShellContent()  { Route = "ScanPage",
+                               ContentTemplate = new DataTemplate(() => new ScanPage(new ScanViewModel())) }
+                           }
+                });
+
+                CenterTab.Items.Add( new ShellContent() 
+                { 
+                      Route = "PortalPage",
+                      ContentTemplate = new DataTemplate(() => 
+                                    new PortalPage(new PortalViewModel()))   
+                });
+                                                    
+            }
+            else
+            {
+                Tabby.Items.Add(new Tab()
+                {
+                    Title = "Portal",
+                    Icon = "scan_ico.png",
+                    Items = {  new ShellContent()  { Route = "PortalPage",
+                               ContentTemplate = new DataTemplate(() => new PortalPage(new PortalViewModel())) }
+                           }
+                });
+
+                CenterTab.Items.Add(new ShellContent() { });
+                CenterTab.IsEnabled = false;              
+            }
+
         }
 
         private async void Settings_Tapped(object sender, TappedEventArgs e)

@@ -187,19 +187,24 @@
                         </Image.GestureRecognizers>
                     </Image>
 
-                    <Image                        
+                    <Image                           
+                        x:Name="ImgRightTag0"
                         Grid.Row="0"
                         Grid.Column="3"
                         HorizontalOptions="End"
                         VerticalOptions="End"
                         HeightRequest="40"
-                        WidthRequest="40"
+                        WidthRequest="40"                        
                         Source="{Binding RightPad0_Img}"
-                        IsVisible="{Binding RightPad0_Present}"
-                        InputTransparent="True">
+                        IsVisible="{Binding RightPad0_Present}" >
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding DisplayItemCommand}" 
+                                                  CommandParameter="RightTag0" />
+                        </Image.GestureRecognizers>
                     </Image>
 
-                    <Image                                 
+                    <Image  
+                        x:Name="ImgRightTag1"
                         Grid.Row="1"
                         Grid.Column="3"
                         HorizontalOptions="End"
@@ -207,10 +212,15 @@
                         HeightRequest="40"
                         WidthRequest="40"
                         Source="{Binding RightPad1_Img}"
-                        IsVisible="{Binding RightPad1_Present}"
-                        InputTransparent="True"/>
+                        IsVisible="{Binding RightPad1_Present}" >
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding DisplayItemCommand}" 
+                                                  CommandParameter="RightTag1" />
+                        </Image.GestureRecognizers>
+                    </Image>
 
-                    <Image                        
+                    <Image   
+                        x:Name="ImgRightTag2"
                         Grid.Row="1"
                         Grid.Column="3"
                         HorizontalOptions="Center"
@@ -218,10 +228,15 @@
                         HeightRequest="40"
                         WidthRequest="40"
                         Source="{Binding RightPad2_Img}"
-                        IsVisible="{Binding RightPad2_Present}"
-                        InputTransparent="True"/>
+                        IsVisible="{Binding RightPad2_Present}" >
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding DisplayItemCommand}" 
+                                                  CommandParameter="RightTag2" />
+                        </Image.GestureRecognizers>
+                    </Image>
 
-                    <Image                        
+                    <Image  
+                        x:Name="ImgRightTag3"
                         Grid.Row="1"
                         Grid.Column="2"
                         HorizontalOptions="End"
@@ -229,10 +244,15 @@
                         HeightRequest="40"
                         WidthRequest="40"
                         Source="{Binding RightPad3_Img}"
-                        IsVisible="{Binding RightPad3_Present}"
-                        InputTransparent="True"/> 
+                        IsVisible="{Binding RightPad3_Present}" >
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding DisplayItemCommand}" 
+                                                  CommandParameter="RightTag3" />
+                        </Image.GestureRecognizers>
+                    </Image>
 
-                    <Image                        
+                    <Image 
+                        x:Name="ImgLeftTag0"
                         Grid.Row="0"
                         Grid.Column="0"
                         HorizontalOptions="Start"
@@ -240,10 +260,15 @@
                         HeightRequest="40"
                         WidthRequest="40"
                         Source="{Binding LeftPad0_Img}"
-                        IsVisible="{Binding LeftPad0_Present}"
-                        InputTransparent="True"/>
+                        IsVisible="{Binding LeftPad0_Present}" >
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding DisplayItemCommand}" 
+                                                  CommandParameter="LeftTag0" />
+                        </Image.GestureRecognizers>
+                    </Image>
 
-                    <Image   
+                    <Image 
+                        x:Name="ImgLeftTag1"
                         Grid.Row="1"
                         Grid.Column="0"
                         HorizontalOptions="Start"
@@ -251,10 +276,15 @@
                         HeightRequest="40"
                         WidthRequest="40"
                         Source="{Binding LeftPad1_Img}"
-                        IsVisible="{Binding LeftPad1_Present}"
-                        InputTransparent="True"/>
+                        IsVisible="{Binding LeftPad1_Present}" >
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding DisplayItemCommand}" 
+                                                  CommandParameter="LeftTag1" />
+                        </Image.GestureRecognizers>
+                    </Image>
 
-                    <Image     
+                    <Image  
+                        x:Name="ImgLeftTag2"
                         Grid.Row="1"
                         Grid.Column="0"
                         HorizontalOptions="End"
@@ -262,11 +292,15 @@
                         HeightRequest="40"
                         WidthRequest="40"
                         Source="{Binding LeftPad2_Img}"
-                        IsVisible="{Binding LeftPad2_Present}"
-                        InputTransparent="True"/>
+                        IsVisible="{Binding LeftPad2_Present}" >
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding DisplayItemCommand}" 
+                                                  CommandParameter="LeftTag2" />
+                        </Image.GestureRecognizers>
+                    </Image>
 
                     <Image    
-                        x:Name="img3"
+                        x:Name="ImgLeftTag3"
                         Grid.Row="1"
                         Grid.Column="1"
                         HorizontalOptions="Center"
@@ -274,10 +308,15 @@
                         HeightRequest="40"
                         WidthRequest="40"
                         Source="{Binding LeftPad3_Img}"
-                        IsVisible="{Binding LeftPad3_Present}"
-                        InputTransparent="True"/>
-                    
-                    <Image                        
+                        IsVisible="{Binding LeftPad3_Present}" >
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding DisplayItemCommand}" 
+                                                  CommandParameter="LeftTag3" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                    <Image   
+                        x:Name="ImgCenterTag"
                         Grid.Row="0"
                         Grid.Column="1"
                         Grid.ColumnSpan="2"
@@ -286,8 +325,11 @@
                         HeightRequest="40"
                         WidthRequest="40"
                         Source="{Binding CenterPad_Img}"
-                        IsVisible="{Binding CenterPad_Present}"
-                        InputTransparent="True">
+                        IsVisible="{Binding CenterPad_Present}" >
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding DisplayItemCommand}" 
+                                                  CommandParameter="CenterTag" />
+                        </Image.GestureRecognizers>
                         
                     </Image>
                 </Grid>
