@@ -1,9 +1,7 @@
 using CommunityToolkit.Maui.Core.Primitives;
 using CommunityToolkit.Maui.Views;
-using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm;
 using System.Collections.ObjectModel;
-using System.Numerics;
-using System.Runtime.InteropServices;
 
 namespace DimensionalTag;
 
@@ -26,8 +24,7 @@ public partial class CharacterPage : ContentPage
             if (_firstIndex == value)
                 return;
             _firstIndex = value;
-            OnPropertyChanged(nameof(FirstIndex));
-            OnPosition_Changed();
+            OnPropertyChanged(nameof(FirstIndex));          
         }
     }
 
@@ -39,7 +36,7 @@ public partial class CharacterPage : ContentPage
             if (Vm.LastIndex == value)
                 return;
             Vm.LastIndex = value;
-            OnPropertyChanged(nameof(FirstIndex));
+            OnPropertyChanged(nameof(LastIndex));
         }
     }
 
@@ -52,6 +49,7 @@ public partial class CharacterPage : ContentPage
                 return;
             Vm.CenterIndex = value;
             OnPropertyChanged(nameof(CenterIndex));
+            OnPosition_Changed();
         }
     }
 
@@ -60,6 +58,7 @@ public partial class CharacterPage : ContentPage
         InitializeComponent();
         BindingContext = vm;
         Vm = vm;
+        vm.cv = collection;
         vm.GetList();
         LastIndex = vm.AllCharacters.Count - 1;
 
@@ -145,38 +144,30 @@ public partial class CharacterPage : ContentPage
 
     private void OnScrolled(object sender, ItemsViewScrolledEventArgs e)
     {
-        var a = collection.ItemsSource as ObservableCollection<Character>;
-        if (a != null)
-        {
-            var total = a.Count;
-            if (e.FirstVisibleItemIndex == 0)
-            {
-                leftArrow.Opacity = 0;
-            }
-            else
-            {
-                leftArrow.Opacity = 1;
-                leftArrow.Shadow = new Shadow
-                {
-                    Brush = Colors.DimGray,
-                    Offset = new(-5, 5),
-                    Radius = 5,
-                    Opacity = .8f
-                };
-            }
+        var source = collection.ItemsSource as ObservableCollection<Character>;
+        if (source == null) { return; }
+        var total = source.Count;
 
-            if (e.LastVisibleItemIndex == total -1)
+        if (e.FirstVisibleItemIndex == 0) { leftArrow.Opacity = 0; }
+        else
+        {  
+            leftArrow.Opacity = 1;
+            leftArrow.Shadow = new Shadow
             {
-                rightArrow.Opacity = 0;
-            }
-            else {  rightArrow.Opacity = 1; }
-
-            FirstIndex = e.FirstVisibleItemIndex;
-            LastIndex = e.LastVisibleItemIndex;
-            CenterIndex = e.CenterItemIndex;
-
+                Brush = Colors.DimGray,
+                Offset = new(-5, 5),
+                Radius = 5,
+                Opacity = .8f
+            };
         }
-       
+
+        if (e.LastVisibleItemIndex == total - 1) { rightArrow.Opacity = 0; }
+        else { rightArrow.Opacity = 1; }
+
+        FirstIndex = e.FirstVisibleItemIndex;
+        LastIndex = e.LastVisibleItemIndex;
+        CenterIndex = e.CenterItemIndex;
+        collection.SelectedItem = source[CenterIndex];
     }
 
     public void SpinTo(Character character)

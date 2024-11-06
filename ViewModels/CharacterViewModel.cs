@@ -9,40 +9,11 @@ namespace DimensionalTag
     public partial class CharacterViewModel : SettingsViewModel
     {
 
-        [ObservableProperty]
-        int position;
-
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(LastCharacter))]
+        [ObservableProperty]    
         int lastIndex;
 
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(CenterCharacter))]
         int centerIndex;
-
-        private Character? _lastCharacter;
-        public Character? LastCharacter
-        {
-            get { _lastCharacter = Character.Characters.ElementAt(LastIndex); return _lastCharacter; }
-            set {  if (_lastCharacter == value)
-                    return;
-                   _lastCharacter = value;
-                OnPropertyChanged();
-            }                
-        }
-
-        private Character? _centerCharacter;
-        public Character? CenterCharacter
-        {
-            get { _centerCharacter = Character.Characters.ElementAt(CenterIndex); return _centerCharacter; }
-            set
-            {
-                if (_centerCharacter == value)
-                    return;
-                _centerCharacter = value;
-                OnPropertyChanged();
-            }
-        }
 
         [ObservableProperty]
         bool isEnabled = true;
@@ -52,6 +23,8 @@ namespace DimensionalTag
 
         [ObservableProperty]
         ObservableCollection<Character> _allCharacters = new();
+
+        public CollectionView? cv {  get; set; }
 
         public void GetList()
         {
@@ -63,42 +36,36 @@ namespace DimensionalTag
         }
 
         [RelayCommand]
-        async void Character_Tapped()
+        async Task Character_Tapped(string name)
         {
             IsEnabled = false;
-#if ANDROID || WINDOWS
+
             HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
 
-            if (CurrentItem != null)
+            if (name == "") { return; }
+
+            var thisItem = Character.Characters.FirstOrDefault(c => c.Name == name);
+            if (thisItem == null) { return; }
+
+            var popup = new PopupPage(true, thisItem);
+            var result = await Shell.Current.ShowPopupAsync(popup);
+
+            if (result is bool sure)
             {
-                var popup = new PopupPage(true, CurrentItem);
-                var result = await Shell.Current.ShowPopupAsync(popup);
-
-                if (result is bool sure)
+                var alert = new AlertPopup(" Alert! ", " Are you sure you want to write this data? ", " Cancel?", " Write? ", true);
+                var confirm = await Shell.Current.ShowPopupAsync(alert);
+                if (confirm is bool tru)
                 {
-                    var alert = new AlertPopup(" Alert! ", " Are you sure you want to write this data? ", " Cancel?", " Write? ", true);
-                    var confirm = await Shell.Current.ShowPopupAsync(alert);
-                    if (confirm is bool tru)
-                    {
-                        LetsWriteIt("WriteCharacter", CurrentItem);
-                    }
+                    LetsWriteIt("WriteCharacter", thisItem);
                 }
-
             }
-#endif
+            cv?.ScrollTo(GetCharacterPosition(thisItem), position: ScrollToPosition.Center);
             IsEnabled = true;
-            CurrentItem = null;
         }
 
         public int GetCharacterPosition(Character character)
         {
-            int index;
-                var check = Character.Characters.FirstOrDefault(x => x.Name == character.Name);
-            if (check != null)
-            {
-                index = Character.Characters.IndexOf(check);
-            }
-            else index = -1;
+            int index = AllCharacters.IndexOf(character);
             return index;   
         }
     }

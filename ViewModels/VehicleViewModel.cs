@@ -8,7 +8,10 @@ namespace DimensionalTag
     public partial class VehicleViewModel : SettingsViewModel
     {
         [ObservableProperty]
-        int position;
+        int lastIndex;
+
+        [ObservableProperty]
+        int centerIndex;
 
         [ObservableProperty]
         bool isEnabled = true;
@@ -18,6 +21,8 @@ namespace DimensionalTag
 
         [ObservableProperty]
         ObservableCollection<Vehicle> _allVehicles = new();
+
+        public CollectionView? cv { get; set; }
 
         public void GetList()
         {
@@ -29,40 +34,37 @@ namespace DimensionalTag
             }
         }
 
-        public void SpinTo(Vehicle vehicle)
-        {
-            var check = Vehicle.Vehicles.FirstOrDefault(x => x.Name == vehicle.Name);
-            if (check != null)
-            {
-                Position = Vehicle.Vehicles.FindAll(x => x.Form == 1).IndexOf(check);
-            }
-        }
-
         [RelayCommand]
-        async void Vehicle_Tapped()
+        async Task Vehicle_Tapped(string name)
         {
             IsEnabled = false;
-#if ANDROID
             HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
 
-            if (CurrentItem != null)
+            if (name == "") { return; }
+
+            var thisItem = Vehicle.Vehicles.FirstOrDefault(v => v.Name == name);
+            if (thisItem == null) { return; }
+
+            var popup = new PopupPage(true, thisItem);
+            var result = await Shell.Current.ShowPopupAsync(popup);
+
+            if (result is bool sure)
             {
-                var popup = new PopupPage(true, CurrentItem);
-                var result = await Shell.Current.ShowPopupAsync(popup);
-
-                if (result is bool sure)
+                var alert = new AlertPopup(" Alert! ", " Are you sure you want to write this data? ", " Cancel?", " Write? ", true);
+                var confirm = await Shell.Current.ShowPopupAsync(alert);
+                if (confirm is bool tru)
                 {
-                    var alert = new AlertPopup(" Alert! ", " Are you sure you want to write this data? ", " Cancel?", " Write? ", true);
-                    var confirm = await Shell.Current.ShowPopupAsync(alert);
-                    if (confirm is bool tru)
-                    {
-                        LetsWriteIt("WriteVehicle", CurrentItem);
-                    }
+                    LetsWriteIt("WriteVehicle", thisItem);
                 }
-
             }
-#endif
+            cv?.ScrollTo(GetVehiclePosition(thisItem), position: ScrollToPosition.Center);
             IsEnabled = true;
         }
+
+        public int GetVehiclePosition(Vehicle vehicle)
+        { 
+            int index = AllVehicles.IndexOf(vehicle);
+            return index;
+        }    
     }
 }

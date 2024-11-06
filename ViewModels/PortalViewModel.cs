@@ -333,6 +333,9 @@ namespace DimensionalTag
         {
             if (IsConnected && Portal1 != null)
             {
+                (RightTag0, RightTag1, RightTag2, RightTag3) = (null, null, null, null);
+                (LeftTag0, LeftTag1, LeftTag2, LeftTag3) = (null, null, null, null);
+                CenterTag = null;
                 Portal1.SetColor(Pad.Center, Color.Black);
                 Portal1.SetColor(Pad.Left, Color.Black);
                 Portal1.SetColor(Pad.Right, Color.Black);
