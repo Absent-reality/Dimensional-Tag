@@ -28,10 +28,10 @@
                     Margin="0,0,0,10">
                     <Label.Shadow>
                         <Shadow
-                          Brush="DimGray"
-                          Offset="10,10"
-                          Radius="20"
-                          Opacity=".8" />
+                    Brush="DimGray"
+                    Offset="5,5"
+                    Radius="5"
+                    Opacity=".8" />
                     </Label.Shadow>
                 </Label>
 
@@ -62,10 +62,10 @@
                         IsVisible="False">
                         <Button.Shadow>
                             <Shadow
-                                 Brush="DimGray"
-                                 Offset="10,10"
-                                 Radius="20"
-                                 Opacity=".8" />
+                                Brush="DimGray"
+                                Offset="5,5"
+                                Radius="5"
+                                Opacity=".8" />
                         </Button.Shadow>
                     </Button>
 
@@ -84,14 +84,21 @@
                         Margin="15">
                         <Button.Shadow>
                             <Shadow
-                                 Brush="DimGray"
-                                 Offset="10,10"
-                                 Radius="20"
-                                 Opacity=".8" />
+                                Brush="DimGray"
+                                Offset="5,5"
+                                Radius="5"
+                                Opacity=".8" />
                         </Button.Shadow>
                     </Button>
                 </HorizontalStackLayout>
             </VerticalStackLayout>
+            <Border.Shadow>
+                <Shadow
+                     Brush="DimGray"
+                     Offset="5,5"
+                     Radius="5"
+                     Opacity=".5" />
+            </Border.Shadow>
         </Border>
     </Grid>
 </toolkit:Popup>

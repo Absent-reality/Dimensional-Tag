@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Input;
-using System.Windows.Input;
+using DimensionalTag.Tools;
 
 namespace DimensionalTag
 {
@@ -8,6 +8,7 @@ namespace DimensionalTag
         public SettingsViewModel SettingsVM { get; private set; }
         public SettingsPage SettingsPage { get; private set; }
         public SearchViewModel SearchVM { get; private set; }
+        public Settings? Settings;
 
         public AppShell()
         {
@@ -16,8 +17,9 @@ namespace DimensionalTag
             SettingsVM = new SettingsViewModel();
             SettingsPage = new SettingsPage(SettingsVM);
             SearchVM = new SearchViewModel();
+            Settings = Settings.GetInstance();
 
-            if (SettingsVM.Settings.NfcEnabled)
+            if (Settings.NfcEnabled)
             {
                 Tabby.Items.Add(new Tab()
                 {
@@ -47,7 +49,7 @@ namespace DimensionalTag
                            }
                 });
 
-                CenterTab.Items.Add(new ShellContent() { });
+                CenterTab.Items.Add(new ShellContent() { Icon = "placeholder.png", IsEnabled = false });
                 CenterTab.IsEnabled = false;              
             }
 
@@ -74,7 +76,7 @@ namespace DimensionalTag
         }
 
          [RelayCommand]
-         async void Search_Tapped()
+         async Task Search_Tapped()
         {
             await Current.Navigation.PushModalAsync(new SearchPage(SearchVM));
         }

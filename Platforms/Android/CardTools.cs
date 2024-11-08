@@ -30,9 +30,10 @@ namespace DimensionalTag
             if (_nfcAdaper == null)
             {
                 Settings = Settings.GetInstance();
+                Settings.NfcEnabled = false;
                 ErrorReport("Nfc Unavailable", "Nfc is not supported on this device. Please connect portal to usb port.");
                 Settings.SetWritingDevice = WritingDevice.Portal;
-                Settings.NfcEnabled = false;
+
             }
         }
         public void OnResume()

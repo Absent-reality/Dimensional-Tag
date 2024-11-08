@@ -29,10 +29,12 @@ namespace DimensionalTag
         public void GetList()
         {
             AllCharacters.Clear();
+            AllCharacters.Add(new Character(0, "", "", "placeholder.png", []));
             foreach (var character in Character.Characters)
             {
                 AllCharacters.Add(character);
             }
+            AllCharacters.Add(new Character(0, "", "", "placeholder.png", []));
         }
 
         [RelayCommand]
@@ -40,9 +42,8 @@ namespace DimensionalTag
         {
             IsEnabled = false;
 
-            HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
-
             if (name == "") { return; }
+            HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
 
             var thisItem = Character.Characters.FirstOrDefault(c => c.Name == name);
             if (thisItem == null) { return; }

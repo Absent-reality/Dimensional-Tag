@@ -161,7 +161,7 @@ public partial class VehiclesPage : ContentPage
 
     public void SpinTo(Vehicle vehicle)
     {
-        collection.ScrollTo(Vm.GetVehiclePosition(vehicle), position: ScrollToPosition.Center);
+        collection.ScrollTo(Vm.GetVehiclePosition(vehicle));
     }
 
     private void Arrow_Tapped(object sender, TappedEventArgs e)
@@ -170,11 +170,11 @@ public partial class VehiclesPage : ContentPage
         switch (img.AutomationId)
         {
             case "Left":
-                collection.ScrollTo(1);
+                collection.ScrollTo(0);
                 break;
 
             case "Right":
-                collection.ScrollTo(Vm.AllVehicles.Count - 2);
+                collection.ScrollTo(Vm.AllVehicles.Count - 1);
                 break;
         }
     }

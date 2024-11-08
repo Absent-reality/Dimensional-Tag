@@ -70,19 +70,21 @@ namespace DimensionalTag
         }
 
         [RelayCommand]
-        async void ItemSelected()
+        async Task ItemSelected(string itemName)
         {
             HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
 
-            if (SelectedItem == null)
+            if (itemName == "")
             {
                 await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong.", "Ok.", "", false));
                 return;
             }
+            var thisItem = ListItems.FirstOrDefault(x => x.ItemName == itemName);
+            if (thisItem == null) { return;}
 
-            if (SelectedItem.Id == null & SelectedItem.ItemName != null)
+            if (thisItem.Id == null & thisItem.ItemName != null)
             {
-                World? world = World.Worlds.FirstOrDefault(m => m.Name == SelectedItem.ItemName);
+                World? world = World.Worlds.FirstOrDefault(m => m.Name == thisItem.ItemName);
                 if (world == null)
                 {
                     await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong with world.", "Ok.", "", false));
@@ -90,16 +92,15 @@ namespace DimensionalTag
                 }
 
                 var navParam = new Dictionary<string, object> { { "WorldParam", world } };
-                await Shell.Current.GoToAsync($"///WorldsPage", navParam);                
+                await Shell.Current.GoToAsync($"///WorldsPage", navParam);
             }
-
-            else if (SelectedItem.Id != null)
+            else if (thisItem.Id != null)
             {
-                switch (SelectedItem.Id.Value)
+                switch (thisItem.Id.Value)
                 {
-                    case <= 800:
+                    case <= 999:
 
-                        Character? character = Character.Characters.FirstOrDefault(m => m.Id == SelectedItem.Id);
+                        Character? character = Character.Characters.FirstOrDefault(m => m.Id == thisItem.Id);
                         if (character == null)
                         {
                             await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong with character.", "Ok.", "", false));
@@ -111,8 +112,8 @@ namespace DimensionalTag
 
                         break;
 
-                    case > 800:
-                        Vehicle? vehicle = Vehicle.Vehicles.FirstOrDefault(m => m.Id == SelectedItem.Id);
+                    case > 999:
+                        Vehicle? vehicle = Vehicle.Vehicles.FirstOrDefault(m => m.Id == thisItem.Id);
                         if (vehicle == null)
                         {
                             await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong with vehicle.", "Ok.", "", false));
@@ -126,10 +127,10 @@ namespace DimensionalTag
                         }
                         else if (vehicle.Form == 2)
                         {
-                            var veh = Vehicle.Vehicles.FirstOrDefault(v => v.Id == vehicle.Id - 1);
-                            if (veh != null)
+                            var vehi = Vehicle.Vehicles.FirstOrDefault(v => v.Id == vehicle.Id - 1);
+                            if (vehi != null)
                             {
-                                var navParam = new Dictionary<string, object> { { "VehicleParam", veh } };
+                                var navParam = new Dictionary<string, object> { { "VehicleParam", vehi } };
                                 await Shell.Current.GoToAsync($"///VehiclesPage", navParam);
                             }
                         }

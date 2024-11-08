@@ -30,10 +30,10 @@
                     Margin="0,0,0,10">
                     <Label.Shadow>
                         <Shadow
-                          Brush="DimGray"
-                          Offset="10,10"
-                          Radius="20"
-                          Opacity=".8" />
+                            Brush="DimGray"
+                            Offset="5,5"
+                            Radius="5"
+                            Opacity=".8" />
                     </Label.Shadow>
                 </Label>
 
@@ -76,7 +76,8 @@
                                 Height="50"  
                                 Text="{x:Binding ItemName}"
                                 Detail="" 
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SearchViewModel}}, Path= ItemSelectedCommand}"/>
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SearchViewModel}}, Path= ItemSelectedCommand}"
+                                CommandParameter="{Binding ItemName}"/>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
@@ -96,13 +97,20 @@
                     Margin="15">
                     <Button.Shadow>
                         <Shadow
-                          Brush="DimGray"
-                          Offset="10,10"
-                          Radius="20"
-                          Opacity=".8" />
+                            Brush="DimGray"
+                            Offset="5,5"
+                            Radius="5"
+                            Opacity=".8" />
                     </Button.Shadow>
                 </Button>
             </VerticalStackLayout>
+            <Border.Shadow>
+                <Shadow
+                     Brush="DimGray"
+                     Offset="5,5"
+                     Radius="5"
+                     Opacity=".5" />
+            </Border.Shadow>
         </Border>
     </Grid>
 </ContentPage>

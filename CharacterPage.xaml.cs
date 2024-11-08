@@ -172,7 +172,7 @@ public partial class CharacterPage : ContentPage
 
     public void SpinTo(Character character)
     {
-        collection.ScrollTo(Vm.GetCharacterPosition(character), position: ScrollToPosition.Center);
+        collection.ScrollTo(Vm.GetCharacterPosition(character));
     }
 
     private void Arrow_Tapped(object sender, TappedEventArgs e)
@@ -181,11 +181,11 @@ public partial class CharacterPage : ContentPage
         switch (img.AutomationId)
         {
             case "Left":
-                collection.ScrollTo(1);
+                collection.ScrollTo(0);
                 break;
 
             case "Right":
-                collection.ScrollTo(Vm.AllCharacters.Count -2);
+                collection.ScrollTo(Vm.AllCharacters.Count -1);
                 break;             
         }       
     }

@@ -45,80 +45,83 @@
             ShouldMute="{Binding Path= Settings.Bgm_isMute}"
             Volume="{Binding Path= Settings.Get_BgmVolume}"
             />
-
-        <CollectionView
-            x:Name="collection"
+        <Border
             Grid.Row="1"
             Grid.RowSpan="2"
             Grid.Column="0"
             Grid.ColumnSpan="3"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center"
-            ItemsSource="{Binding AllCharacters}"
-            IsEnabled="{Binding IsEnabled}"  
-            SelectedItem="{Binding CurrentItem}" 
-            Opacity="0"            
             BackgroundColor="Transparent"
-            Scrolled="OnScrolled"
-            SelectionMode="Single"   
-            Scale="1" >
-            <CollectionView.ItemsLayout>
-                <LinearItemsLayout                   
-                    Orientation="Horizontal"
-                    SnapPointsAlignment="Center"
-                    SnapPointsType="Mandatory"/>
-            </CollectionView.ItemsLayout>
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="viewmodel:Character" > 
+            Stroke="Transparent" >
 
-                    <Grid RowDefinitions="*,*,*" Padding="10">
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup Name="CommonStates" >
-                                <VisualState Name="Normal">
-                                    <VisualState.Setters>
-                                        <Setter Property="Opacity" Value=".5" />
-                                    </VisualState.Setters>   
-                                </VisualState>
-                                <VisualState Name="Selected">
-                                    <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="Transparent" />
-                                        <Setter Property="Opacity" Value="1" />
-                                    </VisualState.Setters>
-                                </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
-                        <Image  
-                            x:Name="ColImg"
-                            Grid.Row="1"
-                            Scale="1.25"
-                            Source="{Binding Images}"
-                            Margin="30,0,30,0"
-                            HorizontalOptions="Center"
-                            VerticalOptions="Center">
-                            <Image.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={x:RelativeSource AncestorType={x:Type viewmodel:CharacterViewModel}}, Path= Character_TappedCommand}"
+            <CollectionView
+                x:Name="collection"
+                VerticalOptions="Center" 
+                HorizontalOptions="Center"
+                ItemsSource="{Binding AllCharacters}"
+                IsEnabled="{Binding IsEnabled}"  
+                SelectedItem="{Binding CurrentItem}" 
+                Opacity="0"            
+                BackgroundColor="Transparent"
+                Scrolled="OnScrolled"
+                SelectionMode="Single" >
+
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout                   
+                        Orientation="Horizontal"
+                        SnapPointsAlignment="Center"
+                        SnapPointsType="Mandatory"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="viewmodel:Character" >
+
+                        <Grid RowDefinitions="*,*,*" >
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup Name="CommonStates" >
+                                    <VisualState Name="Normal">
+                                        <VisualState.Setters>
+                                            <Setter Property="Opacity" Value=".5" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="Transparent" />
+                                            <Setter Property="Opacity" Value="1" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Image  
+                                x:Name="ColImg"
+                                Grid.Row="1"                                
+                                Source="{Binding Images}"
+                                Margin="30,0,30,0"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={x:RelativeSource AncestorType={x:Type viewmodel:CharacterViewModel}}, Path= Character_TappedCommand}"
                                                       CommandParameter="{Binding Name}" />
-                            </Image.GestureRecognizers>
-                        </Image>
+                                </Image.GestureRecognizers>
+                            </Image>
 
-                        <Label 
-                            Grid.Row="2"
-                            x:Name="Lbl_CharName"                                                                             
-                            BackgroundColor="Transparent"
-                            Text="{Binding Name}"
-                            FontSize="Medium"
-                            FontAttributes="Bold"
-                            TextColor="White"
-                            HorizontalTextAlignment="Center"
-                            VerticalOptions="Center"              
-                            HorizontalOptions="Center" >
+                            <Label 
+                                Grid.Row="2"
+                                x:Name="Lbl_CharName"                                                                             
+                                BackgroundColor="Transparent"
+                                Text="{Binding Name}"
+                                FontSize="Medium"
+                                FontAttributes="Bold"
+                                TextColor="White"
+                                HorizontalTextAlignment="Center"
+                                VerticalOptions="Start"              
+                                HorizontalOptions="Center" >
+                            </Label>
 
-                        </Label>
-                    </Grid>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Border>
+        
         <Image
             x:Name="rightArrow"
             AutomationId="Right"

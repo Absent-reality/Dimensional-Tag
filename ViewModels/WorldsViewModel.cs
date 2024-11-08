@@ -37,42 +37,25 @@ namespace DimensionalTag
 
         private ObservableCollection<SearchItems> ListItems = [];
 
-        public CollectionView? cv {  get; set; }
+        public CollectionView? WorldCollection {  get; set; }
+
+        public CollectionView? ItemCollection { get; set; }
 
         public void GetWorldList()
         {
             AllWorlds.Clear();
+            AllWorlds.Add( new World( "", "placeholder.png" ));
             foreach (var world in World.Worlds)
             {
                 AllWorlds.Add(world);
             }
+            AllWorlds.Add(new World("", "placeholder.png"));
         }
 
         [RelayCommand]
         void WorldChanged(object world)
-        {
-            var thisWorld = world as World;
-            //Begin the digging for matches. 
-            ListItems.Clear();
-
-            if (thisWorld != null)
-            {
-
-                var characters = Character.Characters.FindAll(x => x.World == thisWorld.Name);
-                var vehi = Vehicle.Vehicles.FindAll(x => x.World == thisWorld.Name);
-                var firstForm = vehi.FindAll(x => x.Form == 1);
-
-                foreach (var w in characters)
-                {
-                    ListItems.Add(new SearchItems() { ItemName = w.Name, Id = w.Id, Images = w.Images });
-                }
-                foreach (var w in firstForm)
-                {
-                    ListItems.Add(new SearchItems() { ItemName = w.Name, Id = w.Id, Images = w.Images });
-                }
-
-            }
-            SortedItems = ListItems;
+        {         
+            SetItemsList((World)world);        
         }
 
         [RelayCommand]
@@ -92,7 +75,7 @@ namespace DimensionalTag
             }
             switch (thisItem.Id.Value)
             {
-                case <= 800:
+                case <= 999:
                     {
                         Character? character = Character.Characters.FirstOrDefault(m => m.Id == thisItem.Id);
                         if (character == null) { return; }
@@ -112,7 +95,7 @@ namespace DimensionalTag
                     }
                     break;
 
-                case > 800:
+                case > 999:
                     {
                         Vehicle? vehicle = Vehicle.Vehicles.FirstOrDefault(m => m.Id == thisItem.Id);
                         if (vehicle == null) { return; }
@@ -132,7 +115,7 @@ namespace DimensionalTag
                     }
                     break;
             }
-            cv?.ScrollTo(thisItem, position: ScrollToPosition.Center);
+            ItemCollection?.ScrollTo(thisItem, position: ScrollToPosition.Center);
             IsEnabled = true;
         }
 
@@ -140,6 +123,34 @@ namespace DimensionalTag
         {
             int index = AllWorlds.IndexOf(world);
             return index;
+        }
+
+        public void SetItemsList(World? world)
+        {
+            if (world?.Name == "") { return; }
+            var thisWorld = world;
+            //Begin the digging for matches. 
+            ListItems.Clear();
+
+            if (thisWorld == null) { return; }
+            ListItems.Add( new SearchItems() { ItemName = "", Id = 0, Images = "placeholder.png" });
+
+            var characters = Character.Characters.FindAll(x => x.World == thisWorld.Name);
+            var vehi = Vehicle.Vehicles.FindAll(x => x.World == thisWorld.Name);
+            var firstForm = vehi.FindAll(x => x.Form == 1);
+
+            foreach (var w in characters)
+            {
+                ListItems.Add(new SearchItems() { ItemName = w.Name, Id = w.Id, Images = w.Images });
+            }
+            foreach (var w in firstForm)
+            {
+                ListItems.Add(new SearchItems() { ItemName = w.Name, Id = w.Id, Images = w.Images });
+            }
+
+            ListItems.Add(new SearchItems() { ItemName = "", Id = 0, Images = "placeholder.png" });
+
+            SortedItems = ListItems;
         }
     }
 }

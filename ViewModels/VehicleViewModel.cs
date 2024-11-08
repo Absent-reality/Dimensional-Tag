@@ -27,20 +27,21 @@ namespace DimensionalTag
         public void GetList()
         {
             AllVehicles.Clear();
+            AllVehicles.Add(new Vehicle(0, 0, "", "", "placeholder.png", []));
             var vehicleList = Vehicle.Vehicles.FindAll(x => x.Form == 1);
             foreach (var vehicle in vehicleList)
             {
                 AllVehicles.Add(vehicle);
             }
+            AllVehicles.Add(new Vehicle(0, 0, "", "", "placeholder.png", []));
         }
 
         [RelayCommand]
         async Task Vehicle_Tapped(string name)
         {
             IsEnabled = false;
-            HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
-
             if (name == "") { return; }
+            HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
 
             var thisItem = Vehicle.Vehicles.FirstOrDefault(v => v.Name == name);
             if (thisItem == null) { return; }

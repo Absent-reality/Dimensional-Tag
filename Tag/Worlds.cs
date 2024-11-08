@@ -25,9 +25,9 @@ namespace DimensionalTag
         }
 
         public static readonly List<World> Worlds =
-        [           
-            new World ("DC Comics",                                  "dc.png"),
-            new World ("Lord of the Rings",                          "lotr.png"),
+        [  
+            new World ("Lord of the Rings",                          "lotr.png"),        
+            new World ("DC Comics",                                  "dc.png"),           
             new World ("The Lego Movie",                             "lego_movie.png"),
             new World ("The Simpsons",                               "simpsons.png"),
             new World ("Portal 2",                                   "portal.png"),

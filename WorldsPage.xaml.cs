@@ -1,7 +1,6 @@
 using CommunityToolkit.Maui.Core.Primitives;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm;
-using Microsoft.VisualBasic;
 using System.Collections.ObjectModel;
 
 namespace DimensionalTag;
@@ -98,7 +97,8 @@ public partial class WorldsPage : ContentPage
 		InitializeComponent();
         BindingContext = vm;
         Vm = vm;
-        vm.cv = worldCollection;
+        vm.WorldCollection = worldCollection;
+        vm.ItemCollection = itemCollection;
         vm.GetWorldList();
         WorldLastIndex = vm.AllWorlds.Count -1;
 
@@ -111,7 +111,7 @@ public partial class WorldsPage : ContentPage
     {
         this.Loaded -= Page_Loaded;
         sfx.Volume = Vm.CheckValue("Sfx", sfx.Volume);
-        worldCollection.ScrollTo(1);
+  
     }
 
     public async void PoppingIn()
@@ -138,13 +138,14 @@ public partial class WorldsPage : ContentPage
         sfx.Stop();
 
         await Task.Delay(500);
-
+        worldCollection.ScrollTo(1);  
         View[] views = [];
         if (ItemFirstIndex != 0 && ItemLastIndex != Vm.SortedItems.Count - 1)
         { views = [worldCollection, itemCollection, rightArrow, leftArrow]; }
         else if (ItemFirstIndex == 0) { views = [worldCollection, itemCollection, rightArrow]; }
         else if (ItemLastIndex == Vm.SortedItems.Count - 1) { views = [worldCollection, itemCollection, leftArrow]; }
         await FadeGroup(views, 1);
+        Vm.SetItemsList(Vm.CurrentWorld);
 
     }
 
@@ -174,58 +175,59 @@ public partial class WorldsPage : ContentPage
 
     }
 
-    private void On_Scrolled(object sender, ItemsViewScrolledEventArgs e)
+    private void OnWorlds_Scrolled(object sender, ItemsViewScrolledEventArgs e)
     {
-        var obj = (CollectionView)sender;
 
-        switch (obj.AutomationId)
+        var worldSource = worldCollection.ItemsSource as ObservableCollection<World>;
+        if (worldSource == null) { return; }
+     
+        WorldFirstIndex = e.FirstVisibleItemIndex;
+        WorldLastIndex = e.LastVisibleItemIndex;
+        WorldCenterIndex = e.CenterItemIndex;
+
+        worldCollection.SelectedItem = worldSource[WorldCenterIndex]; 
+        itemCollection.ScrollTo(1);
+
+        var itemSource = itemCollection.ItemsSource as ObservableCollection<SearchItems>;
+        if (itemSource == null) { return; }
+        var total = itemSource.Count;
+
+        if (total < 4) { leftArrow.Opacity = 0; rightArrow.Opacity = 0; }
+
+    }
+
+    private void OnItems_Scrolled(object sender, ItemsViewScrolledEventArgs e)
+    {
+        var itemSource = itemCollection.ItemsSource as ObservableCollection<SearchItems>;
+        if (itemSource == null) { return; }
+        var total = itemSource.Count;
+
+        if (e.FirstVisibleItemIndex == 0) { leftArrow.Opacity = 0; }
+        else
         {
-            case "Worlds":
-
-                var worldSource = worldCollection.ItemsSource as ObservableCollection<World>;
-                if (worldSource == null) { return; }
-
-                WorldFirstIndex = e.FirstVisibleItemIndex;
-                WorldLastIndex = e.LastVisibleItemIndex;
-                WorldCenterIndex = e.CenterItemIndex;
-                worldCollection.SelectedItem = worldSource[WorldCenterIndex];
-
-                break;
-
-            case "Items":
-
-                var itemSource = itemCollection.ItemsSource as ObservableCollection<SearchItems>;
-                if (itemSource == null) { return; }
-                var total = itemSource.Count;
-
-                if (e.FirstVisibleItemIndex == 0) { leftArrow.Opacity = 0; }
-                else
-                {
-                    leftArrow.Opacity = 1;
-                    leftArrow.Shadow = new Shadow
-                    {
-                        Brush = Colors.DimGray,
-                        Offset = new(-5, 5),
-                        Radius = 5,
-                        Opacity = .8f
-                    };
-                }
-
-                if (e.LastVisibleItemIndex == total - 1) { rightArrow.Opacity = 0; }
-                else { rightArrow.Opacity = 1; }
-
-                ItemFirstIndex = e.FirstVisibleItemIndex;
-                ItemLastIndex = e.LastVisibleItemIndex;
-                ItemCenterIndex = e.CenterItemIndex;
-                itemCollection.SelectedItem = itemSource[WorldCenterIndex];
-                break;
+            leftArrow.Opacity = 1;
+            leftArrow.Shadow = new Shadow
+            {
+                Brush = Colors.DimGray,
+                Offset = new(-5, 5),
+                Radius = 5,
+                Opacity = .8f
+            };
         }
-        
+
+        if (e.LastVisibleItemIndex == total - 1) { rightArrow.Opacity = 0; }
+        else { rightArrow.Opacity = 1; }
+
+        ItemFirstIndex = e.FirstVisibleItemIndex;
+        ItemLastIndex = e.LastVisibleItemIndex;
+        ItemCenterIndex = e.CenterItemIndex;
+        itemCollection.SelectedItem = itemSource[ItemCenterIndex];
+
     }
 
     public void SpinTo(World world)
     {
-        worldCollection.ScrollTo(Vm.GetWorldPosition(world), position: ScrollToPosition.Center);
+        worldCollection.ScrollTo(Vm.GetWorldPosition(world));
     }
 
     private void Arrow_Tapped(object sender, TappedEventArgs e)
@@ -234,11 +236,11 @@ public partial class WorldsPage : ContentPage
         switch (img.AutomationId)
         {
             case "Left":
-                itemCollection.ScrollTo(1);
+                itemCollection.ScrollTo(0);
                 break;
 
             case "Right":
-                itemCollection.ScrollTo(Vm.SortedItems.Count - 2);
+                itemCollection.ScrollTo(Vm.SortedItems.Count - 1);
                 break;
         }
     }

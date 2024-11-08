@@ -30,11 +30,11 @@
                Margin="0,0,0,30"
                Source="scan_four.png">
             <Image.Shadow>
-                  <Shadow
-                      Brush="Gray"
-                      Offset="10,10"
-                      Radius="20"
-                      Opacity=".25" />
+                <Shadow
+                     Brush="DimGray"
+                     Offset="5,5"
+                     Radius="5"
+                     Opacity=".5" />
             </Image.Shadow>
         </Image>
 

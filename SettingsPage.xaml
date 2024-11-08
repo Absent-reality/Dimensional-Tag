@@ -74,6 +74,13 @@
                                     VerticalOptions="Center" />
 
                             </HorizontalStackLayout>
+                            <Border.Shadow>
+                                <Shadow
+                     Brush="DimGray"
+                     Offset="5,5"
+                     Radius="5"
+                     Opacity=".5" />
+                            </Border.Shadow>
                         </Border>
 
                         <HorizontalStackLayout>
@@ -179,6 +186,13 @@
                     </Button.Shadow>
                 </Button>
             </VerticalStackLayout>
+            <Border.Shadow>
+                <Shadow
+                     Brush="DimGray"
+                     Offset="5,5"
+                     Radius="5"
+                     Opacity=".5" />
+            </Border.Shadow>
         </Border>
     </Grid>
 </ContentPage>
