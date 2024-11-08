@@ -15,18 +15,11 @@ namespace DimensionalTag
     {
         public CardTools cardTools;
 
-        UsbManager? manager;
-        Activity? activity;
-        private const int ProductId = 0x0241;
-        private const int VendorId = 0x0E6F;
-
         protected override void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             cardTools = new CardTools(this);
 
-            manager = GetSystemService(Context.UsbService) as UsbManager;
-            activity = Platform.CurrentActivity;
             cardTools.OnCreate();
         }
 
@@ -39,18 +32,11 @@ namespace DimensionalTag
         protected override void OnPause()
         {
             base.OnPause();         
-
         }
 
         protected override void OnNewIntent(Intent? intent)
         {
             base.OnNewIntent(intent);
-
-            if (intent.Action == UsbManager.ActionUsbDeviceAttached)
-            {
-                manager = GetSystemService(UsbService) as UsbManager;
-            }
-
             cardTools.OnNewIntent(intent);
         }
     }

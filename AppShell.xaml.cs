@@ -1,25 +1,33 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using DimensionalTag.Tools;
+﻿#if ANDROID
+using Android.Content;
+using Android.Nfc;
+#endif
+using CommunityToolkit.Mvvm.Input;
 
 namespace DimensionalTag
 {
     public partial class AppShell : Shell
     {
+
         public SettingsViewModel SettingsVM { get; private set; }
         public SettingsPage SettingsPage { get; private set; }
         public SearchViewModel SearchVM { get; private set; }
-        public Settings? Settings;
 
         public AppShell()
         {
+
             InitializeComponent();
-            BindingContext = this;
+            BindingContext = this;           
             SettingsVM = new SettingsViewModel();
             SettingsPage = new SettingsPage(SettingsVM);
             SearchVM = new SearchViewModel();
-            Settings = Settings.GetInstance();
 
-            if (Settings.NfcEnabled)
+#if ANDROID   
+            
+            var manager = Android.App.Application.Context.GetSystemService(Context.NfcService) as NfcManager;           
+            var adapter = manager!.DefaultAdapter;  
+                      
+            if (adapter != null )
             {
                 Tabby.Items.Add(new Tab()
                 {
@@ -43,16 +51,17 @@ namespace DimensionalTag
                 Tabby.Items.Add(new Tab()
                 {
                     Title = "Portal",
-                    Icon = "scan_ico.png",
+                    Icon = "portal_ico.png",
                     Items = {  new ShellContent()  { Route = "PortalPage",
                                ContentTemplate = new DataTemplate(() => new PortalPage(new PortalViewModel())) }
                            }
                 });
 
                 CenterTab.Items.Add(new ShellContent() { Icon = "placeholder.png", IsEnabled = false });
-                CenterTab.IsEnabled = false;              
+                CenterTab.IsEnabled = false; 
+                Img_Port.IsVisible = false;
             }
-
+#endif
         }
 
         private async void Settings_Tapped(object sender, TappedEventArgs e)

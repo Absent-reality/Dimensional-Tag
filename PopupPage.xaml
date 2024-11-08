@@ -171,6 +171,15 @@
                         Clicked="CancelButton_Clicked" 
                         Padding="10"
                         Margin="15">
+                        <Button.Triggers>
+                            <DataTrigger 
+                                 TargetType="Button"
+                                 Binding="{Binding HereToWrite}"
+                                 Value="False">
+                                <Setter Property="Text"
+                                        Value="Close" />
+                            </DataTrigger>
+                        </Button.Triggers>
                         <Button.Shadow>
                             <Shadow
                                 Brush="DimGray"
