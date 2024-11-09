@@ -4,7 +4,7 @@ using SkiaSharp;
 
 namespace DimensionalTag
 {
-#if ANDROID || WINDOWS
+
     [QueryProperty(nameof(WriteCharacter), nameof(WriteCharacter))]
     [QueryProperty(nameof(WriteVehicle), nameof(WriteVehicle))]
 
@@ -21,6 +21,8 @@ namespace DimensionalTag
             set => SendToWrite(value);
         }
 
+#if ANDROID || WINDOWS
+
         public Microsoft.Maui.Graphics.Color Picked
         {
             get { return Vm.PickedColor; }
@@ -33,12 +35,13 @@ namespace DimensionalTag
             set { Vm.CameToWrite = value; OnPropertyChanged(); }   
         }
 
-  
+#endif
         public PortalViewModel Vm;
         public PortalPage(PortalViewModel vm)
         {
             InitializeComponent();
             BindingContext = vm;
+
             Vm = vm;
             
             this.Loaded += Page_Loaded;
@@ -118,10 +121,10 @@ namespace DimensionalTag
                         var innerRingRadius = ((float)canvasWidth / (float)canvasHeight) * (float)12;
                         canvas.DrawCircle(lastTouchPoint.X, lastTouchPoint.Y,
                                             innerRingRadius, paintTouchPoint);
-
+#if ANDROID || WINDOWS
                         //set selected color
                         Picked = touchPointColor.ToMauiColor();
-
+#endif
                     }
                 }
 
@@ -153,13 +156,17 @@ namespace DimensionalTag
 
         public async void SendToWrite(object item)
         {
-           bool result = await Vm.BeginWrite(item);
+#if ANDROID || WINDOWS
+            bool result = await Vm.BeginWrite(item);
+#endif
         }
 
         private void OnGoodbye(object sender, NavigatedFromEventArgs e)
         {
+#if ANDROID || WINDOWS
+
             CameHereToWrite = false;
+#endif
         }
     }
-#endif
 }

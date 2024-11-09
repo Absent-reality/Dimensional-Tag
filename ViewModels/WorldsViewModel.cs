@@ -44,12 +44,12 @@ namespace DimensionalTag
         public void GetWorldList()
         {
             AllWorlds.Clear();
-            AllWorlds.Add( new World( "", "placeholder.png" ));
+            AllWorlds.Add( new World( "", "left_placeholder.png" ));
             foreach (var world in World.Worlds)
             {
                 AllWorlds.Add(world);
             }
-            AllWorlds.Add(new World("", "placeholder.png"));
+            AllWorlds.Add(new World("", "right_placeholder.png"));
         }
 
         [RelayCommand]
@@ -132,7 +132,7 @@ namespace DimensionalTag
             ListItems.Clear();
 
             if (thisWorld == null) { return; }
-            ListItems.Add( new SearchItems() { ItemName = "", Id = 0, Images = "placeholder.png" });
+            ListItems.Add( new SearchItems() { ItemName = "", Id = 0, Images = "left_placeholder.png" });
 
             var characters = Character.Characters.FindAll(x => x.World == thisWorld.Name);
             var vehi = Vehicle.Vehicles.FindAll(x => x.World == thisWorld.Name);
@@ -147,7 +147,7 @@ namespace DimensionalTag
                 ListItems.Add(new SearchItems() { ItemName = w.Name, Id = w.Id, Images = w.Images });
             }
 
-            ListItems.Add(new SearchItems() { ItemName = "", Id = 0, Images = "placeholder.png" });
+            ListItems.Add(new SearchItems() { ItemName = "", Id = 0, Images = "right_placeholder.png" });
 
             SortedItems = ListItems;
         }

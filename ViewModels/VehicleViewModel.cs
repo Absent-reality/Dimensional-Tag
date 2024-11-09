@@ -27,13 +27,13 @@ namespace DimensionalTag
         public void GetList()
         {
             AllVehicles.Clear();
-            AllVehicles.Add(new Vehicle(0, 0, "", "", "placeholder.png", []));
+            AllVehicles.Add(new Vehicle(0, 0, "", "", "left_placeholder.png", []));
             var vehicleList = Vehicle.Vehicles.FindAll(x => x.Form == 1);
             foreach (var vehicle in vehicleList)
             {
                 AllVehicles.Add(vehicle);
             }
-            AllVehicles.Add(new Vehicle(0, 0, "", "", "placeholder.png", []));
+            AllVehicles.Add(new Vehicle(0, 0, "", "", "right_placeholder.png", []));
         }
 
         [RelayCommand]

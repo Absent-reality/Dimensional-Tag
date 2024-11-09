@@ -211,10 +211,12 @@
 	  <None Remove="Resources\Images\Info.png" />
 	  <None Remove="Resources\Images\lefthalf.png" />
 	  <None Remove="Resources\Images\left_arrow.png" />
+	  <None Remove="Resources\Images\left_placeholder.png" />
 	  <None Remove="Resources\Images\mute_icon.png" />
 	  <None Remove="Resources\Images\placeholder.png" />
 	  <None Remove="Resources\Images\righthalf.png" />
 	  <None Remove="Resources\Images\right_arrow.png" />
+	  <None Remove="Resources\Images\right_placeholder.png" />
 	  <None Remove="Resources\Images\settings_icon.png" />
 	  <None Remove="Resources\Images\Tab_Icons\char_ico.png" />
 	  <None Remove="Resources\Images\Tab_Icons\portal_ico.png" />

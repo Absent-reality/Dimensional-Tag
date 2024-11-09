@@ -29,12 +29,12 @@ namespace DimensionalTag
         public void GetList()
         {
             AllCharacters.Clear();
-            AllCharacters.Add(new Character(0, "", "", "placeholder.png", []));
+            AllCharacters.Add(new Character(0, "", "", "left_placeholder.png", []));
             foreach (var character in Character.Characters)
             {
                 AllCharacters.Add(character);
             }
-            AllCharacters.Add(new Character(0, "", "", "placeholder.png", []));
+            AllCharacters.Add(new Character(0, "", "", "right_placeholder.png", []));
         }
 
         [RelayCommand]
