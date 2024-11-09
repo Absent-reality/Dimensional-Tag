@@ -1,7 +1,11 @@
-﻿
-using CommunityToolkit.Maui.Core.Primitives;
+﻿using CommunityToolkit.Maui.Core.Primitives;
 using CommunityToolkit.Maui.Views;
 using DimensionalTag.Tools;
+
+#if ANDROID
+using Android.Nfc;
+using Android.Content;
+#endif
 
 namespace DimensionalTag
 {
@@ -23,6 +27,9 @@ namespace DimensionalTag
 
         public bool cameToWrite = false;
         public bool isNotBusy = true;
+#if ANDROID
+        public NfcAdapter? Adapter;
+#endif
 
         public ScanViewModel Vm { get; set; }
         public ScanPage(ScanViewModel vm)
@@ -30,10 +37,13 @@ namespace DimensionalTag
             InitializeComponent();
             BindingContext = vm;
             Vm = vm;
-            
-            this.Loaded += ScanPage_Loaded;
 
+            this.Loaded += ScanPage_Loaded;
 #if ANDROID
+            var manager = Android.App.Application.Context.GetSystemService(Context.NfcService) as NfcManager;
+            var adapter = manager!.DefaultAdapter;
+            Adapter = adapter;
+
             CardToolsGetter.SetOnCardReceive(async (cardInfo) =>
             {              
                 if (cardInfo != null)
@@ -65,8 +75,15 @@ namespace DimensionalTag
 
         private async void On_Arrived(object sender, NavigatedToEventArgs e)
         {        
-                await Task.Delay(600);
-                SwapBg(cameToWrite);           
+            await Task.Delay(600);
+            SwapBg(cameToWrite);
+#if ANDROID
+            if (Adapter != null && !Adapter.IsEnabled)
+            {
+                await Shell.Current.ShowPopupAsync(new AlertPopup("Oops.", "Nfc is not enabled. Please enable from your device settings.", "ok", "", false));
+            }
+#endif
+
         }
 
         private async void On_Goodbye(object sender, NavigatedFromEventArgs e)

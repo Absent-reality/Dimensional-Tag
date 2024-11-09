@@ -39,8 +39,10 @@ namespace DimensionalTag
         [RelayCommand]
         async Task Vehicle_Tapped(string name)
         {
-            IsEnabled = false;
+
             if (name == "") { return; }
+            IsEnabled = false;
+           
             HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
 
             var thisItem = Vehicle.Vehicles.FirstOrDefault(v => v.Name == name);

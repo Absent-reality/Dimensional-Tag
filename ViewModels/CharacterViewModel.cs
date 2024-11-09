@@ -40,9 +40,10 @@ namespace DimensionalTag
         [RelayCommand]
         async Task Character_Tapped(string name)
         {
-            IsEnabled = false;
 
             if (name == "") { return; }
+            IsEnabled = false;
+
             HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
 
             var thisItem = Character.Characters.FirstOrDefault(c => c.Name == name);

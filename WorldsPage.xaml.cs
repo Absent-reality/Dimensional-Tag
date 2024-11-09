@@ -111,7 +111,7 @@ public partial class WorldsPage : ContentPage
     {
         this.Loaded -= Page_Loaded;
         sfx.Volume = Vm.CheckValue("Sfx", sfx.Volume);
-  
+        worldCollection.ScrollTo(1, position: ScrollToPosition.Center);
     }
 
     public async void PoppingIn()
@@ -137,8 +137,6 @@ public partial class WorldsPage : ContentPage
         await Task.Delay(500);
         sfx.Stop();
 
-        await Task.Delay(500);
-        worldCollection.ScrollTo(1);  
         View[] views = [];
         if (ItemFirstIndex != 0 && ItemLastIndex != Vm.SortedItems.Count - 1)
         { views = [worldCollection, itemCollection, rightArrow, leftArrow]; }
@@ -193,6 +191,7 @@ public partial class WorldsPage : ContentPage
         var total = itemSource.Count;
 
         if (total < 4) { leftArrow.Opacity = 0; rightArrow.Opacity = 0; }
+        else { leftArrow.Opacity = 1; rightArrow.Opacity = 1; }
 
     }
 
@@ -225,9 +224,14 @@ public partial class WorldsPage : ContentPage
 
     }
 
-    public void SpinTo(World world)
+    private async void SpinTo(World world)
     {
-        worldCollection.ScrollTo(Vm.GetWorldPosition(world));
+        while (!this.IsLoaded)
+        {
+            await Task.Delay(500);
+        }
+        var item = Vm.GetWorldPosition(world);
+        worldCollection.ScrollTo(item, position: ScrollToPosition.Center);
     }
 
     private void Arrow_Tapped(object sender, TappedEventArgs e)

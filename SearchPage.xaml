@@ -47,7 +47,7 @@
                         x:Name="searchBar"                    
                         Placeholder="Search..."
                         Text="{Binding Query}"
-                        HorizontalTextAlignment="Start"
+                        HorizontalTextAlignment="Start"                      
                         TextColor="White"                   
                         BackgroundColor="#161616"
                         PlaceholderColor="LightGray"

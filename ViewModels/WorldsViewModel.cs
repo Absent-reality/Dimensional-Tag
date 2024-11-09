@@ -60,12 +60,11 @@ namespace DimensionalTag
 
         [RelayCommand]
         async Task Item_Tapped(string name)
-        {
-            IsEnabled = false;
+        {         
             HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
 
             if (name == "") { return; }
-
+            IsEnabled = false;
             var thisItem = SortedItems.FirstOrDefault(x => x.ItemName == name);
             if (thisItem?.Id == null)
             {

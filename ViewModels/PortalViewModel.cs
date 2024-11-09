@@ -722,11 +722,11 @@ namespace DimensionalTag
         /// <returns>True if the tag is empty.</returns>
         public static bool IsEmptyCard(byte[] data)
         {
-            var a = data.SequenceEqual(new byte[] { 0x00, 0x00, 0x00, 0x00,
+            var result = data.SequenceEqual(new byte[] { 0x00, 0x00, 0x00, 0x00,
                                                    0x00, 0x00, 0x00, 0x00,
                                                    0x00, 0x00, 0x00, 0x00,
                                                    0x00, 0x00, 0x00, 0x00 });
-            return a;
+            return result;
         }
 
 

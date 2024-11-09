@@ -20,9 +20,9 @@ namespace DimensionalTag
         {
             ObservableCollection<SearchItems> totalTags = [];
 
-            var charList = Character.Characters.FindAll(x => !string.IsNullOrWhiteSpace(x.Name) && x.Name.Contains(filterText, StringComparison.OrdinalIgnoreCase))?.ToList();
-            var worldList = World.Worlds.FindAll(x => !string.IsNullOrWhiteSpace(x.Name) && x.Name.Contains(filterText, StringComparison.OrdinalIgnoreCase))?.ToList();
-            var vehiList = Vehicle.Vehicles.FindAll(x => !string.IsNullOrWhiteSpace(x.Name) && x.Name.Contains(filterText, StringComparison.OrdinalIgnoreCase))?.ToList();
+            var charList = Character.Characters.FindAll(x => !string.IsNullOrWhiteSpace(x.Name) && x.Name.Contains(filterText, StringComparison.OrdinalIgnoreCase));
+            var worldList = World.Worlds.FindAll(x => !string.IsNullOrWhiteSpace(x.Name) && x.Name.Contains(filterText, StringComparison.OrdinalIgnoreCase));
+            var vehiList = Vehicle.Vehicles.FindAll(x => !string.IsNullOrWhiteSpace(x.Name) && x.Name.Contains(filterText, StringComparison.OrdinalIgnoreCase));
 
             if (charList == null || charList.Count <= 0)
             {

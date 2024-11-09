@@ -35,37 +35,25 @@ namespace DimensionalTag
         {
             //Begin the digging for matches. 
             ListItems.Clear();
-            bool notFound = false;
 
-            if (Query != "")
-            {
-
-                var items = SearchItems.SearchTags(Query);
-
-                if (items == null || items.Count == 0)
-                {
-                    notFound = true;
-                    ListItems.Add(new SearchItems() { ItemName = "Name not found." });
-                }
-                else
-                {
-                    notFound = false;
-                    foreach (var item in items)
-                    ListItems.Add(new SearchItems() { ItemName = item.ItemName, Id = item.Id });
-                }
-
-                if (notFound) { Results = $" Results: {0} "; }
-                else
-                {
-                    var count = ListItems.Where(x => !string.IsNullOrWhiteSpace(x.ItemName)).Count();
-                    Results = $" Results: {count} ";
-                }
-                
-            }
-            else
+            if (Query == "")
             {
                 Results = "";
                 ListItems = [];
+                return;
+            }
+
+            var items = SearchItems.SearchTags(Query);
+
+            if (items == null || items.Count == 0)
+            {
+                ListItems.Add(new SearchItems() { ItemName = "Name not found." });
+                Results = $" Results: {0} ";
+            }
+            else
+            {              
+                ListItems = items;
+                Results = $" Results: {ListItems.Count} ";
             }
         }
 

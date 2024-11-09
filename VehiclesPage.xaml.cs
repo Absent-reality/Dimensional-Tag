@@ -20,11 +20,9 @@ public partial class VehiclesPage : ContentPage
     {
         get { return _firstIndex; }
         set
-        {
-            if (_firstIndex == value)
-                return;
-            _firstIndex = value;
-            OnPropertyChanged(nameof(FirstIndex));
+        { if (_firstIndex == value) { return; }
+           _firstIndex = value;
+           OnPropertyChanged(nameof(FirstIndex));     
         }
     }
 
@@ -32,12 +30,10 @@ public partial class VehiclesPage : ContentPage
     {
         get { return Vm.CenterIndex; }
         set
-        {
-            if (Vm.CenterIndex == value)
-                return;
-            Vm.CenterIndex = value;
-            OnPropertyChanged(nameof(CenterIndex));
-            OnPosition_Changed();
+        { if (Vm.CenterIndex == value) { return; }
+           Vm.CenterIndex = value;
+           OnPropertyChanged(nameof(CenterIndex));   
+           OnPosition_Changed();
         }
     }
 
@@ -45,11 +41,9 @@ public partial class VehiclesPage : ContentPage
     {
         get { return Vm.LastIndex; }
         set
-        {
-            if (Vm.LastIndex == value)
-                return;
-            Vm.LastIndex = value;
-            OnPropertyChanged(nameof(LastIndex));
+        { if (Vm.LastIndex == value) { return; }
+           Vm.LastIndex = value;
+           OnPropertyChanged(nameof(LastIndex));     
         }
     }
 
@@ -70,7 +64,8 @@ public partial class VehiclesPage : ContentPage
     {
         this.Loaded -= Page_Loaded;
         sfx.Volume = Vm.CheckValue("Sfx", sfx.Volume);
-        collection.ScrollTo(1);
+        collection.ScrollTo(1, position: ScrollToPosition.Center);
+
     }
 
     public async void PoppingIn()
@@ -96,7 +91,6 @@ public partial class VehiclesPage : ContentPage
         await Task.Delay(500);
         sfx.Stop();
 
-        await Task.Delay(500);
         View[] views = [];
         if (FirstIndex != 0 && LastIndex != Vm.AllVehicles.Count - 1)
         { views = [collection, rightArrow, leftArrow]; }
@@ -159,9 +153,15 @@ public partial class VehiclesPage : ContentPage
         collection.SelectedItem = source[CenterIndex];
     }
 
-    public void SpinTo(Vehicle vehicle)
+    private async void SpinTo(Vehicle vehicle)
     {
-        collection.ScrollTo(Vm.GetVehiclePosition(vehicle));
+        while (!this.IsLoaded)           
+        { 
+          await Task.Delay(500);
+        }
+
+        var item = Vm.GetVehiclePosition(vehicle);
+        collection.ScrollTo(item, position: ScrollToPosition.Center);
     }
 
     private void Arrow_Tapped(object sender, TappedEventArgs e)

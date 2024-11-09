@@ -81,7 +81,7 @@ public partial class CharacterPage : ContentPage
         this.Loaded -= Page_Loaded;      
         bgm.Volume = Vm.CheckValue("Bgm", bgm.Volume);
         sfx.Volume = Vm.CheckValue("Sfx", sfx.Volume);
-        collection.ScrollTo(1);
+        collection.ScrollTo(1, position: ScrollToPosition.Center);
     }
 
     public async void PoppingIn()
@@ -107,7 +107,6 @@ public partial class CharacterPage : ContentPage
         await Task.Delay(500);
         sfx.Stop();
 
-        await Task.Delay(500);
         View[] views = [];
         if (FirstIndex != 0 && LastIndex != Vm.AllCharacters.Count - 1)
         { views = [collection, rightArrow, leftArrow]; }
@@ -170,9 +169,14 @@ public partial class CharacterPage : ContentPage
         collection.SelectedItem = source[CenterIndex];
     }
 
-    public void SpinTo(Character character)
+    private async void SpinTo(Character character)
     {
-        collection.ScrollTo(Vm.GetCharacterPosition(character));
+        while (!this.IsLoaded)
+        {
+            await Task.Delay(500);
+        }
+        var item = Vm.GetCharacterPosition(character);
+        collection.ScrollTo(item, position: ScrollToPosition.Center);
     }
 
     private void Arrow_Tapped(object sender, TappedEventArgs e)
