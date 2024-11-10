@@ -100,21 +100,38 @@
                             Margin="10"
                         />
                         <HorizontalStackLayout>
-                            
+
                             <Button
-                                HorizontalOptions="Start"
-                                ImageSource="{Binding BgmImg}"
+                                HorizontalOptions="Start"                                
                                 HeightRequest="40"
                                 BackgroundColor="Transparent"
-                                Command="{Binding MuteBgmCommand}"
-                            />
+                                Command="{Binding MuteBgmCommand}">
+                                <Button.Triggers>
+                                    <DataTrigger
+                                        TargetType="Button"
+                                        Binding="{Binding Path=Settings.Bgm_isMute}"
+                                        Value="True">
+                                        <Setter Property="ImageSource"
+                                                Value="mute_icon.png" />
+                                    </DataTrigger>
+                                    <DataTrigger
+                                        TargetType="Button"
+                                        Binding="{Binding Path=Settings.Bgm_isMute}"
+                                        Value="False">
+                                        <Setter Property="ImageSource"
+                                                Value="volume_icon.png"/>
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
+                           
                             
-                            <Slider
+                            <Slider                                                             
+                                x:Name="bgm_slider"
                                 Maximum="1"
                                 WidthRequest="150"
                                 HorizontalOptions="Start"
                                 VerticalOptions="Center"
-                                Value="{Binding Path= Settings.Bgm_Volume, Mode=TwoWay}"
+                                Value="{Binding Path=Settings.Bgm_Volume, Mode=TwoWay}"
                                 ThumbColor="#01a7d3"
                                 BackgroundColor="Transparent"
                                 MinimumTrackColor="#01a7d3"
@@ -135,13 +152,29 @@
 
                             <Button
                                 HorizontalOptions="Start"
-                                ImageSource="{Binding SfxImg}"
                                 HeightRequest="40"
                                 BackgroundColor="Transparent"
-                                Command="{Binding MuteSfxCommand}"
-                            />
+                                Command="{Binding MuteSfxCommand}">
+                                <Button.Triggers>
+                                    <DataTrigger
+                                        TargetType="Button"
+                                        Binding="{Binding Path=Settings.Sfx_isMute}"
+                                        Value="True">
+                                        <Setter Property="ImageSource"
+                                                Value="mute_icon.png" />
+                                    </DataTrigger>
+                                    <DataTrigger
+                                        TargetType="Button"
+                                        Binding="{Binding Path=Settings.Sfx_isMute}"
+                                        Value="False">
+                                        <Setter Property="ImageSource"
+                                                Value="volume_icon.png"/>
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
 
-                            <Slider                   
+                            <Slider                              
+                                x:Name="sfx_slider"
                                 Maximum="1"
                                 WidthRequest="150"
                                 HorizontalOptions="Start"
@@ -151,8 +184,8 @@
                                 BackgroundColor="Transparent"
                                 MinimumTrackColor="#01a7d3"
                                 Margin="0,0,0,0"
-                                ValueChanged="SfxSlider_ValueChanged"
-                            />
+                                ValueChanged="SfxSlider_ValueChanged" />                              
+                           
                         </HorizontalStackLayout>
 
                     </VerticalStackLayout>

@@ -48,7 +48,7 @@
             HorizontalOptions="Center"
             TextColor="White"
             FontSize="Micro"
-            Text="Ver: 2.0.1"
+            Text="Ver: 1.0.1"
             VerticalOptions="End"
             />
         <toolkit:MediaElement

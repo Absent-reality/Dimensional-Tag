@@ -15,12 +15,6 @@ namespace DimensionalTag
             RestoreSettings();
         }
 
-        [ObservableProperty]
-        ImageSource bgmImg = "volume_icon.png";
-
-        [ObservableProperty]
-        ImageSource sfxImg = "volume_icon.png";
-
         [RelayCommand]
         public async Task ShowIt()
         {
@@ -30,42 +24,24 @@ namespace DimensionalTag
         [RelayCommand]
         void MuteBgm()
         {
-            if (!Settings.Bgm_isMute)
-            {
-                BgmImg = "mute_icon.png";
-                Settings.Bgm_isMute = true;
-            }
-            else
-            {
-                BgmImg = "volume_icon.png";
-                Settings.Bgm_isMute = false;
-            }
+            Settings.Bgm_isMute = !Settings.Bgm_isMute;
         }
         [RelayCommand]
         void MuteSfx()
         {
-            if (!Settings.Sfx_isMute)
-            {
-                SfxImg = "mute_icon.png";
-                Settings.Sfx_isMute = true;
-            }
-            else
-            {
-                SfxImg = "volume_icon.png";
-                Settings.Sfx_isMute = false;
-            }
+            Settings.Sfx_isMute = !Settings.Sfx_isMute;
         }
 
         void RestoreSettings()
         {
             if (Preferences.ContainsKey("Bgm"))
             {
-                Settings.Bgm_Volume = Preferences.Default.Get<double>("Bgm", 0);
+                Settings.Bgm_Volume = Preferences.Default.Get<double>("Bgm", 1);
             }
 
             if (Preferences.ContainsKey("Sfx"))
             {
-                Settings.Sfx_Volume = Preferences.Default.Get<double>("Sfx", 0);
+                Settings.Sfx_Volume = Preferences.Default.Get<double>("Sfx", 1);
             }
 
             if (Preferences.ContainsKey("save"))

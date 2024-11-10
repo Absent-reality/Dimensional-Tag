@@ -75,10 +75,8 @@
         </Tab>
 
         <Tab x:Name="CenterTab">
-          <!--  <ShellContent 
-            ContentTemplate="{DataTemplate local:PortalPage}"
-                Route="PortalPage" /> -->
-        </Tab> 
+
+        </Tab>
 
         <Tab Title="Worlds" Icon="world_ico.png">
 
@@ -86,12 +84,6 @@
                 ContentTemplate="{DataTemplate local:WorldsPage }"
                 Route="WorldsPage" />
         </Tab>
-
-        <!--  <Tab Title="{OnPlatform Android= Portal, WinUI=Scan}" Icon="{OnPlatform Android=scan_ico.png, WinUI=scan_ico.png}">
-            <ShellContent                                
-                ContentTemplate="{OnPlatform Android={DataTemplate local:PortalPage}, WinUI={DataTemplate local:ScanPage}}"
-                Route="{OnPlatform Android=PortalPage, WinUI=ScanPage}" />
-        </Tab> -->
 
     </local:CustomTabBar>
 
