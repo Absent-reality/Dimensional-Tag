@@ -18,6 +18,22 @@ namespace DimensionalTag
         int itemLastIndex;
 
         [ObservableProperty]
+        int itemFirstIndex;
+
+        private int _itemsCollectionEnd;
+        public int ItemsCollectionEnd
+        {
+            get { return SortedItems.Count -1; }
+            set
+            {
+                if (_itemsCollectionEnd == value)
+                    return;
+                _itemsCollectionEnd = value;
+                OnPropertyChanged(nameof(ItemsCollectionEnd));
+            }
+        }
+
+        [ObservableProperty]
         int itemCenterIndex;
 
         [ObservableProperty]
@@ -33,6 +49,7 @@ namespace DimensionalTag
         ObservableCollection<World> _allWorlds = new();
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(ItemsCollectionEnd))]
         ObservableCollection<SearchItems> _sortedItems = new();
 
         private ObservableCollection<SearchItems> ListItems = [];

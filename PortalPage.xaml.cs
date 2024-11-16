@@ -156,8 +156,27 @@ namespace DimensionalTag
 
         public async void SendToWrite(object item)
         {
-#if ANDROID || WINDOWS
-            bool result = await Vm.BeginWrite(item);
+ #if ANDROID || WINDOWS
+            switch (item)
+            {
+                case Character:
+
+                    Character c = (Character)item;
+                    if (c == null || c.Name == "") { return; }
+                    bool result1 = await Vm.BeginWrite(c);
+                    break; 
+                    
+                case Vehicle:
+
+                    Vehicle v = (Vehicle)item;
+                    if (v == null || v.Name == "") { return; }
+                    bool result2 = await Vm.BeginWrite(v);
+                    break;
+
+            }
+
+            WriteCharacter = new Character(0, "", "", "", []);
+            WriteVehicle = new Vehicle(0, 0, "", "", "", []);            
 #endif
         }
 
@@ -166,6 +185,8 @@ namespace DimensionalTag
 #if ANDROID || WINDOWS
 
             CameHereToWrite = false;
+            WriteCharacter = new Character(0, "", "", "", []);
+            WriteVehicle = new Vehicle(0, 0, "", "", "", []);
 #endif
         }
     }

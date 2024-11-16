@@ -90,6 +90,7 @@ public partial class CharacterPage : ContentPage
          //measure the display size to know how far to translate.
         var width = (DeviceDisplay.MainDisplayInfo.Width)/2;
 
+        this.IsBusy = true;
         await Task.Delay(500);
         await char_title.TranslateTo(-width, 0, 100);
         await char_title.FadeTo(1);
@@ -112,7 +113,9 @@ public partial class CharacterPage : ContentPage
         { views = [collection, rightArrow, leftArrow]; }
         else if (FirstIndex == 0) { views = [collection, rightArrow]; }
         else if (LastIndex == Vm.AllCharacters.Count - 1) { views = [collection, leftArrow]; }
+
         await FadeGroup(views, 1);
+        this.IsBusy = false;
 
     }
 
@@ -171,7 +174,8 @@ public partial class CharacterPage : ContentPage
 
     private async void SpinTo(Character character)
     {
-        while (!this.IsLoaded)
+        
+        while (this.IsBusy)
         {
             await Task.Delay(500);
         }
@@ -196,9 +200,10 @@ public partial class CharacterPage : ContentPage
 
     public async Task FadeGroup(View[] views, double opacity)
     {
+        
         if (views == null)
         {
-            ArgumentNullException.ThrowIfNull(nameof(views)); 
+            ArgumentNullException.ThrowIfNull(nameof(views));  
             return;
         }
         if (views.Length != 0)
@@ -206,7 +211,7 @@ public partial class CharacterPage : ContentPage
             foreach (var v in views)
             {
                 await v.FadeTo(opacity);
-            }
+            }       
         }
     }
 }

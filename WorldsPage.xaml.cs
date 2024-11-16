@@ -54,15 +54,14 @@ public partial class WorldsPage : ContentPage
         }
     }
 
-    private int _itemFirstIndex = 0;
     public int ItemFirstIndex
     {
-        get { return _itemFirstIndex; }
+        get { return Vm.ItemFirstIndex; }
         set
         {
-            if (_itemFirstIndex == value)
+            if (Vm.ItemFirstIndex == value)
                 return;
-            _itemFirstIndex = value;
+            Vm.ItemFirstIndex = value;
             OnPropertyChanged(nameof(ItemFirstIndex));
         }
     }
@@ -103,7 +102,6 @@ public partial class WorldsPage : ContentPage
         WorldLastIndex = vm.AllWorlds.Count -1;
 
         sfx.Source = MediaSource.FromResource("swish.mp3");
-      //  World_Carousel.ItemsSource = World.Worlds;
         this.Loaded += Page_Loaded;
     }
 
@@ -117,9 +115,10 @@ public partial class WorldsPage : ContentPage
     public async void PoppingIn()
     {
         sfx.Source = MediaSource.FromResource("swish.mp3");
+
         //measure the display size to know how far to translate.
         var width = (DeviceDisplay.MainDisplayInfo.Width) / 2;
-
+        this.IsBusy = true;
         await Task.Delay(500);
         await world_title.TranslateTo(-width, 0, 100);
         await world_title.FadeTo(1);
@@ -144,7 +143,7 @@ public partial class WorldsPage : ContentPage
         else if (ItemLastIndex == Vm.SortedItems.Count - 1) { views = [worldCollection, itemCollection, leftArrow]; }
         await FadeGroup(views, 1);
         Vm.SetItemsList(Vm.CurrentWorld);
-
+        this.IsBusy = false;
     }
 
     private void OnArrival(object sender, NavigatedToEventArgs e)
@@ -190,9 +189,10 @@ public partial class WorldsPage : ContentPage
         if (itemSource == null) { return; }
         var total = itemSource.Count;
 
-        if (total < 4) { leftArrow.Opacity = 0; rightArrow.Opacity = 0; }
+        if (ItemFirstIndex == 0) { leftArrow.Opacity = 0; rightArrow.Opacity = 1; }
+        else if (ItemLastIndex == total - 1) { rightArrow.Opacity = 0; leftArrow.Opacity = 1; }
         else { leftArrow.Opacity = 1; rightArrow.Opacity = 1; }
-
+        if (total < 4) { leftArrow.Opacity = 0; rightArrow.Opacity = 0; }      
     }
 
     private void OnItems_Scrolled(object sender, ItemsViewScrolledEventArgs e)
@@ -215,7 +215,7 @@ public partial class WorldsPage : ContentPage
         }
 
         if (e.LastVisibleItemIndex == total - 1) { rightArrow.Opacity = 0; }
-        else { rightArrow.Opacity = 1; }
+        else { rightArrow.Opacity = 1; } 
 
         ItemFirstIndex = e.FirstVisibleItemIndex;
         ItemLastIndex = e.LastVisibleItemIndex;
@@ -226,7 +226,7 @@ public partial class WorldsPage : ContentPage
 
     private async void SpinTo(World world)
     {
-        while (!this.IsLoaded)
+        while (this.IsBusy)
         {
             await Task.Delay(500);
         }
@@ -244,7 +244,7 @@ public partial class WorldsPage : ContentPage
                 break;
 
             case "Right":
-                itemCollection.ScrollTo(Vm.SortedItems.Count - 1);
+                itemCollection.ScrollTo(Vm.ItemsCollectionEnd);
                 break;
         }
     }

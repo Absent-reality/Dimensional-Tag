@@ -25,7 +25,16 @@ namespace DimensionalTag
             set => SendToWrite(value);
         }
 
-        public bool cameToWrite = false;
+        private bool cameToWrite = false;
+        public bool CameToWrite
+        {
+            get => cameToWrite;
+            set { if (cameToWrite == value) { return; }
+                cameToWrite = value;
+                OnPropertyChanged(nameof(CameToWrite));             
+            }
+        }
+
         public bool isNotBusy = true;
 #if ANDROID
         public NfcAdapter? Adapter;
@@ -62,21 +71,42 @@ namespace DimensionalTag
 
         private async void SendToWrite(object item)
         {
-            SwapBg(cameToWrite = true);
+
             sfx.Source = MediaSource.FromResource("lego_pieces.mp3");
+                                
+            switch (item)
+            {
+                case Character:
 
-            bool result = await Vm.BeginWrite(item);
-           
-            sfx.Play();               
-            cameToWrite = false;
-            SwapBg(cameToWrite);
+                    Character c = (Character)item;
+                    if (c == null || c.Name == "") { return; }
+                  
+                    SwapBg(CameToWrite = true);
+                    bool result1 = await Vm.BeginWrite(c);
+                    sfx.Play();
+                    break;
 
+                case Vehicle:
+
+                    Vehicle v = (Vehicle)item;
+                    if (v == null || v.Name == "") { return; }
+
+                    SwapBg(CameToWrite = true);
+                    bool result2 = await Vm.BeginWrite(v);
+                    sfx.Play();
+                    break;
+            }
+
+            WriteCharacter = new Character(0, "", "", "", []);
+            WriteVehicle = new Vehicle(0, 0, "", "", "", []);
+            
+            SwapBg(CameToWrite = false);
         }
 
         private async void On_Arrived(object sender, NavigatedToEventArgs e)
         {        
             await Task.Delay(600);
-            SwapBg(cameToWrite);
+            SwapBg(CameToWrite);
 #if ANDROID
             if (Adapter != null && !Adapter.IsEnabled)
             {
@@ -88,21 +118,24 @@ namespace DimensionalTag
 
         private async void On_Goodbye(object sender, NavigatedFromEventArgs e)
         {
+            WriteCharacter = new Character(0, "", "", "", []);
+            WriteVehicle = new Vehicle(0, 0, "", "", "", []);
             await Lbl_scan.FadeTo(0,250);
             img_write.IsVisible = false;
-            cameToWrite = false;
+         
+            SwapBg(CameToWrite = false);
+
 #if ANDROID
             CardToolsGetter.WriteCardCancel();          
 #endif
         }
 
-        private async void SwapBg(bool switchItUp)
+        private async void SwapBg(bool change)
         {
             if (!isNotBusy)
-            {
-                return;
-            }
-            switch (switchItUp)
+            { return; }
+                         
+            switch (change)
             {
                 case true:
                     {               

@@ -47,51 +47,38 @@ public partial class Loading : ContentPage
         await Img_grd.FadeTo(1, 1000); // Fade out
         lbl_txt.IsVisible = false;
 
-
 #if ANDROID
         await Stuff.FadeTo(1, 1000);
         for (int idc = 1; idc < 24; idc++)
         {
-
             Img_grd.Source = $"logo{idc}.png";
             await Task.Delay(100);
-
         }
 
         for (int idc = 1; idc < 24; idc++)
         {
-
             Img_grd.Source = $"logo{idc}.png";
             await Task.Delay(100);
-
         }
         for (int idc = 24; idc < 32; idc++)
         {
-
             Img_grd.Source = $"logo{idc}.png";
             await Task.Delay(50);
-
         }
         for (int idc = 31; idc < 55; idc++)
         {
-
             Img_grd.Source = $"logo{idc}.png";
             await Task.Delay(100);
-
         }
         for (int idc = 55; idc < 60; idc++)
         {
-
             Img_grd.Source = $"logo{idc}.png";
             await Task.Delay(50);
-
         }
         for (int idc = 60; idc < 66; idc++)
         {
-
             Img_grd.Source = $"logo{idc}.png";
             await Task.Delay(100);
-
         }
             await Task.Delay(2000);
             await Img_grd.FadeTo(0, 1000);

@@ -15,6 +15,9 @@ namespace DimensionalTag
             RestoreSettings();
         }
 
+        [ObservableProperty]
+        string versionNumber = "Ver: 2.0.0";
+
         [RelayCommand]
         public async Task ShowIt()
         {
