@@ -139,8 +139,7 @@ namespace DimensionalTag
             {
                 case true:
                     {               
-                            isNotBusy = false;
-
+                            isNotBusy = false;                          
                             Lbl_scan.Text = "Hold phone on empty tag to write.";
                             await Lbl_scan.FadeTo(1, 1000);
                             img_write.IsVisible = true;

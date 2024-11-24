@@ -4,12 +4,14 @@ using DimensionalTag.Portal;
 using System.Text;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Maui.Views;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DimensionalTag
 {
     public partial class PortalViewModel : SettingsViewModel
     {
-#if ANDROID || WINDOWS
+
 
         int PadNumber = 0;
 
@@ -193,9 +195,10 @@ namespace DimensionalTag
         [ObservableProperty]
         Microsoft.Maui.Graphics.Color pickedColor = Colors.Black;
 
+#if ANDROID || WINDOWS
         [ObservableProperty]
         LegoPortal? portal1;
-
+#endif
 
         private string _tagged = "Please connect portal.";
          public string Tagged
@@ -215,6 +218,7 @@ namespace DimensionalTag
         [RelayCommand]
         public void ImageTapped(string position)
         {
+ #if ANDROID || WINDOWS 
             if (position is not null)
                 switch (position)
                 {
@@ -237,11 +241,13 @@ namespace DimensionalTag
                         Color3 = Colors.WhiteSmoke;
                         break;
                 }
+#endif  
         }
 
         [RelayCommand]
         void EllipseTapped(string color)
         {
+#if ANDROID || WINDOWS
             if (color != null)
             {
 
@@ -271,12 +277,13 @@ namespace DimensionalTag
 
 
             }
+#endif
         }
 
         [RelayCommand]
         private void Canvas_Tapped()
         {
-
+#if ANDROID || WINDOWS
             switch (PadNumber)
             {
                 case 1:
@@ -297,11 +304,12 @@ namespace DimensionalTag
                     LightUpPad(3, Color3);
                     break;
             }
-
+#endif
         }
 
         void LightUpPad(int padNum, Microsoft.Maui.Graphics.Color MauiColor)
         {
+#if ANDROID || WINDOWS
             if (!IsConnected) { return; }
 
 
@@ -325,12 +333,13 @@ namespace DimensionalTag
                         break;
                 }
             }
-
+#endif
         }
 
         [RelayCommand]
         void CloseIt()
         {
+#if ANDROID || WINDOWS
             if (IsConnected && Portal1 != null)
             {
                 (RightTag0, RightTag1, RightTag2, RightTag3) = (null, null, null, null);
@@ -343,30 +352,33 @@ namespace DimensionalTag
                 Portal1.Dispose();
                 IsConnected = false;
             }
+#endif
         }
 
         [RelayCommand]
         void TestFade()
         {
+#if ANDROID || WINDOWS
             if (Portal1 != null && IsConnected)
-            Portal1.FadeAll(new FadePad(75, 2, Color.Purple), new FadePad(50, 2, Color.Cyan), new FadePad(50, 2, Color.Green));   
+            Portal1.FadeAll(new FadePad(75, 2, Color.Purple), new FadePad(50, 2, Color.Cyan), new FadePad(50, 2, Color.Green));
 
 
-               /*      
-               Portal1.Fade(Pad.Center, new FadePad(50, 5, Color.Green));
-               Thread.Sleep(200);
-               Portal1.Fade(Pad.Left, new FadePad(255, 1, Color.Purple));
-               Thread.Sleep(200);
-               Portal1.Fade(Pad.Right, new FadePad(200, 5, Color.LightBlue));
-               Thread.Sleep(2000);
-               Portal1.FadeAll(new FadePad(200, 5, Color.Cyan), new FadePad(200, 5, Color.Cyan), new FadePad(200, 5, Color.Cyan));
-               */
-
+            /*      
+            Portal1.Fade(Pad.Center, new FadePad(50, 5, Color.Green));
+            Thread.Sleep(200);
+            Portal1.Fade(Pad.Left, new FadePad(255, 1, Color.Purple));
+            Thread.Sleep(200);
+            Portal1.Fade(Pad.Right, new FadePad(200, 5, Color.LightBlue));
+            Thread.Sleep(2000);
+            Portal1.FadeAll(new FadePad(200, 5, Color.Cyan), new FadePad(200, 5, Color.Cyan), new FadePad(200, 5, Color.Cyan));
+            */
+#endif
         }
 
         [RelayCommand]
          async Task DisplayItem(string item)
         {
+#if ANDROID || WINDOWS
             HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
            object? tag = null;
             switch (item)
@@ -420,25 +432,34 @@ namespace DimensionalTag
             if (tag is null) { return; }
                var popup = new PopupPage(false, tag);
                await Shell.Current.ShowPopupAsync(popup);
+#endif
         }
 
         [RelayCommand]
-        void GrabPortal()
+        async void GrabPortal()
         {
+#if ANDROID || WINDOWS
+            Thread newPortalLink = new Thread(GetNewPortal);
+            newPortalLink.IsBackground = true;
+            newPortalLink.Start(); 
+
+           /*
             var portal = LegoPortal.GetFirstPortal();
             if (portal == null || !portal.IsConnected)
             {
                 Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Portal not detected. Please connect lego portal.", "Ok.", "", false));
                 return;
             }
-
             Portal1 = portal;
             IsConnected = portal.IsConnected;
 
             TestFade();
             portal.LegoTagEvent += Portal_LegoTagEvent;
-        }
+           */
+#endif
 
+        }
+#if ANDROID || WINDOWS
         public void Portal_LegoTagEvent(object? sender, LegoTagEventArgs e)
         {
             string tagInfo = "";
@@ -554,9 +575,11 @@ namespace DimensionalTag
                 }
             }
         }
-
+#endif
+#if ANDROID || WINDOWS
         public async Task<bool> BeginWrite(object tagType)
         {
+
             bool completed = false;
             WriteEnabled = false;
             if (Portal1 is null || !IsConnected)
@@ -598,10 +621,13 @@ namespace DimensionalTag
 
             Portal1.Fade(Pad.Center, new FadePad(20, 1, Color.Black));
             return completed;
-        }
 
+        }
+#endif
+#if ANDROID || WINDOWS
         async Task<bool> WriteToCard(LegoTagEventArgs centerTag, object tagType)
         {
+
             bool TaskComplete = false;
             if (Portal1 is null || !IsConnected)
             {
@@ -693,8 +719,10 @@ namespace DimensionalTag
             WriteEnabled = false;
             CameToWrite = false;
             return TaskComplete;
-        }
 
+        }
+#endif
+#if ANDROID || WINDOWS
         /// <summary>
         /// Reads 4 pages of a tag.
         /// </summary>
@@ -703,6 +731,7 @@ namespace DimensionalTag
         /// <returns>Byte[] from pages, or empty array if failed.</returns>
         public byte[] Read4Pages(LegoTagEventArgs thisTag, byte page)
         {
+
             if (Portal1 == null && thisTag == null)
             {
                 return [];
@@ -711,10 +740,10 @@ namespace DimensionalTag
             var idx = thisTag.Index;
             byte[] bytes = Portal1!.ReadTag(idx, page);
 
+
             return bytes;
-
         }
-
+#endif
         /// <summary>
         /// Checks if the data is empty for a given 16 blocks.
         /// </summary>
@@ -731,7 +760,7 @@ namespace DimensionalTag
 
 
         public string ThisTagInfo(LegoTagEventArgs legoTag)
-        {           
+        {
             if (legoTag == null) { return ""; }
             if (legoTag.LegoTag?.GetType().Name == "Character")
             { 
@@ -747,11 +776,11 @@ namespace DimensionalTag
             }
 
             else { return ""; }
-
         }
 
         public object? GetItem(LegoTagEventArgs legoTag)
         {
+
             if(legoTag is null) { return null; }
             if (legoTag.LegoTag?.GetType().Name == "Character")
             {
@@ -766,10 +795,27 @@ namespace DimensionalTag
                 return (vehicle);
             }
 
-            else { return null; }          
+            else { return null; }
+          
         }
-#endif
 
+        private void GetNewPortal()
+        {
+#if ANDROID
+
+            var portal = LegoPortal.GetFirstPortal();
+            if (portal == null || !portal.IsConnected)
+            {
+                Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Portal not detected. Please connect lego portal.", "Ok.", "", false));
+                return;
+            }
+            Portal1 = portal;
+            IsConnected = portal.IsConnected;
+
+            TestFade();
+            portal.LegoTagEvent += Portal_LegoTagEvent;
+#endif
+        }
     }
 }
     

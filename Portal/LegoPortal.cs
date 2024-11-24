@@ -1,6 +1,8 @@
 ﻿#if ANDROID || WINDOWS
 
 using DimensionalTag.Portal;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DimensionalTag
 {
@@ -62,26 +64,27 @@ namespace DimensionalTag
 
         public LegoPortal()
         {
-            //Use a service for Platform specific usb connection.
+             //Use a service for Platform specific usb connection.
             PortalConnectionService service = new PortalConnectionService();
-            var connection = service.GetConnection();
 
-            var check = service.OpenIt();
+                var connection = service.GetConnection();
+                var portalLink = service.OpenIt();
+                 
+                if (!portalLink) { return; }
+                IsConnected = true;
 
-            if (!check) { return; }
-            IsConnected = true;
+                // Read the first 32 bytes
+                var readBuffer = new byte[32];
+                var returned = service.GetIt(readBuffer);
+                _service = service;
 
-            // Read the first 32 bytes
-            var readBuffer = new byte[32];
-            var returned = service.GetIt(readBuffer);
-            _service = service;
-
-            // Start the read thread
-            _cancelThread = new CancellationTokenSource();
-            _readThread = new Thread(ReadThread);
-            _readThread.Start();
-            // WakeUp the portal
-            WakeUp();
+                // Start the read thread
+                _cancelThread = new CancellationTokenSource();          
+                _readThread = new Thread(ReadThread);
+                _readThread.Start();          
+                
+                // WakeUp the portal
+                WakeUp();
         }
 
         /// <inheritdoc/>

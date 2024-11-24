@@ -91,6 +91,7 @@ public partial class WorldsPage : ContentPage
         }
     }
 
+    public bool IsFullyLoaded = false;
     public WorldsPage(WorldsViewModel vm)
 	{
 		InitializeComponent();
@@ -117,8 +118,7 @@ public partial class WorldsPage : ContentPage
         sfx.Source = MediaSource.FromResource("swish.mp3");
 
         //measure the display size to know how far to translate.
-        var width = (DeviceDisplay.MainDisplayInfo.Width) / 2;
-        this.IsBusy = true;
+        var width = (DeviceDisplay.MainDisplayInfo.Width) / 2;       
         await Task.Delay(500);
         await world_title.TranslateTo(-width, 0, 100);
         await world_title.FadeTo(1);
@@ -143,7 +143,7 @@ public partial class WorldsPage : ContentPage
         else if (ItemLastIndex == Vm.SortedItems.Count - 1) { views = [worldCollection, itemCollection, leftArrow]; }
         await FadeGroup(views, 1);
         Vm.SetItemsList(Vm.CurrentWorld);
-        this.IsBusy = false;
+        IsFullyLoaded = true;
     }
 
     private void OnArrival(object sender, NavigatedToEventArgs e)
@@ -226,7 +226,7 @@ public partial class WorldsPage : ContentPage
 
     private async void SpinTo(World world)
     {
-        while (this.IsBusy)
+        while (!IsFullyLoaded)
         {
             await Task.Delay(500);
         }

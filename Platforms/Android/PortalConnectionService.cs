@@ -64,7 +64,6 @@ namespace DimensionalTag
                 PendingIntent? mPermissionIntent = PendingIntent.GetBroadcast(act, 0, new Intent(ACTION_USB_PERMISSION), PendingIntentFlags.Immutable);
                 IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
                 manager.RequestPermission(portal, mPermissionIntent);
-
             }
             return (manager, portal);
         }
@@ -84,20 +83,19 @@ namespace DimensionalTag
 
         public int SendIt(byte[] bytes)
         {
-           var returned = _connection.BulkTransfer(_writeEndpoint, bytes, 32, ReadWriteTimeout);
+            var returned = _connection!.BulkTransfer(_writeEndpoint, bytes, 32, ReadWriteTimeout);
             return returned;
         }
 
         public int GetIt(byte[] readBuffer)
         {
-          var returned = _connection.BulkTransfer(_readEndpoint, readBuffer, 32, ReadWriteTimeout);
+          var returned = _connection!.BulkTransfer(_readEndpoint, readBuffer, 32, ReadWriteTimeout);
             return returned;
-
         }
 
         public bool CloseIt()
         {
-            _connection.ReleaseInterface(_interface);
+            _connection!.ReleaseInterface(_interface);
             _connection.Close();
             _connection.Dispose();
             if (_connection == null) { return false; }

@@ -53,6 +53,7 @@ public partial class CharacterPage : ContentPage
         }
     }
 
+    public bool IsFullyLoaded = false;
     public CharacterPage(CharacterViewModel vm)
     {
         InitializeComponent();
@@ -89,8 +90,7 @@ public partial class CharacterPage : ContentPage
         sfx.Source =  MediaSource.FromResource("swish.mp3");
          //measure the display size to know how far to translate.
         var width = (DeviceDisplay.MainDisplayInfo.Width)/2;
-
-        this.IsBusy = true;
+        
         await Task.Delay(500);
         await char_title.TranslateTo(-width, 0, 100);
         await char_title.FadeTo(1);
@@ -115,7 +115,7 @@ public partial class CharacterPage : ContentPage
         else if (LastIndex == Vm.AllCharacters.Count - 1) { views = [collection, leftArrow]; }
 
         await FadeGroup(views, 1);
-        this.IsBusy = false;
+        IsFullyLoaded = true;
 
     }
 
@@ -173,9 +173,8 @@ public partial class CharacterPage : ContentPage
     }
 
     private async void SpinTo(Character character)
-    {
-        
-        while (this.IsBusy)
+    {      
+        while (!IsFullyLoaded)
         {
             await Task.Delay(500);
         }

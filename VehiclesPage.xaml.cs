@@ -47,8 +47,9 @@ public partial class VehiclesPage : ContentPage
         }
     }
 
+    public bool IsFullyLoaded = false;
     public VehiclesPage(VehicleViewModel vm)
-	{
+	{       
 		InitializeComponent();
         BindingContext = vm;
         Vm = vm;
@@ -72,7 +73,6 @@ public partial class VehiclesPage : ContentPage
         sfx.Source = MediaSource.FromResource("swish_rev.mp3");
 
         var width = (DeviceDisplay.MainDisplayInfo.Width)/2;
-        this.IsBusy = true;
         await Task.Delay(500);
         await Vehi_title.TranslateTo(width, 0, 100);
         await Vehi_title.FadeTo(1);
@@ -96,7 +96,8 @@ public partial class VehiclesPage : ContentPage
         else if (FirstIndex == 0) { views = [collection, rightArrow]; }
         else if (LastIndex == Vm.AllVehicles.Count - 1) { views = [collection, leftArrow]; }
         await FadeGroup(views, 1);
-        this.IsBusy = false;
+        IsFullyLoaded = true;
+        
     }
 
     private void OnArrival(object sender, NavigatedToEventArgs e)
@@ -154,10 +155,10 @@ public partial class VehiclesPage : ContentPage
 
     private async void SpinTo(Vehicle vehicle)
     {
-        while (this.IsBusy)           
+        while (!IsFullyLoaded)           
         { 
           await Task.Delay(500);
-        }
+        }       
         var item = Vm.GetVehiclePosition(vehicle);
         collection.ScrollTo(item, position: ScrollToPosition.Center);
     }
