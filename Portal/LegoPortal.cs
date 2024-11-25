@@ -14,7 +14,7 @@ namespace DimensionalTag
 
         //Class variables
         private byte _messageId;
-        private const int ReceiveTimeout = 2000;
+        private const int ReceiveTimeout = 1000;
         private Thread? _readThread;
         private CancellationTokenSource? _cancelThread; 
         private List<PresentTag> _presentTags = new List<PresentTag>();
@@ -49,18 +49,9 @@ namespace DimensionalTag
 
         /// <inheritdoc/>
         public bool GetTagDetails { get; set; } = true;
-
         public byte[]? SerialNumber { get; internal set; }
-
         public bool IsConnected { get; set; } = false;
-
         public int Id { get; internal set; }
-
-        public static LegoPortal? GetFirstPortal()
-        {
-            return new LegoPortal();
-        }
-
 
         public LegoPortal()
         {
@@ -84,7 +75,7 @@ namespace DimensionalTag
                 _readThread.Start();          
                 
                 // WakeUp the portal
-                WakeUp();
+               Task.Run(WakeUp);
         }
 
         /// <inheritdoc/>
@@ -103,9 +94,10 @@ namespace DimensionalTag
             if (commandId.Result != null)
             {
                 SerialNumber = (byte[])commandId.Result;
-            }
+            } 
 
             _commandId.Remove(commandId);
+            
         }
 
         /// <inheritdoc/>
@@ -373,11 +365,11 @@ namespace DimensionalTag
             var readBuffer = new byte[32];
             int bytesRead;
 
-            while (!_cancelThread.IsCancellationRequested)
+            while (!_cancelThread!.IsCancellationRequested)
             {
                 try
                 {
-                    bytesRead = _service.GetIt(readBuffer);
+                    bytesRead = _service!.GetIt(readBuffer);
                     if (bytesRead > 0)
                     {
                         System.Diagnostics.Debug.WriteLine($"REC: {BitConverter.ToString(readBuffer)}");
@@ -462,7 +454,6 @@ namespace DimensionalTag
                                         continue;
                                     }
 
-
                                     // We should have our 0x24
                                     if (LegoPortal.IsEmptyCard(message.Payload.AsSpan(1, 8).ToArray()))
                                     {
@@ -474,7 +465,6 @@ namespace DimensionalTag
                                         var vecId = LegoTag.GetVehicleId(message.Payload.AsSpan(1, 4).ToArray());
                                         var vec = Vehicle.Vehicles.FirstOrDefault(m => m.Id == vecId);
                                         legoTag.LegoTag = vec;
-
                                     }
 
                                     else
@@ -546,7 +536,7 @@ namespace DimensionalTag
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Excption: {ex}");
+                    System.Diagnostics.Debug.WriteLine($"Exception: {ex}");
                 }
             }
         }
@@ -577,7 +567,7 @@ namespace DimensionalTag
             _cancelThread.Cancel();
             // Make sure the thread is stopped
             _readThread?.Join();
-            IsConnected = _service.CloseIt();           
+            IsConnected = _service!.CloseIt();           
         }
     }
 }

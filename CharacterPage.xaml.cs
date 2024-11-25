@@ -136,10 +136,9 @@ public partial class CharacterPage : ContentPage
 
     private void OnPosition_Changed() 
     {
-        if (sfx.CurrentState == MediaElementState.Playing)
-        {
-            sfx.Stop();
-        }
+        if (sfx.CurrentState == MediaElementState.Playing) 
+        { sfx.Stop(); }
+
         sfx.Source = MediaSource.FromResource("click.mp3");
         sfx.Play();           
     }

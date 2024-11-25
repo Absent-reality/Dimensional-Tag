@@ -36,6 +36,7 @@ namespace DimensionalTag
         }
 
 #endif
+        public CancellationTokenSource? CancelWrite;
         public PortalViewModel Vm;
         public PortalPage(PortalViewModel vm)
         {
@@ -157,20 +158,22 @@ namespace DimensionalTag
         public async void SendToWrite(object item)
         {
  #if ANDROID || WINDOWS
+            CancelWrite = new CancellationTokenSource();
+            
             switch (item)
             {
                 case Character:
 
                     Character c = (Character)item;
                     if (c == null || c.Name == "") { return; }
-                    bool result1 = await Vm.BeginWrite(c);
+                    bool result1 = await Vm.BeginWrite(c, CancelWrite.Token);
                     break; 
                     
                 case Vehicle:
 
                     Vehicle v = (Vehicle)item;
                     if (v == null || v.Name == "") { return; }
-                    bool result2 = await Vm.BeginWrite(v);
+                    bool result2 = await Vm.BeginWrite(v, CancelWrite.Token);
                     break;
 
             }
@@ -183,8 +186,8 @@ namespace DimensionalTag
         private void OnGoodbye(object sender, NavigatedFromEventArgs e)
         {
 #if ANDROID || WINDOWS
-
             CameHereToWrite = false;
+            CancelWrite?.Cancel();
             WriteCharacter = new Character(0, "", "", "", []);
             WriteVehicle = new Vehicle(0, 0, "", "", "", []);
 #endif

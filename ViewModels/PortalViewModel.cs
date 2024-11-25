@@ -31,6 +31,9 @@ namespace DimensionalTag
 
         public bool NotEnabled => !IsConnected;
 
+        [ObservableProperty]
+        Thread? newPortalLink;
+
         [NotifyPropertyChangedFor(nameof(CenterPad_Present), nameof(CenterPad_Img))]
         [ObservableProperty]
         LegoTagEventArgs? _centerTag;
@@ -436,28 +439,13 @@ namespace DimensionalTag
         }
 
         [RelayCommand]
-        async void GrabPortal()
+        void GrabPortal()
         {
 #if ANDROID || WINDOWS
-            Thread newPortalLink = new Thread(GetNewPortal);
-            newPortalLink.IsBackground = true;
-            newPortalLink.Start(); 
 
-           /*
-            var portal = LegoPortal.GetFirstPortal();
-            if (portal == null || !portal.IsConnected)
-            {
-                Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Portal not detected. Please connect lego portal.", "Ok.", "", false));
-                return;
-            }
-            Portal1 = portal;
-            IsConnected = portal.IsConnected;
-
-            TestFade();
-            portal.LegoTagEvent += Portal_LegoTagEvent;
-           */
+            NewPortalLink = new(GetNewPortal) { IsBackground = true };                               
+            NewPortalLink.Start();
 #endif
-
         }
 #if ANDROID || WINDOWS
         public void Portal_LegoTagEvent(object? sender, LegoTagEventArgs e)
@@ -467,7 +455,6 @@ namespace DimensionalTag
             Console.WriteLine($"Tag is present: {e.Present} - UID: {BitConverter.ToString(e.CardUid)}");
             if (e.Present)
             {
-
                 if (e.CardUid != null)
                 {
                     switch (e.Pad)
@@ -482,7 +469,7 @@ namespace DimensionalTag
                                 if (LeftTag0 == null) { LeftTag0 = e; }
                                 else if (LeftTag1 == null) { LeftTag1 = e; }
                                 else if (LeftTag2 == null) { LeftTag2 = e; }
-                                else if (LeftTag3 == null) { LeftTag3 = e; }
+                                else LeftTag3 ??= e;
 
                             }
                             break;
@@ -497,7 +484,7 @@ namespace DimensionalTag
                                 if (RightTag0 == null) { RightTag0 = e; }
                                 else if (RightTag1 == null) { RightTag1 = e; }
                                 else if (RightTag2 == null) { RightTag2 = e; }
-                                else if (RightTag3 == null) { RightTag3 = e; }
+                                else RightTag3 ??= e;
                             }
                             break;
 
@@ -512,15 +499,11 @@ namespace DimensionalTag
                             else
                             {
                                 if (CenterTag == null)
-                                {
-                                    CenterTag = e;
-                                }
+                                { CenterTag = e; }
+                                                                
                                 else if (!CenterTag.CardUid.SequenceEqual(e.CardUid))
-                                {
-                                    CenterTag = e;
-                                }
+                                { CenterTag = e; }                                                                
                             }
-
                             break;
                     }
 
@@ -569,6 +552,7 @@ namespace DimensionalTag
                             if (CenterTag!.CardUid.SequenceEqual(e.CardUid))
                             {
                                 CenterTag = null;
+                                WriteEnabled = false;
                             }
                         }
                         break;
@@ -577,51 +561,68 @@ namespace DimensionalTag
         }
 #endif
 #if ANDROID || WINDOWS
-        public async Task<bool> BeginWrite(object tagType)
+        public async Task<bool> BeginWrite(object tagType, CancellationToken token)
         {
-
             bool completed = false;
             WriteEnabled = false;
-            if (Portal1 is null || !IsConnected)
-            {
-                await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Portal not detected. Please connect lego portal and try again.", "Ok.", "", false));
-                return completed;
-            }
 
-            Tagged = "Place empty card on center pad.";
-            Portal1.Fade(Pad.Center, new FadePad(50, 1, Color.Cyan));
-            CameToWrite = true;
+            while (!token.IsCancellationRequested)
+            { 
+                try
+                {                                 
+                    if (Portal1 is null || !IsConnected)
+                    {
+                        await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Portal not detected. Please connect lego portal and try again.", "Ok.", "", false));
+                        return completed;
+                    }
 
-            while (!WriteEnabled)
-            {
-                await Task.Delay(100);
-            }
+                    Tagged = "Place empty card on center pad.";
+                    Portal1.Fade(Pad.Center, new FadePad(50, 1, Color.Cyan));
+                    CameToWrite = true;
 
-            if (CenterTag == null || CenterTag == null)
-            {
-                await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Failed to read tag on center pad.", "Ok.", "", false));
-                WriteEnabled = false;
-                return completed;
-            }
+                    while (!WriteEnabled)
+                    {
+                        await Task.Delay(100, token);
 
-            var pageBytes = Read4Pages(CenterTag, 0x24);
-            if (!IsEmptyCard(pageBytes))
-            {
-                var alert = new AlertPopup(" Alert! ", " Card may not be empty. Proceed with writing data? ", " Cancel?", " Write? ", true);
-                var confirm = await Shell.Current.ShowPopupAsync(alert);
-                if (confirm is bool tru)
-                {
-                  completed = await WriteToCard(CenterTag, tagType);
+                        if (token.IsCancellationRequested)
+                        {
+                            Portal1.Fade(Pad.Center, new FadePad(20, 1, Color.Black));
+                            return completed; 
+                        }                                                                        
+                    }
+
+                    if (CenterTag == null || CenterTag == null)
+                    {
+                        await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Failed to read tag on center pad.", "Ok.", "", false));
+                        WriteEnabled = false;
+                        return completed;
+                    }
+
+                    var pageBytes = Read4Pages(CenterTag, 0x24);
+                    if (!IsEmptyCard(pageBytes))
+                    {
+                        var alert = new AlertPopup(" Alert! ", " Card may not be empty. Proceed with writing data? ", " Cancel?", " Write? ", true);
+                        var confirm = await Shell.Current.ShowPopupAsync(alert);
+                        if (confirm is bool tru)
+                        {
+                            completed = await WriteToCard(CenterTag, tagType);
+                        }
+                        else { WriteEnabled = false; completed = false; }
+
+                        ToDebug.AppendLine(BitConverter.ToString(pageBytes));
+                    }
+                    else { completed = await WriteToCard(CenterTag, tagType); }
+
+                    Portal1.Fade(Pad.Center, new FadePad(20, 1, Color.Black));
+                  
                 }
-                else { WriteEnabled = false; completed = false; }
-                
-                ToDebug.AppendLine(BitConverter.ToString(pageBytes));
+                catch (Exception ex) 
+                {
+                    System.Diagnostics.Debug.WriteLine($"Exception: {ex}");
+                    return completed;
+                }
             }
-            else { completed = await WriteToCard(CenterTag, tagType); }
-
-            Portal1.Fade(Pad.Center, new FadePad(20, 1, Color.Black));
             return completed;
-
         }
 #endif
 #if ANDROID || WINDOWS
@@ -801,21 +802,21 @@ namespace DimensionalTag
 
         private void GetNewPortal()
         {
-#if ANDROID
-
-            var portal = LegoPortal.GetFirstPortal();
-            if (portal == null || !portal.IsConnected)
+#if ANDROID         
+            var portal = new LegoPortal();
+            if (portal == null || !portal.IsConnected) 
             {
-                Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Portal not detected. Please connect lego portal.", "Ok.", "", false));
-                return;
+                Application.Current!.Dispatcher.Dispatch(AlertMe);                              
+                return; 
             }
-            Portal1 = portal;
+            Portal1 = portal;            
             IsConnected = portal.IsConnected;
 
             TestFade();
             portal.LegoTagEvent += Portal_LegoTagEvent;
 #endif
         }
+            private void AlertMe() => Shell.Current.ShowPopupAsync(new AlertPopup ("Oops...", "Portal not detected. Please connect lego portal.", "Ok.", "", false));
     }
 }
     
