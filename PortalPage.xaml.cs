@@ -12,8 +12,8 @@ namespace DimensionalTag
     {
 
         public Character WriteCharacter
-        {
-            set => SendToWrite(value);
+        {          
+            set =>  SendToWrite(value);
         }
 
         public Vehicle WriteVehicle
@@ -166,20 +166,20 @@ namespace DimensionalTag
 
                     Character c = (Character)item;
                     if (c == null || c.Name == "") { return; }
-                    bool result1 = await Vm.BeginWrite(c, CancelWrite.Token);
+                    bool result1 = await Vm.PrepareWrite(c, CancelWrite.Token);
                     break; 
                     
                 case Vehicle:
 
                     Vehicle v = (Vehicle)item;
                     if (v == null || v.Name == "") { return; }
-                    bool result2 = await Vm.BeginWrite(v, CancelWrite.Token);
+                    bool result2 = await Vm.PrepareWrite(v, CancelWrite.Token);
                     break;
-
             }
 
             WriteCharacter = new Character(0, "", "", "", []);
-            WriteVehicle = new Vehicle(0, 0, "", "", "", []);            
+            WriteVehicle = new Vehicle(0, 0, "", "", "", []); 
+            CancelWrite.Dispose();           
 #endif
         }
 
