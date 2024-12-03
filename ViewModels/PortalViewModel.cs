@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Maui.Views;
 using System.Threading;
 using System.Threading.Tasks;
+using DimensionalTag.Enums;
 
 namespace DimensionalTag
 {
@@ -23,6 +24,9 @@ namespace DimensionalTag
         bool isConnected = false;
 
         [ObservableProperty]
+        bool isDisconnecting = false;
+
+        [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(Tagged))]
         bool cameToWrite = false;
 
@@ -32,6 +36,8 @@ namespace DimensionalTag
 
         [ObservableProperty]
         Thread? newPortalLink;
+
+        public CancellationTokenSource? CancelWriteRequest = null;
 
         [NotifyPropertyChangedFor(nameof(CenterPad_Present), nameof(CenterPad_Img))]
         [ObservableProperty]
@@ -327,20 +333,25 @@ namespace DimensionalTag
         }
 
         [RelayCommand]
-        void CloseIt()
+        async void CloseIt()
         {
 #if ANDROID || WINDOWS
+            if (IsDisconnecting) { return; }
             if (IsConnected && Portal1 != null)
             {
+                IsDisconnecting = true;
                 (RightTag0, RightTag1, RightTag2, RightTag3) = (null, null, null, null);
                 (LeftTag0, LeftTag1, LeftTag2, LeftTag3) = (null, null, null, null);
                 CenterTag = null;
+                CameToWrite = false;
                 Portal1.SetColor(Pad.Center, Color.Black);
                 Portal1.SetColor(Pad.Left, Color.Black);
                 Portal1.SetColor(Pad.Right, Color.Black);
                 Thread.Sleep(200);
-                Portal1.Dispose();
+                Task disconnect = Task.Run(Dispose);
+                await disconnect;
                 IsConnected = false;
+                IsDisconnecting = false;
             }
 #endif
         }
@@ -428,9 +439,9 @@ namespace DimensionalTag
         void GrabPortal()
         {
 #if ANDROID || WINDOWS
-
-            NewPortalLink = new(GetNewPortal) { IsBackground = true };                               
-            NewPortalLink.Start();
+            if (IsConnected && IsDisconnecting) return;
+            NewPortalLink = new(GetNewPortal) { IsBackground = true };  
+            NewPortalLink?.Start();
 #endif
         }
 #if ANDROID || WINDOWS
@@ -543,34 +554,77 @@ namespace DimensionalTag
             }
         }
 #endif
-#if ANDROID || WINDOWS
-        public async Task<bool> PrepareWrite(object tagType, CancellationToken token)
+        [RelayCommand]
+        void CancelWrite()
         {
-            bool isCompleted = false;
-            if (token.IsCancellationRequested)
-            { return isCompleted; }
+            if (CancelWriteRequest == null) { return; }
+            CancelWriteRequest.Cancel();
+        }
 
-            isCompleted = await BeginWrite(tagType, token);
-            var (title, message) = isCompleted ? ("Yay!", "Write complete." ): ("Oops..","Write failed.");
-            await Shell.Current.ShowPopupAsync(new AlertPopup(title, message, "Ok.", "", false), token: token);
+#if ANDROID || WINDOWS
+        public async Task<TaskStatus> PrepareWrite(object tagType)
+        {
+            GrabPortal();
+            TaskStatus taskStatus = new();
+            CancelWriteRequest = new();
+            var token = CancelWriteRequest.Token;
+            while (!IsConnected)
+            {
+               await Task.Delay(500);
+               break;
+            }
+            
+            if (Portal1 is null || !IsConnected || IsDisconnecting) { return TaskStatus.TimedOut; }           
+            var (title, message) = ("", "");
+            Task<TaskStatus> task = BeginWrite(tagType, token);
+           
+            try
+            {
+                taskStatus = await task;
+            }
+            catch (Exception ex)            
+            { System.Diagnostics.Debug.WriteLine($"Exception: {ex}"); }
+            
+            if (task.IsCanceled) { taskStatus = TaskStatus.Cancelled; } 
+                                         
+            switch (taskStatus)
+            {
+                case TaskStatus.Cancelled:
+                    (title, message) = ("", "Write cancelled.");
+                    break;
 
+                case TaskStatus.TimedOut:
+                    break;
+
+                case TaskStatus.NoConnection:
+                    (title, message) = ("Oops...", "Portal not detected. Please connect lego portal and try again.");
+                    break;
+
+                case TaskStatus.Failed:
+                    (title,message) = ("Oops..", "Write failed.");
+                    break;
+
+                case TaskStatus.Success:
+                    (title, message) = ("Yay!", "Write complete.");
+                    break;
+            }
+            
             Portal1?.Fade(Pad.Center, new FadePad(20, 1, Color.Black));
             WriteEnabled = false;
             CameToWrite = false;
-            return isCompleted;
+
+            await Shell.Current.ShowPopupAsync(new AlertPopup(title, message, "Ok.", "", false), CancellationToken.None);               
+            return taskStatus;
         }
-        private async Task<bool> BeginWrite(object tagType, CancellationToken token)
-        {
-            bool completed = false;
+
+        private async Task<TaskStatus> BeginWrite(object tagType, CancellationToken token)
+        {    
             WriteEnabled = false;
-            if (token.IsCancellationRequested)
-            { return completed; }
+            token.ThrowIfCancellationRequested();
 
             if (Portal1 is null || !IsConnected)
             {
-                await Shell.Current.ShowPopupAsync(new AlertPopup(
-                        "Oops...", "Portal not detected. Please connect lego portal and try again.", "Ok.", "", false), token: token);     
-                return completed;
+                return TaskStatus.NoConnection;            
             }
 
             Tagged = "Place empty card on center pad.";
@@ -579,42 +633,39 @@ namespace DimensionalTag
 
             while (!WriteEnabled)
             {
-                if(token.IsCancellationRequested) { return completed; } 
-                await Task.Delay(100, token);
+                token.ThrowIfCancellationRequested();
+                await Task.Delay(1000, token);
             }
 
             if (CenterTag == null || CenterTag == null)
             {
                 await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Failed to read tag on center pad.", "Ok.", "", false), token: token);
-                return completed;
+                return TaskStatus.TimedOut;
             }
-
+            TaskStatus status = new();
             var pageBytes = Read4Pages(CenterTag, 0x24);
             if (!IsEmptyCard(pageBytes))
             {
                 var alert = new AlertPopup(" Alert! ", " Card may not be empty. Proceed with writing data? ", " Cancel?", " Write? ", true);
                 var confirm = await Shell.Current.ShowPopupAsync(alert, token: token);
                 if (confirm is bool tru)
-                { completed = await WriteToCard(CenterTag, tagType, token); }
+                { status = await WriteToCard(CenterTag, tagType, token); }
 
                 ToDebug.AppendLine(BitConverter.ToString(pageBytes));
             }
-            else { completed = await WriteToCard(CenterTag, tagType, token); }
-
-            return completed;
+            else { status = await WriteToCard(CenterTag, tagType, token); }
+ 
+            return status;
         }
 #endif
 #if ANDROID || WINDOWS
-        private async Task<bool> WriteToCard(LegoTagEventArgs centerTag, object tagType, CancellationToken token)
+        private async Task<TaskStatus> WriteToCard(LegoTagEventArgs centerTag, object tagType, CancellationToken token)
         {
-            bool TaskComplete = false;
-            if (token.IsCancellationRequested)
-            { return TaskComplete; }
-
+            token.ThrowIfCancellationRequested();
+            TaskStatus status = new();
             if (Portal1 is null || !IsConnected)
             {
-                await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Portal not detected. Please connect lego portal.", "Ok.", "", false), token: token);
-                return TaskComplete;
+                return TaskStatus.NoConnection;
             }
 
             var Uid = centerTag.CardUid;
@@ -635,7 +686,7 @@ namespace DimensionalTag
                         {
                             //Failed to write;
                             ToDebug.AppendLine("Failed to write Character on 0x24");
-                            return TaskComplete;
+                            return TaskStatus.Failed;
                         }
 
                         bool success2 = Portal1.WriteTag(index, 0x25, car.AsSpan().Slice(4, 4).ToArray());
@@ -643,11 +694,11 @@ namespace DimensionalTag
                         {
                             //Failed to write;
                             ToDebug.AppendLine("Failed to write Character on 0x25");
-                            return TaskComplete;
+                            return TaskStatus.Failed;
                         }
 
                         if (success1 && success2)
-                        { TaskComplete = true; } 
+                        { status = TaskStatus.Success; } 
 
                         // "Automatic password again"
                         Portal1.SetTagPassword(PortalPassword.Automatic, index, auth);
@@ -666,27 +717,27 @@ namespace DimensionalTag
                         {
                             //failed to write
                             ToDebug.AppendLine("Failed to write Vehicle on 0x24");
-                            return TaskComplete;
+                            return TaskStatus.Failed;
                         }
 
-                        byte[] Data = new byte[] { 0x00, 0x01, 0x00, 0x00 };
+                        byte[] Data = [0x00, 0x01, 0x00, 0x00];
                         var success2 = Portal1.WriteTag(index, 0x26, Data);
 
                         if (!success2)
                         {
                             //failed to write
                             ToDebug.AppendLine("Failed to write Vehicle on 0x26");
-                            return TaskComplete;
+                            return TaskStatus.Failed;
                         }
 
                         if (success1 && success2)
-                        { TaskComplete = true; }
+                        { status = TaskStatus.Success; }
 
                         Portal1.SetTagPassword(PortalPassword.Automatic, index);
                         break;
                     }             
             }        
-            return TaskComplete;
+            return await Task.FromResult(status);
         }
 #endif
 #if ANDROID || WINDOWS
@@ -760,7 +811,7 @@ namespace DimensionalTag
 
         private void GetNewPortal()
         {
-#if ANDROID         
+#if ANDROID                 
             var portal = new LegoPortal();
             if (portal == null || !portal.IsConnected) 
             {
@@ -774,7 +825,18 @@ namespace DimensionalTag
             portal.LegoTagEvent += Portal_LegoTagEvent;
 #endif
         }
-       
+
+        public void Dispose()
+        {
+#if ANDROID || WINDOWS
+
+            if (Portal1 == null || !Portal1.IsConnected) return;
+            Portal1.Dispose();        
+            Thread.Sleep(200);
+            NewPortalLink?.Join();
+#endif         
+        }
+
         void SendToAlert() => AlertMe("Oops...", "Portal not detected. Please connect lego portal.");
         public Task<object?> AlertMe(string title, string message) => Shell.Current.ShowPopupAsync(new AlertPopup(title, message, "Ok.", "", false));
     }

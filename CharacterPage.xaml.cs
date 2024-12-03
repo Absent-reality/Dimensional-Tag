@@ -197,8 +197,7 @@ public partial class CharacterPage : ContentPage
     }
 
     public async Task FadeGroup(View[] views, double opacity)
-    {
-        
+    {       
         if (views == null)
         {
             ArgumentNullException.ThrowIfNull(nameof(views));  

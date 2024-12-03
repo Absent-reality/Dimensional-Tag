@@ -1,15 +1,14 @@
 ﻿#if ANDROID || WINDOWS
 
 using DimensionalTag.Portal;
-using System.Threading;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace DimensionalTag
 {
     /// <summary>
     /// Instance of a Lego Dimensions Portal.
     /// </summary>
-    public class LegoPortal : IDisposable, ILegoPortal
+    public class LegoPortal : IDisposable, ILegoPortal, INotifyPropertyChanged
     {
 
         //Class variables
@@ -17,14 +16,15 @@ namespace DimensionalTag
         private const int ReceiveTimeout = 1000;
         private Thread? _readThread;
         private CancellationTokenSource? _cancelThread; 
-        private List<PresentTag> _presentTags = new List<PresentTag>();
+        private List<PresentTag> _presentTags = [];
         private bool _nfcEnabled = true;
+        private bool _isConnected = false;
         private PortalConnectionService? _service;
 
         // We do have only 3 Pads
         // This one is to store the last message ID request for details
-        private List<PadTag> _padTag = new List<PadTag>();
-        private List<CommandId> _commandId = new List<CommandId>();
+        private List<PadTag> _padTag = [];
+        private List<CommandId> _commandId = [];
 
         /// <inheritdoc/>
         public event EventHandler<LegoTagEventArgs>? LegoTagEvent;
@@ -40,60 +40,78 @@ namespace DimensionalTag
             get => _nfcEnabled;
             set
             {
+                if (_nfcEnabled == value) 
+                    return;
                 _nfcEnabled = value;
                 var message = new Message(MessageCommand.ConfigActive);
                 message.AddPayload(_nfcEnabled);
                 SendMessage(message);
+                OnPropertyChanged(nameof(NfcEnabled));
             }
         }
+
+        public bool IsConnected 
+        {
+            get => _isConnected;
+            set
+            {
+                if (_isConnected == value)
+                    return;
+                _isConnected = value;
+                OnPropertyChanged(nameof(IsConnected));
+            }
+        } 
 
         /// <inheritdoc/>
         public bool GetTagDetails { get; set; } = true;
         public byte[]? SerialNumber { get; internal set; }
-        public bool IsConnected { get; set; } = false;
+       
         public int Id { get; internal set; }
 
         public LegoPortal()
         {
-             //Use a service for Platform specific usb connection.
-            PortalConnectionService service = new PortalConnectionService();
+            //Use a service for Platform specific usb connection.
+            PortalConnectionService service = new();
 
-                var connection = service.GetConnection();
-                var portalLink = service.OpenIt();
-                 
-                if (!portalLink) { return; }
-                IsConnected = true;
+            var connection = service.GetConnection();
+            IsConnected = service.OpenIt();
+            if (!IsConnected)
+            {
+                return;
+            }
 
-                // Read the first 32 bytes
-                var readBuffer = new byte[32];
-                var returned = service.GetIt(readBuffer);
-                _service = service;
+            // Read the first 32 bytes
+            var readBuffer = new byte[32];
+            var returned = service.GetIt(readBuffer);
+            _service = service;
 
-                // Start the read thread
-                _cancelThread = new CancellationTokenSource();          
-                _readThread = new Thread(ReadThread);
-                _readThread.Start();          
-                
-                // WakeUp the portal
-               Task.Run(WakeUp);
+            // Start the read thread
+            _cancelThread = new CancellationTokenSource();
+            Task.Run(() =>
+            {
+                ReadThread(_cancelThread.Token);
+            });
+
+            // WakeUp the portal
+            Task.Run(WakeUp);
         }
 
         /// <inheritdoc/>
         public void WakeUp()
         {
-            Message message = new Message(MessageCommand.Wake);
+            Message message = new(MessageCommand.Wake);
             message.AddPayload("(c) LEGO 2014");
             _messageId = 0;
             var getSerial = new ManualResetEvent(false);
-            SerialNumber = new byte[0];
+            SerialNumber = [];
             var commandId = new CommandId(SendMessage(message), MessageCommand.Wake, getSerial);
             _commandId.Add(commandId);
 
             getSerial.WaitOne(ReceiveTimeout, true);
 
             if (commandId.Result != null)
-            {
-                SerialNumber = (byte[])commandId.Result;
+            { 
+                SerialNumber = (byte[])commandId.Result; 
             } 
 
             _commandId.Remove(commandId);
@@ -103,7 +121,7 @@ namespace DimensionalTag
         /// <inheritdoc/>
         public void SetColor(Pad pad, Color color)
         {
-            Message message = new Message(MessageCommand.Color);
+            Message message = new(MessageCommand.Color);
             message.AddPayload(pad, color);
             SendMessage(message);
         }
@@ -111,7 +129,7 @@ namespace DimensionalTag
         /// <inheritdoc/>
         public Color GetColor(Pad pad)
         {
-            Message message = new Message(MessageCommand.GetColor);
+            Message message = new(MessageCommand.GetColor);
             message.AddPayload(pad);
             var getColor = new ManualResetEvent(false);
             var commandId = new CommandId(SendMessage(message), MessageCommand.GetColor, getColor);
@@ -124,26 +142,25 @@ namespace DimensionalTag
             getColor.WaitOne(ReceiveTimeout, true);
 
             if (commandId.Result != null)
-            {
-                padColor = (Color)commandId.Result;
+            { 
+                padColor = (Color)commandId.Result; 
             }
-
+               
             _commandId.Remove(commandId);
-
             return padColor;
         }
 
         /// <inheritdoc/>
         public void SetColorAll(Color padCenter, Color padLeft, Color padRight)
         {
-            Message message = new Message(MessageCommand.ColorAll);
+            Message message = new(MessageCommand.ColorAll);
             message.AddPayload(true, padCenter, true, padLeft, true, padRight);
         }
 
         /// <inheritdoc/>
         public void SwitchOffAll()
         {
-            Message message = new Message(MessageCommand.ColorAll);
+            Message message = new(MessageCommand.ColorAll);
             message.AddPayload(false, Color.Black, false, Color.Black, false, Color.Black);
             SendMessage(message);
         }
@@ -151,7 +168,7 @@ namespace DimensionalTag
         /// <inheritdoc/>
         public void Flash(Pad pad, FlashPad flashPad)
         {
-            Message message = new Message(MessageCommand.Flash);
+            Message message = new(MessageCommand.Flash);
             message.AddPayload(pad, flashPad.TickOn, flashPad.TickOff, flashPad.TickCount, flashPad.Color);
             SendMessage(message);
         }
@@ -159,7 +176,7 @@ namespace DimensionalTag
         /// <inheritdoc/>
         public void FlashAll(FlashPad flashPadCenter, FlashPad flashPadLeft, FlashPad flashPadRight)
         {
-            Message message = new Message(MessageCommand.FlashAll);
+            Message message = new(MessageCommand.FlashAll);
             message.AddPayload(flashPadCenter.Enabled, flashPadCenter.TickOn, flashPadCenter.TickOff, flashPadCenter.TickCount, flashPadCenter.Color);
             message.AddPayload(flashPadLeft.Enabled, flashPadLeft.TickOn, flashPadLeft.TickOff, flashPadLeft.TickCount, flashPadLeft.Color);
             message.AddPayload(flashPadRight.Enabled, flashPadRight.TickOn, flashPadRight.TickOff, flashPadRight.TickCount, flashPadRight.Color);
@@ -169,7 +186,7 @@ namespace DimensionalTag
         /// <inheritdoc/>
         public void Fade(Pad pad, FadePad fadePad)
         {
-            Message message = new Message(MessageCommand.Fade);
+            Message message = new(MessageCommand.Fade);
             message.AddPayload(pad, fadePad.TickTime, fadePad.TickCount, fadePad.Color);
             SendMessage(message);
         }
@@ -177,7 +194,7 @@ namespace DimensionalTag
         /// <inheritdoc/>
         public void FadeAll(FadePad fadePadCenter, FadePad fadePadLeft, FadePad fadePadRight)
         {
-            Message message = new Message(MessageCommand.FadeAll);
+            Message message = new(MessageCommand.FadeAll);
             message.AddPayload(fadePadCenter.Enabled, fadePadCenter.TickTime, fadePadCenter.TickCount, fadePadCenter.Color);
             message.AddPayload(fadePadLeft.Enabled, fadePadLeft.TickTime, fadePadLeft.TickCount, fadePadLeft.Color);
             message.AddPayload(fadePadRight.Enabled, fadePadRight.TickTime, fadePadRight.TickCount, fadePadRight.Color);
@@ -187,7 +204,7 @@ namespace DimensionalTag
         /// <inheritdoc/>
         public void FadeRandom(Pad pad, byte tickTime, byte tickCount)
         {
-            Message message = new Message(MessageCommand.FadeRandom);
+            Message message = new(MessageCommand.FadeRandom);
             message.AddPayload(pad, tickTime, tickCount);
             SendMessage(message);
         }
@@ -200,14 +217,14 @@ namespace DimensionalTag
         /// <returns>A byte array of 16 bytes in case of success.</returns>
         public byte[] ReadTag(byte index, byte page)
         {
-            Message message = new Message(MessageCommand.Read);
+            Message message = new(MessageCommand.Read);
             message.AddPayload(index, page);
             var getRead = new ManualResetEvent(false);
             var commandId = new CommandId(SendMessage(message), MessageCommand.Read, getRead);
             _commandId.Add(commandId);
-            // In case we won't get any color, use the default black one
-            byte[] readBytes = new byte[0];
-            // Wait maximum 2 seconds
+
+            byte[] readBytes = [];
+            // Wait maximum 1 seconds
             getRead.WaitOne(ReceiveTimeout, true);
 
             if (commandId.Result != null)
@@ -216,7 +233,6 @@ namespace DimensionalTag
             }
 
             _commandId.Remove(commandId);
-
             return readBytes;
         }
 
@@ -234,25 +250,23 @@ namespace DimensionalTag
                 throw new ArgumentException("Write to card must be 4 bytes.");
             }
 
-            Message message = new Message(MessageCommand.Write);
+            Message message = new(MessageCommand.Write);
             message.AddPayload(index, page, bytes);
             var getWrite = new ManualResetEvent(false);
             var commandId = new CommandId(SendMessage(message), MessageCommand.Write, getWrite);
             _commandId.Add(commandId);
 
-            // In case we won't get any color, use the default black one
             bool success = false;
 
-            // Wait maximum 2 seconds
+            // Wait maximum 1 seconds
             getWrite.WaitOne(ReceiveTimeout, true);
 
             if (commandId.Result != null)
-            {
+            { 
                 success = (bool)commandId.Result;
-            }
+            }     
 
             _commandId.Remove(commandId);
-
             return success;
         }
 
@@ -263,14 +277,13 @@ namespace DimensionalTag
         /// <returns>A byte array of 8 bytes in case of success.</returns>
         public byte[] GetTagInformation(byte[] encryoptedIndex)
         {
-            Message message = new Message(MessageCommand.Model);
+            Message message = new(MessageCommand.Model);
             message.AddPayload(encryoptedIndex);
             var getRead = new ManualResetEvent(false);
             var commandId = new CommandId(SendMessage(message), MessageCommand.Model, getRead);
             _commandId.Add(commandId);
-            // In case we won't get any color, use the default black one
-            byte[] readBytes = new byte[0];
-            // Wait maximum 2 seconds
+
+            byte[] readBytes = [];
             getRead.WaitOne(ReceiveTimeout, true);
 
             if (commandId.Result != null)
@@ -279,7 +292,6 @@ namespace DimensionalTag
             }
 
             _commandId.Remove(commandId);
-
             return readBytes;
         }
 
@@ -289,13 +301,12 @@ namespace DimensionalTag
         /// <returns>A byte array of 8 bytes in case of success.</returns>
         public byte[] GetChallenge()
         {
-            Message message = new Message(MessageCommand.Challenge);
+            Message message = new(MessageCommand.Challenge);
             var getChallenge = new ManualResetEvent(false);
             var commandId = new CommandId(SendMessage(message), MessageCommand.Challenge, getChallenge);
             _commandId.Add(commandId);
-            // In case we won't get any color, use the default black one
-            byte[] readBytes = new byte[0];
-            // Wait maximum 2 seconds
+
+            byte[] readBytes = [];
             getChallenge.WaitOne(ReceiveTimeout, true);
 
             if (commandId.Result != null)
@@ -304,13 +315,12 @@ namespace DimensionalTag
             }
 
             _commandId.Remove(commandId);
-
             return readBytes;
         }
 
         public IEnumerable<PresentTag> ListTags()
         {
-            Message message = new Message(MessageCommand.TagList);
+            Message message = new(MessageCommand.TagList);
             var getTagList = new ManualResetEvent(false);
             var commandId = new CommandId(SendMessage(message), MessageCommand.TagList, getTagList);
             _commandId.Add(commandId);
@@ -353,19 +363,19 @@ namespace DimensionalTag
         public byte SendMessage(Message message, byte messageId = 0)
         {
             var bytes = message.GetBytes(messageId == 0 ? IncreaseMessageId() : messageId);
-            var returned = _service.SendIt(bytes);
+            var returned = _service!.SendIt(bytes);
             // Assume it's awake if we send 32 bytes properly
             System.Diagnostics.Debug.WriteLine($"SND: {BitConverter.ToString(bytes)}");
             return messageId == 0 ? _messageId : messageId;
         }
 
-        private void ReadThread(object? obj)
+        private void ReadThread(CancellationToken token)
         {
             // Read is always 32 bytes
             var readBuffer = new byte[32];
             int bytesRead;
 
-            while (!_cancelThread!.IsCancellationRequested)
+            while (!token!.IsCancellationRequested)
             {
                 try
                 {
@@ -565,10 +575,20 @@ namespace DimensionalTag
             if(_cancelThread == null) return;
 
             _cancelThread.Cancel();
+
             // Make sure the thread is stopped
             _readThread?.Join();
-            IsConnected = _service!.CloseIt();           
+            IsConnected = _service!.CloseIt(); 
+            GC.SuppressFinalize(this);
         }
+
+        public virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChangedEventArgs ea = new PropertyChangedEventArgs(propertyName);
+            PropertyChanged?.Invoke(this, ea);
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
     }
 }
 #endif

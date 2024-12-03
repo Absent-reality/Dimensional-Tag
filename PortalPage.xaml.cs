@@ -29,14 +29,8 @@ namespace DimensionalTag
             set { Vm.PickedColor = value; OnPropertyChanged(); }       
         }
 
-        public bool CameHereToWrite
-        {
-            get { return Vm.CameToWrite; }
-            set { Vm.CameToWrite = value; OnPropertyChanged(); }   
-        }
-
 #endif
-        public CancellationTokenSource? CancelWrite;
+
         public PortalViewModel Vm;
         public PortalPage(PortalViewModel vm)
         {
@@ -157,39 +151,39 @@ namespace DimensionalTag
 
         public async void SendToWrite(object item)
         {
- #if ANDROID || WINDOWS
-            CancelWrite = new CancellationTokenSource();
-            
+#if ANDROID || WINDOWS
+           
             switch (item)
             {
                 case Character:
 
                     Character c = (Character)item;
                     if (c == null || c.Name == "") { return; }
-                    bool result1 = await Vm.PrepareWrite(c, CancelWrite.Token);
+                    var result1 = await Vm.PrepareWrite(c); 
+
                     break; 
                     
                 case Vehicle:
 
                     Vehicle v = (Vehicle)item;
                     if (v == null || v.Name == "") { return; }
-                    bool result2 = await Vm.PrepareWrite(v, CancelWrite.Token);
+                    var result2 = await Vm.PrepareWrite(v); 
+
                     break;
             }
 
             WriteCharacter = new Character(0, "", "", "", []);
-            WriteVehicle = new Vehicle(0, 0, "", "", "", []); 
-            CancelWrite.Dispose();           
+            WriteVehicle = new Vehicle(0, 0, "", "", "", []);           
 #endif
         }
 
-        private void OnGoodbye(object sender, NavigatedFromEventArgs e)
+        private async void OnGoodbye(object sender, NavigatedFromEventArgs e)
         {
-#if ANDROID || WINDOWS
-            CameHereToWrite = false;
-            CancelWrite?.Cancel();
+#if ANDROID || WINDOWS      
             WriteCharacter = new Character(0, "", "", "", []);
             WriteVehicle = new Vehicle(0, 0, "", "", "", []);
+            await Task.Delay(200);
+            Vm.CloseItCommand.Execute(null);          
 #endif
         }
     }

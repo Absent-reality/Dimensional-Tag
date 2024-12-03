@@ -11,6 +11,7 @@ namespace DimensionalTag
         private const int ProductId = 0x0241;
         private const int VendorId = 0x0E6F;
         private const int ReadWriteTimeout = 1000;
+        private const int MessageLength = 32;
 
         // Class variables
         private UsbDevice? _portal;
@@ -44,9 +45,10 @@ namespace DimensionalTag
         public static (UsbManager? usbManager, UsbDevice? device) GetPortal()
         {
             Activity? act = Platform.CurrentActivity;
-            var manager = (UsbManager?)act.GetSystemService(Context.UsbService);
-            //Get a list of all connected devices
-            IDictionary<string, UsbDevice> devicesDirectory = manager.DeviceList;
+            var manager = (UsbManager?)act!.GetSystemService(Context.UsbService);
+            if (manager == null) { return (null, null); }
+            //Get a list of all connected devices                 
+            IDictionary<string, UsbDevice> devicesDirectory = manager.DeviceList!;
             if (devicesDirectory == null || devicesDirectory.Count < 1)
             { return (null, null); }
             //Find the device by vendor and pid in the list
@@ -83,25 +85,24 @@ namespace DimensionalTag
 
         public int SendIt(byte[] bytes)
         {
-            var returned = _connection!.BulkTransfer(_writeEndpoint, bytes, 32, ReadWriteTimeout);
+            var returned = _connection!.BulkTransfer(_writeEndpoint, bytes, MessageLength, ReadWriteTimeout);
             return returned;
         }
 
         public int GetIt(byte[] readBuffer)
         {
-          var returned = _connection!.BulkTransfer(_readEndpoint, readBuffer, 32, ReadWriteTimeout);
+          var returned = _connection!.BulkTransfer(_readEndpoint, readBuffer, MessageLength, ReadWriteTimeout);
             return returned;
         }
 
         public bool CloseIt()
         {
-            _connection!.ReleaseInterface(_interface);
+            if (_connection == null) return false;
+            _connection.ReleaseInterface(_interface);
             _connection.Close();
             _connection.Dispose();
             if (_connection == null) { return false; }
             return true;
         }
-
     }
-
 }
