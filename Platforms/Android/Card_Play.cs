@@ -4,12 +4,14 @@ using Android.Nfc.Tech;
 using AndroidX.Core.Content;
 using CommunityToolkit.Maui.Views;
 using DimensionalTag.Enums;
+using System.ComponentModel;
 using System.Text;
 
 namespace DimensionalTag
 {
     public class Card_Play
     {
+       
         /// <summary>
         ///  For easy set of alert popup's title
         /// </summary>
@@ -85,7 +87,6 @@ namespace DimensionalTag
                     if (thisTag == null)
                     {
                         ErrorReport("Failed to read tag.");                       
-                       // return "";
                     }
                     else
                     {

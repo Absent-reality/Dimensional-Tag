@@ -344,9 +344,7 @@ namespace DimensionalTag
                 (LeftTag0, LeftTag1, LeftTag2, LeftTag3) = (null, null, null, null);
                 CenterTag = null;
                 CameToWrite = false;
-                Portal1.SetColor(Pad.Center, Color.Black);
-                Portal1.SetColor(Pad.Left, Color.Black);
-                Portal1.SetColor(Pad.Right, Color.Black);
+                Portal1.SetColorAll(Color.Black, Color.Black, Color.Black);
                 Thread.Sleep(200);
                 Task disconnect = Task.Run(Dispose);
                 await disconnect;

@@ -13,7 +13,7 @@ namespace DimensionalTag
 
         //Class variables
         private byte _messageId;
-        private const int ReceiveTimeout = 1000;
+        private const int ReceiveTimeout = 2000;
         private Thread? _readThread;
         private CancellationTokenSource? _cancelThread; 
         private List<PresentTag> _presentTags = [];
@@ -223,8 +223,7 @@ namespace DimensionalTag
             var commandId = new CommandId(SendMessage(message), MessageCommand.Read, getRead);
             _commandId.Add(commandId);
 
-            byte[] readBytes = [];
-            // Wait maximum 1 seconds
+            byte[] readBytes = [];         
             getRead.WaitOne(ReceiveTimeout, true);
 
             if (commandId.Result != null)
@@ -257,8 +256,6 @@ namespace DimensionalTag
             _commandId.Add(commandId);
 
             bool success = false;
-
-            // Wait maximum 1 seconds
             getWrite.WaitOne(ReceiveTimeout, true);
 
             if (commandId.Result != null)
