@@ -636,43 +636,46 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="AlertPopup.xaml.cs">
+	  <Compile Update="Popups\AlertPopup.xaml.cs">
 	    <DependentUpon>AlertPopup.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="ScanPage.xaml.cs">
+	  <Compile Update="Views\ScanPage.xaml.cs">
 	    <DependentUpon>ScanPage.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="SettingsPage.xaml.cs">
+	  <Compile Update="Views\SettingsPage.xaml.cs">
 	    <DependentUpon>SettingsPage.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="CharacterPage.xaml">
+	  <MauiXaml Update="Views\CharacterPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Loading.xaml">
+	  <MauiXaml Update="Views\Loading.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="AlertPopup.xaml">
+	  <MauiXaml Update="Popups\AlertPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="PopupPage.xaml">
+	  <MauiXaml Update="Popups\PopupPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="PortalPage.xaml">
+	  <MauiXaml Update="Popups\DebugPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="SearchPage.xaml">
+	  <MauiXaml Update="Views\PortalPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="SettingsPage.xaml">
+	  <MauiXaml Update="Views\SearchPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="VehiclesPage.xaml">
+	  <MauiXaml Update="Views\SettingsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="WorldsPage.xaml">
+	  <MauiXaml Update="Views\VehiclesPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\WorldsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

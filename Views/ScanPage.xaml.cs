@@ -1,6 +1,5 @@
-﻿using CommunityToolkit.Maui.Core.Primitives;
+﻿
 using CommunityToolkit.Maui.Views;
-using DimensionalTag.Tools;
 
 #if ANDROID
 using Android.Nfc;
@@ -9,18 +8,11 @@ using Android.Content;
 
 namespace DimensionalTag
 {
-    [QueryProperty(nameof(WriteCharacter), nameof(WriteCharacter))]
-    [QueryProperty(nameof(WriteVehicle), nameof(WriteVehicle))]
-  
-    public partial class ScanPage : ContentPage
-    {
-        
-        public Character WriteCharacter
-        {
-            set => SendToWrite(value);
-        }
+    [QueryProperty(nameof(WriteTag), nameof(WriteTag))]
 
-        public Vehicle WriteVehicle
+    public partial class ScanPage : ContentPage
+    {    
+        public ToyTag WriteTag
         {
             set => SendToWrite(value);
         }
@@ -39,28 +31,29 @@ namespace DimensionalTag
 #if ANDROID
         public NfcAdapter? Adapter;
 #endif
-
+        public INfcTools NfcTools;
         public ScanViewModel Vm { get; set; }
-        public ScanPage(ScanViewModel vm)
-        {
+
+        public ScanPage(ScanViewModel vm, INfcTools nfcTools)
+        {           
             InitializeComponent();
             BindingContext = vm;
             Vm = vm;
-
+            NfcTools = nfcTools;
             this.Loaded += ScanPage_Loaded;
+            nfcTools.NfcTagEvent += NfcTools_NfcTagEvent;
+        
 #if ANDROID
             var manager = Android.App.Application.Context.GetSystemService(Context.NfcService) as NfcManager;
             var adapter = manager!.DefaultAdapter;
             Adapter = adapter;
-
-            CardToolsGetter.SetOnCardReceive(async (cardInfo) =>
-            {              
-                if (cardInfo != null)
-                {
-                   Vm.LoadTo(cardInfo);                   
-                }             
-            });
 #endif          
+        }
+
+        private void NfcTools_NfcTagEvent(object? sender, NfcTagEventArgs e)
+        {
+            ToyTag toy = new ToyTag(e.Id, e.Name, e.World, e.Abilities, e.ToyTagType);
+            Vm.LoadTo(toy);
         }
 
         private void ScanPage_Loaded(object? sender, EventArgs e)
@@ -69,37 +62,15 @@ namespace DimensionalTag
             sfx.Volume = Vm.CheckValue("Sfx", sfx.Volume);
         }
 
-        private async void SendToWrite(object item)
+        private void SendToWrite(ToyTag item)
         {
-
             sfx.Source = MediaSource.FromResource("lego_pieces.mp3");
-                                
-            switch (item)
-            {
-                case Character:
+            if (item == null || item.ToyTagType == ToyTagType.None) { return; }  
+            SwapBg(CameToWrite = true);
+            Vm.BeginWrite(item);
+            sfx.Play();
 
-                    Character c = (Character)item;
-                    if (c == null || c.Name == "") { return; }
-                  
-                    SwapBg(CameToWrite = true);
-                    bool result1 = await Vm.BeginWrite(c);
-                    sfx.Play();
-                    break;
-
-                case Vehicle:
-
-                    Vehicle v = (Vehicle)item;
-                    if (v == null || v.Name == "") { return; }
-
-                    SwapBg(CameToWrite = true);
-                    bool result2 = await Vm.BeginWrite(v);
-                    sfx.Play();
-                    break;
-            }
-
-            WriteCharacter = new Character(0, "", "", "", []);
-            WriteVehicle = new Vehicle(0, 0, "", "", "", []);
-            
+            WriteTag = new ToyTag(0, "", "", [], ToyTagType.None);          
             SwapBg(CameToWrite = false);
         }
 
@@ -110,23 +81,19 @@ namespace DimensionalTag
 #if ANDROID
             if (Adapter != null && !Adapter.IsEnabled)
             {
-                await Shell.Current.ShowPopupAsync(new AlertPopup("Oops.", "Nfc is not enabled. Please enable from your device settings.", "ok", "", false));
+               await Vm.Alert.SendAlert("Oops.", "Nfc is not enabled. Please enable from your device settings.", "ok", "", false);
             }
 #endif
-
         }
 
         private async void On_Goodbye(object sender, NavigatedFromEventArgs e)
         {
-            WriteCharacter = new Character(0, "", "", "", []);
-            WriteVehicle = new Vehicle(0, 0, "", "", "", []);
+            WriteTag = new ToyTag(0, "", "", [], ToyTagType.None);
             await Lbl_scan.FadeTo(0,250);
-            img_write.IsVisible = false;
-         
+            img_write.IsVisible = false;     
             SwapBg(CameToWrite = false);
-
 #if ANDROID
-            CardToolsGetter.WriteCardCancel();          
+            NfcTools.WriteCardCancel();          
 #endif
         }
 
@@ -134,25 +101,25 @@ namespace DimensionalTag
         {
             if (!isNotBusy)
             { return; }
-                         
+
             switch (change)
             {
                 case true:
-                    {               
-                            isNotBusy = false;                          
-                            Lbl_scan.Text = "Hold phone on empty tag to write.";
-                            await Lbl_scan.FadeTo(1, 1000);
-                            img_write.IsVisible = true;
-                            await Task.Delay(200);
-                            await img_scan.TranslateTo(0, -50, 500);
-                            await Task.Delay(600);
-                            await img_scan.TranslateTo(0, 0, 500);
-                            await Task.Delay(500);
-                            await img_scan.TranslateTo(0, -50, 500);
-                            await Task.Delay(600);
-                            await img_scan.TranslateTo(0, 0, 500);
+                    {
+                        isNotBusy = false;
+                        Lbl_scan.Text = "Hold phone on empty tag to write.";
+                        await Lbl_scan.FadeTo(1, 1000);
+                        img_write.IsVisible = true;
+                        await Task.Delay(200);
+                        await img_scan.TranslateTo(0, -50, 500);
+                        await Task.Delay(600);
+                        await img_scan.TranslateTo(0, 0, 500);
+                        await Task.Delay(500);
+                        await img_scan.TranslateTo(0, -50, 500);
+                        await Task.Delay(600);
+                        await img_scan.TranslateTo(0, 0, 500);
 
-                            isNotBusy = true;
+                        isNotBusy = true;
                     }
                     break;
 
@@ -180,10 +147,7 @@ namespace DimensionalTag
                     }
                     break;
             }
-
         }
-
     }
-
 }
 

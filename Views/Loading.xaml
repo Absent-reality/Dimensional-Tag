@@ -48,26 +48,24 @@
             HorizontalOptions="Center"
             TextColor="White"
             FontSize="Micro"
-            Text="{Binding VersionNumber}"
+            Text="{Binding Path= AppSettings.VersionNumber}"
             VerticalOptions="End"
             />
         <toolkit:MediaElement
-            x:DataType="viewmodel:LoadingViewModel"
             x:Name="bgm"
             Source="Embed://Free_Fall.mp3"
             IsVisible="Hidden"
             ShouldAutoPlay="True"
-            ShouldMute="{Binding Path= Settings.Bgm_isMute}"
-            Volume="{Binding Path= Settings.Get_BgmVolume}"
+            ShouldMute="{Binding Path= AppSettings.Bgm_isMute}"
+            Volume="{Binding Path= AppSettings.Get_BgmVolume}"
             ShouldLoopPlayback="False"
             />
 
         <toolkit:MediaElement    
-            x:DataType="viewmodel:LoadingViewModel"
             x:Name="sfx"          
             IsVisible="Hidden"
-            ShouldMute="{Binding Path= Settings.Sfx_isMute}"
-            Volume="{Binding Path= Settings.Get_SfxVolume}"
+            ShouldMute="{Binding Path= AppSettings.Sfx_isMute}"
+            Volume="{Binding Path= AppSettings.Get_SfxVolume}"
             />
 
     </Grid>

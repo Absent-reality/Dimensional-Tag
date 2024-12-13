@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             x:Class="DimensionalTag.AlertPopup" Color="Transparent" >
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:viewmodel="clr-namespace:DimensionalTag"
+               x:DataType="viewmodel:AlertPopupViewModel"
+               x:Class="DimensionalTag.AlertPopup" Color="Transparent" >
 
     <Grid>
-
+        
         <Border
             VerticalOptions="Start"
             Background="#161616"
@@ -22,6 +24,7 @@
                     VerticalTextAlignment="Center"
                     HeightRequest="40"
                     FontSize="Large"
+                    Text="{Binding Title}"
                     BackgroundColor="#01a7d3"
                     TextColor="Black"                    
                     FontAttributes="Bold"                    
@@ -38,9 +41,10 @@
                 <Editor
                     x:Name="edt_Alert"  
                     HorizontalTextAlignment="Start"
-                    BackgroundColor="Transparent"                        
+                    HorizontalOptions="CenterAndExpand"                    
+                    BackgroundColor="Transparent"  
+                    Text="{Binding Text}"
                     TextColor="White"
-                    HorizontalOptions="CenterAndExpand"
                     IsReadOnly="True" />
 
                 <HorizontalStackLayout 
@@ -51,7 +55,8 @@
                         HeightRequest="40"
                         VerticalOptions="End"
                         HorizontalOptions="StartAndExpand"
-                        BackgroundColor="#01a7d3"                                       
+                        BackgroundColor="#01a7d3"    
+                        Text="{Binding ConfirmButton}"                        
                         FontSize="Small"
                         FontAttributes="Bold"
                         TextColor="Black"
@@ -59,7 +64,7 @@
                         Clicked="BtnWrite_Clicked"
                         Padding="10"
                         Margin="15"
-                        IsVisible="False">
+                        IsVisible="{Binding IsVisible}">
                         <Button.Shadow>
                             <Shadow
                                 Brush="DimGray"
@@ -74,7 +79,8 @@
                         HeightRequest="40"
                         VerticalOptions="End"
                         HorizontalOptions="EndAndExpand"
-                        BackgroundColor="#01a7d3"               
+                        BackgroundColor="#01a7d3" 
+                        Text="{Binding CancelButton}"
                         FontSize="Small"
                         FontAttributes="Bold"
                         TextColor="Black"

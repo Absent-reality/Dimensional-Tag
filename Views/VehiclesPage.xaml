@@ -2,12 +2,12 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             xmlns:viewmodel="clr-namespace:DimensionalTag"           
-             x:Class="DimensionalTag.CharacterPage"
-             x:DataType="viewmodel:CharacterViewModel"
-             BackgroundColor="Black" 
-             BackgroundImageSource="galaxy.png"
-             NavigatedTo="OnArrival" NavigatedFrom="OnGoodbye" >
+             xmlns:viewmodel="clr-namespace:DimensionalTag"
+             x:Class="DimensionalTag.VehiclesPage"
+             x:DataType="viewmodel:VehicleViewModel"             
+             BackgroundColor="Black"
+             BackgroundImageSource="galaxy.png" 
+             NavigatedTo="OnArrival" NavigatedFrom="OnGoodbye">
 
     <Grid 
         x:Name="theGrid"
@@ -16,11 +16,11 @@
         Padding="0,50,0,0" >
         
         <Image 
-            x:Name="char_title"             
+            x:Name="Vehi_title"             
             Grid.Row="0"
             Grid.Column="0"
             Grid.ColumnSpan="3"
-            Source="character.png"         
+            Source="vehicle.png"         
             HorizontalOptions="Center"
             VerticalOptions="Center"
             Scale=".85"
@@ -28,43 +28,35 @@
             Opacity="0">
         </Image>
 
-        <toolkit:MediaElement    
+        <toolkit:MediaElement
             x:Name="sfx"          
             IsVisible="Hidden"
             ShouldAutoPlay="False"
-            ShouldLoopPlayback="False"
-            ShouldMute="{Binding Path= Settings.Sfx_isMute}"
-            Volume="{Binding Path= Settings.Get_SfxVolume}"
+            ShouldLoopPlayback="False"            
+            ShouldMute="{Binding Path= AppSettings.Sfx_isMute}"
+            Volume="{Binding Path= AppSettings.Get_SfxVolume}"
             />
 
-        <toolkit:MediaElement           
-            x:Name="bgm"          
-            ShouldAutoPlay="True"
-            ShouldLoopPlayback="True"
-            IsVisible="Hidden"
-            ShouldMute="{Binding Path= Settings.Bgm_isMute}"
-            Volume="{Binding Path= Settings.Get_BgmVolume}"
-            />
-        <Border
+        <Border 
             Grid.Row="1"
             Grid.RowSpan="2"
             Grid.Column="0"
             Grid.ColumnSpan="3"
             BackgroundColor="Transparent"
             Stroke="Transparent" >
-
+           
             <CollectionView
                 x:Name="collection"
                 VerticalOptions="Center" 
                 HorizontalOptions="Center"
-                ItemsSource="{Binding AllCharacters}"
+                ItemsSource="{Binding AllVehicles}"
                 IsEnabled="{Binding IsEnabled}"  
                 SelectedItem="{Binding CurrentItem}" 
                 Opacity="0"            
                 BackgroundColor="Transparent"
                 Scrolled="OnScrolled"
-                SelectionMode="Single" >
-
+                SelectionMode="Single">   
+            
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout                   
                         Orientation="Horizontal"
@@ -72,7 +64,7 @@
                         SnapPointsType="Mandatory"/>
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="viewmodel:Character" >
+                    <DataTemplate x:DataType="viewmodel:Vehicle" >
 
                         <Grid RowDefinitions="*,*,*" >
                             <VisualStateManager.VisualStateGroups>
@@ -91,31 +83,31 @@
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
                             <Image  
-                                x:Name="ColImg"
-                                Grid.Row="1"                                
-                                Source="{Binding Images}"
-                                Margin="30,0,30,0"
-                                HorizontalOptions="Center"
-                                VerticalOptions="Center">
+                            x:Name="ColImg"
+                            Grid.Row="1"
+                            Source="{Binding Images}"
+                            Margin="30,0,30,0"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center">
                                 <Image.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={x:RelativeSource AncestorType={x:Type viewmodel:CharacterViewModel}}, Path= Character_TappedCommand}"
+                                    <TapGestureRecognizer Command="{Binding Source={x:RelativeSource AncestorType={x:Type viewmodel:VehicleViewModel}}, Path= Vehicle_TappedCommand}"
                                                       CommandParameter="{Binding Name}" />
                                 </Image.GestureRecognizers>
                             </Image>
 
                             <Label 
-                                Grid.Row="2"
-                                x:Name="Lbl_CharName"                                                                             
-                                BackgroundColor="Transparent"
-                                Text="{Binding Name}"
-                                FontSize="Medium"
-                                FontAttributes="Bold"
-                                TextColor="White"
-                                HorizontalTextAlignment="Center"
-                                VerticalOptions="Start"              
-                                HorizontalOptions="Center" >
-                            </Label>
+                            Grid.Row="2"
+                            x:Name="Lbl_VehiName"                                                                             
+                            BackgroundColor="Transparent"
+                            Text="{Binding Name}"
+                            FontSize="Medium"
+                            FontAttributes="Bold"
+                            TextColor="White"
+                            HorizontalTextAlignment="Center"
+                            VerticalOptions="Start"              
+                            HorizontalOptions="Center" >
 
+                            </Label>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

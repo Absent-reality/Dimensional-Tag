@@ -4,7 +4,8 @@
 using DimensionalTag.Portal;
 
 namespace DimensionalTag
-{
+{ 
+
     public interface ILegoPortal
     {
         /// <summary>
@@ -80,8 +81,9 @@ namespace DimensionalTag
         /// <summary>
         /// Fades a color on a specific Pad.
         /// </summary>
-        /// <param name="pad">The Pad(s) to fade.</param>
-        /// <param name="fadePad">The fade pad settings.</param>
+        /// <param name="fadePadCenter">The fade pad settings for center pad.</param>
+        /// <param name="fadePadRight">The fade pad settings for right pad.</param>
+        /// <param name="fadePadLeft">The fade pad settings for left pad.</param>
         void FadeAll(FadePad fadePadCenter, FadePad fadePadLeft, FadePad fadePadRight);
 
         /// <summary>

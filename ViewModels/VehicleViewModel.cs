@@ -5,8 +5,11 @@ using System.Collections.ObjectModel;
 
 namespace DimensionalTag
 {
-    public partial class VehicleViewModel : SettingsViewModel
+    public partial class VehicleViewModel(AppSettings settings, IAlert alert) : BaseViewModel(settings, alert)
     {
+        public IAlert Alerts { get; set; } = alert;
+        public AppSettings AppSettings { get; set; } = settings;
+
         [ObservableProperty]
         int lastIndex;
 
@@ -53,11 +56,11 @@ namespace DimensionalTag
 
             if (result is bool sure)
             {
-                var alert = new AlertPopup(" Alert! ", " Are you sure you want to write this data? ", " Cancel?", " Write? ", true);
-                var confirm = await Shell.Current.ShowPopupAsync(alert);
-                if (confirm is bool tru)
+                var confirm = await Alert.SendAlert(" Alert! ", " Are you sure you want to write this data? ", " Cancel?", " Write? ", true);
+                if (confirm)
                 {
-                    LetsWriteIt("WriteVehicle", thisItem);
+                    ToyTag toyTag = ToyTag.ConvertTo(thisItem);
+                    LetsWriteIt(toyTag);
                 }
             }
             cv?.ScrollTo(GetVehiclePosition(thisItem), position: ScrollToPosition.Center);

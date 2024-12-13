@@ -5,8 +5,10 @@ using System.Collections.ObjectModel;
 
 namespace DimensionalTag
 {
-    public partial class WorldsViewModel : SettingsViewModel
+    public partial class WorldsViewModel(AppSettings settings, IAlert alert) : BaseViewModel(settings, alert)
     {
+        public IAlert Alerts { get; set; } = alert;
+        public AppSettings AppSettings { get; set; } = settings;
 
         [ObservableProperty]
         int worldLastIndex;
@@ -85,7 +87,7 @@ namespace DimensionalTag
             var thisItem = SortedItems.FirstOrDefault(x => x.ItemName == name);
             if (thisItem?.Id == null)
             {
-                await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong..", "Ok.", "", false));
+                await Alert.SendAlert("Oops...", "Something went wrong..", "Ok.", "", false);
                 IsEnabled = true;
                 return;
             }
@@ -100,14 +102,13 @@ namespace DimensionalTag
                         var result = await Shell.Current.ShowPopupAsync(popup);
                         if (result is bool sure)
                         {
-                            var alert = new AlertPopup(" Alert! ", " Are you sure you want to write this data? ", " Cancel?", " Write? ", true);
-                            var confirm = await Shell.Current.ShowPopupAsync(alert);
-                            if (confirm is bool tru)
+                            var confirm = await Alert.SendAlert(" Alert! ", " Are you sure you want to write this data? ", " Cancel?", " Write? ", true);
+                            if (confirm)
                             {
-                                LetsWriteIt("WriteCharacter", character);
+                                ToyTag toyTag = ToyTag.ConvertTo(character);
+                                LetsWriteIt(toyTag);
                             }
                         }
-
                     }
                     break;
 
@@ -120,14 +121,13 @@ namespace DimensionalTag
                         var result = await Shell.Current.ShowPopupAsync(popup);
                         if (result is bool meh)
                         {
-                            var alert = new AlertPopup(" Alert! ", " Are you sure you want to write this data? ", " Cancel?", " Write? ", true);
-                            var confirm = await Shell.Current.ShowPopupAsync(alert);
-                            if (confirm is bool tru)
+                            var confirm = await Alert.SendAlert(" Alert! ", " Are you sure you want to write this data? ", " Cancel?", " Write? ", true);
+                            if (confirm)
                             {
-                                LetsWriteIt("WriteVehicle", vehicle);
+                                ToyTag toyTag = ToyTag.ConvertTo(vehicle);
+                                LetsWriteIt(toyTag);
                             }
                         }
-
                     }
                     break;
             }

@@ -1,109 +1,77 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Maui.Views;
-using System.Collections.ObjectModel;
-using DimensionalTag.Tools;
-
+﻿
 namespace DimensionalTag
 {
-    public partial class ScanViewModel : SettingsViewModel
+    public partial class ScanViewModel(AppSettings settings, IAlert alert, INfcTools nfcTools) : BaseViewModel(settings, alert)
     {
+        public IAlert Alerts { get; set; } = alert;
+        public AppSettings AppSettings { get; set; } = settings;
 
-        public async void LoadTo(object obj)
+        public async void LoadTo(ToyTag toy)
         {
-            switch (obj)
+            switch (toy.ToyTagType)
             {
-                case Character:
+                case ToyTagType.Character:
                     {
-                        Character c = (Character)obj;
-                        Character? character = Character.Characters.FirstOrDefault(m => m.Id == c.Id);
+                        Character? character = Character.Characters.FirstOrDefault(m => m.Id == toy.Id);
 
                         if (character == null)
                         {
-                            await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong with character.", "Ok.", "", false));
+                            await Alert.SendAlert("Oops...", "Something went wrong with character.", "Ok.", "", false);
                         }
                         else
                         {
-                            var navParam = new Dictionary<string, object> { { "CharacterParam", character } };
-                            await Shell.Current.GoToAsync($"///CharacterPage", navParam);
+                            PassItOn(nameof(CharacterPage), "CharacterParam", character);
                         }
                     }
                     break;
 
-                case Vehicle:
+                case ToyTagType.Vehicle:
                     {
-                        Vehicle v = (Vehicle)obj;
-                        Vehicle? vehicle = Vehicle.Vehicles.FirstOrDefault(m => m.Id == v.Id);
+                        Vehicle? vehicle = Vehicle.Vehicles.FirstOrDefault(m => m.Id == toy.Id);
 
                         if (vehicle == null)
                         {
-                            await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Something went wrong with vehicle.", "Ok.", "", false));
+                            await Alert.SendAlert("Oops...", "Something went wrong with vehicle.", "Ok.", "", false);
                         }
                         else
                         {
-                            if (vehicle.Form == 1)
+                            string destination = nameof(VehiclesPage);
+                            Vehicle? vehicleToLoad;
+                            switch (vehicle.Form)
                             {
-                                var navParam = new Dictionary<string, object> { { "VehicleParam", vehicle } };
-                                await Shell.Current.GoToAsync($"///VehiclesPage", navParam);
-                            }
-                            else if (vehicle.Form == 2)
-                            {
-                                var veh = Vehicle.Vehicles.FirstOrDefault(v => v.Id == vehicle.Id - 1);
-                                if (veh != null)
-                                {
-                                    var navParam = new Dictionary<string, object> { { "VehicleParam", veh } };
-                                    await Shell.Current.GoToAsync($"///VehiclesPage", navParam);
-                                }
-                            }
-                            else if (vehicle.Form == 3)
-                            {
-                                var V = Vehicle.Vehicles.FirstOrDefault(x => x.Id == vehicle.Id - 2);
-                                if (V != null)
-                                {
-                                    var navParam = new Dictionary<string, object> { { "VehicleParam", V } };
-                                    await Shell.Current.GoToAsync($"///VehiclesPage", navParam);
-                                }
+
+                                case 1:
+                                  
+                                    PassItOn(destination, "VehicleParam", vehicle);
+                                    break;
+
+                                case 2:
+                                   
+                                    vehicleToLoad = Vehicle.Vehicles.FirstOrDefault(v => v.Id == vehicle.Id - 1);
+                                    if (vehicleToLoad != null)
+                                    {
+                                        PassItOn(destination, "VehicleParam", vehicleToLoad);
+                                    }
+                                    break;
+
+                                case 3:
+                                    vehicleToLoad = Vehicle.Vehicles.FirstOrDefault(x => x.Id == vehicle.Id - 2);
+                                    if (vehicleToLoad != null)
+                                    {
+                                        PassItOn(destination, "VehicleParam", vehicleToLoad);
+                                    }
+                                    break;
                             }
                         }
-                    }
-                    break;
-
-                case null:
-                    {
-                        await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Failed to load data.", "Ok.", "", false));
                     }
                     break;
             }
         }
 
-        public async Task<bool> BeginWrite(object item)
-        {  
-            bool complete = false;
-            switch (item)
-            {               
-                case Character:
-                    {
-                        Character c = (Character)item;
-                        complete = await CardToolsGetter.WriteCard("Character", c.Id);                        
-                    }
-                    return complete;
-
-                case Vehicle:
-                    {
-                        Vehicle v = (Vehicle)item;
-                        complete = await CardToolsGetter.WriteCard("Vehicle", v.Id);                         
-                    }
-                    return complete;
-
-                case null:
-                    {
-                        //If navigating here from write, then to the opposite type (ie character to vehicle) 
-                        // It throws null since the other info clears.
-                        complete = false;
-                    }
-                    return complete;          
-            }
-            return complete;
+        public void BeginWrite(ToyTag item)
+        {
+            if (item.Name == "") { return; }
+            nfcTools.SendToWrite(item);
         }
     }
 }

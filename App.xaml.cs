@@ -1,16 +1,15 @@
 ﻿using CommunityToolkit.Maui.Views;
-using DimensionalTag.Tools;
 
 namespace DimensionalTag
 {
     public partial class App : Application
     {
 
-        public App()
+        public App(INfcTools nfcTools, AppSettings settings, IAlert alert)
         {
             InitializeComponent();
             UserAppTheme = AppTheme.Dark;        
-            MainPage = new AppShell();
+            MainPage = new AppShell(nfcTools, settings, alert);
 
         }
 

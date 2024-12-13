@@ -1,5 +1,5 @@
 ﻿
-namespace DimensionalTag.Enums
+namespace DimensionalTag
 {
     public enum WritingDevice
     {

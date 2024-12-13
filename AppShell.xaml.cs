@@ -12,15 +12,17 @@ namespace DimensionalTag
         public SettingsViewModel SettingsVM { get; private set; }
         public SettingsPage SettingsPage { get; private set; }
         public SearchViewModel SearchVM { get; private set; }
+        public AppSettings Settings;
 
-        public AppShell()
+        public AppShell(INfcTools nfcTools, AppSettings settings, IAlert alert)
         {
 
             InitializeComponent();
-            BindingContext = this;           
-            SettingsVM = new SettingsViewModel();
+            BindingContext = this;             
+            SettingsVM = new SettingsViewModel(settings, alert);
             SettingsPage = new SettingsPage(SettingsVM);
-            SearchVM = new SearchViewModel();
+            SearchVM = new SearchViewModel(settings, alert);
+            Settings = settings;
 
 #if ANDROID   
             
@@ -34,7 +36,7 @@ namespace DimensionalTag
                     Title = "Scan",
                     Icon = "scan_ico.png",
                     Items = {  new ShellContent()  { Route = "ScanPage",
-                               ContentTemplate = new DataTemplate(() => new ScanPage(new ScanViewModel())) }
+                               ContentTemplate = new DataTemplate(() => new ScanPage(new ScanViewModel(settings, alert, nfcTools), nfcTools)) }
                            }
                 });
 
@@ -42,7 +44,7 @@ namespace DimensionalTag
                 { 
                       Route = "PortalPage",
                       ContentTemplate = new DataTemplate(() => 
-                                    new PortalPage(new PortalViewModel()))   
+                                    new PortalPage(new PortalViewModel(settings, alert)))   
                 });
                                                     
             }
@@ -53,7 +55,7 @@ namespace DimensionalTag
                     Title = "Portal",
                     Icon = "portal_ico.png",
                     Items = {  new ShellContent()  { Route = "PortalPage",
-                               ContentTemplate = new DataTemplate(() => new PortalPage(new PortalViewModel())) }
+                               ContentTemplate = new DataTemplate(() => new PortalPage(new PortalViewModel(settings, alert))) }
                            }
                 });
 

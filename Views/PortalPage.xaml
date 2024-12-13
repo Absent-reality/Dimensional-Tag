@@ -354,8 +354,8 @@
             <toolkit:MediaElement
                 x:Name="sfx"
                 IsVisible="Hidden"
-                ShouldMute="{Binding Path= Settings.Sfx_isMute}"
-                Volume="{Binding Path= Settings.Get_SfxVolume}"
+                ShouldMute="{Binding Path= AppSettings.Sfx_isMute}"
+                Volume="{Binding Path= AppSettings.Get_SfxVolume}"
                 />
 
             <HorizontalStackLayout

@@ -6,7 +6,7 @@ namespace DimensionalTag
     /// <summary>
     /// Manage Lego Tag from NFC data.
     /// </summary>
-    public static class LegoTag
+    public static class LegoTagTools
     {
         /// <summary>
         /// Generates the password to read the NFC card.
@@ -262,6 +262,6 @@ namespace DimensionalTag
 
             v[0] = v0;
             v[1] = v1;
-        }                 
+        }
     }
 }

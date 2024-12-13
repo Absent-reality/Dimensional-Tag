@@ -91,7 +91,7 @@ public partial class WorldsPage : ContentPage
         }
     }
 
-    public bool IsFullyLoaded = false;
+    private bool IsFullyLoaded = false;
     public WorldsPage(WorldsViewModel vm)
 	{
 		InitializeComponent();
@@ -113,7 +113,7 @@ public partial class WorldsPage : ContentPage
         worldCollection.ScrollTo(1, position: ScrollToPosition.Center);
     }
 
-    public async void PoppingIn()
+    private async void PoppingIn()
     {
         sfx.Source = MediaSource.FromResource("swish.mp3");
 
@@ -249,7 +249,7 @@ public partial class WorldsPage : ContentPage
         }
     }
 
-    public async Task FadeGroup(View[] views, double opacity)
+    private async Task FadeGroup(View[] views, double opacity)
     {
         if (views == null)
         {

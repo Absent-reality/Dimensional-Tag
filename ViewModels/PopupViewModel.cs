@@ -4,8 +4,11 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace DimensionalTag
 {
-    public partial class PopupViewModel : SettingsViewModel
+    public partial class PopupViewModel(AppSettings settings, IAlert alert) : BaseViewModel(settings, alert)
     {
+        public IAlert Alerts { get; set; } = alert;
+        public AppSettings AppSettings { get; set; } = settings;
+
         [ObservableProperty]
         bool hereToWrite;
 
@@ -51,7 +54,6 @@ namespace DimensionalTag
                         {
                             Abilities += $"{a} \n";
                         }
-
                     }
                     break;
 
@@ -87,28 +89,26 @@ namespace DimensionalTag
         {
             ShouldClose = false;
             HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
-            var alert = new AlertPopup(" Alert! ", " Are you sure you want to write this data? ", " Cancel?", " Write? ", true);
-            var confirm = await Shell.Current.ShowPopupAsync(alert);
-            if (confirm is bool tru)
+            var confirm = await Alert.SendAlert(" Alert! ", " Are you sure you want to write this data? ", " Cancel?", " Write? ", true);
+            if (confirm)
             {
                 Vehicle? current = null;
                 switch (form)
                 {
                     case "Form2":
                         current = Vehicle.Vehicles.FirstOrDefault(x => x.Name == Form2);
-
                         break;
 
                     case "Form3":
                         current = Vehicle.Vehicles.FirstOrDefault(y => y.Name == Form3);
-
                         break;
                 }
 
                 if (current == null) { return; }
                 if (Popup != null)
                 {
-                    LetsWriteIt("WriteVehicle", current);
+                    ToyTag toyTag = ToyTag.ConvertTo(current);
+                    LetsWriteIt(toyTag);
                     Popup.Close();
                 }
             

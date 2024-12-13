@@ -6,12 +6,13 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Maui.Views;
 using System.Threading;
 using System.Threading.Tasks;
-using DimensionalTag.Enums;
 
 namespace DimensionalTag
 {
-    public partial class PortalViewModel : SettingsViewModel
+    public partial class PortalViewModel(AppSettings settings, IAlert alert) : BaseViewModel(settings, alert)
     {
+        public IAlert Alerts { get; set; } = alert;
+        public AppSettings AppSettings { get; set; } = settings;
 
         int PadNumber = 0;
 
@@ -464,7 +465,7 @@ namespace DimensionalTag
                                 if (LeftTag0 == null) { LeftTag0 = e; }
                                 else if (LeftTag1 == null) { LeftTag1 = e; }
                                 else if (LeftTag2 == null) { LeftTag2 = e; }
-                                else LeftTag3 ??= e;
+                                else if (LeftTag3 == null) { LeftTag3 = e; }
 
                             }
                             break;
@@ -479,7 +480,7 @@ namespace DimensionalTag
                                 if (RightTag0 == null) { RightTag0 = e; }
                                 else if (RightTag1 == null) { RightTag1 = e; }
                                 else if (RightTag2 == null) { RightTag2 = e; }
-                                else RightTag3 ??= e;
+                                else if (RightTag3 == null) { RightTag3 = e; }
                             }
                             break;
 
@@ -560,10 +561,11 @@ namespace DimensionalTag
         }
 
 #if ANDROID || WINDOWS
-        public async Task<TaskStatus> PrepareWrite(object tagType)
+        public async Task<TaskStatus> PrepareWrite(ToyTag tagType)
         {
             GrabPortal();
             TaskStatus taskStatus = new();
+            ToDebug = new();
             CancelWriteRequest = new();
             var token = CancelWriteRequest.Token;
             while (!IsConnected)
@@ -572,8 +574,8 @@ namespace DimensionalTag
                break;
             }
             
-            if (Portal1 is null || !IsConnected || IsDisconnecting) { return TaskStatus.TimedOut; }           
-            var (title, message) = ("", "");
+            if (Portal1 is null || !IsConnected || IsDisconnecting) { return TaskStatus.TimedOut; }
+
             Task<TaskStatus> task = BeginWrite(tagType, token);
            
             try
@@ -584,7 +586,8 @@ namespace DimensionalTag
             { System.Diagnostics.Debug.WriteLine($"Exception: {ex}"); }
             
             if (task.IsCanceled) { taskStatus = TaskStatus.Cancelled; } 
-                                         
+
+             var (title, message, cancelText, confirmText, debug) = ("", "", "Ok.", "", false);                                        
             switch (taskStatus)
             {
                 case TaskStatus.Cancelled:
@@ -595,11 +598,17 @@ namespace DimensionalTag
                     break;
 
                 case TaskStatus.NoConnection:
-                    (title, message) = ("Oops...", "Portal not detected. Please connect lego portal and try again.");
+                    title = "Oops...";
+                    message = "Portal not detected. Please connect lego portal and try again.";
+                    confirmText = "View Log?";
+                    debug = true;
                     break;
 
                 case TaskStatus.Failed:
-                    (title,message) = ("Oops..", "Write failed.");
+                    title = "Oops..";
+                    message = "Write failed.";
+                    confirmText = "View Log?";
+                    debug = true;
                     break;
 
                 case TaskStatus.Success:
@@ -611,17 +620,22 @@ namespace DimensionalTag
             WriteEnabled = false;
             CameToWrite = false;
 
-            await Shell.Current.ShowPopupAsync(new AlertPopup(title, message, "Ok.", "", false), CancellationToken.None);               
+            var shouldDebug = await Alert.SendAlert(title, message, cancelText, confirmText, debug);    
+            if (shouldDebug)
+            {
+                await Shell.Current.ShowPopupAsync(new DebugPopup(ToDebug));
+            }
             return taskStatus;
         }
 
-        private async Task<TaskStatus> BeginWrite(object tagType, CancellationToken token)
+        private async Task<TaskStatus> BeginWrite(ToyTag tagType, CancellationToken token)
         {    
             WriteEnabled = false;
             token.ThrowIfCancellationRequested();
 
             if (Portal1 is null || !IsConnected)
             {
+                ToDebug.AppendLine("Portal is either null or not connected");
                 return TaskStatus.NoConnection;            
             }
 
@@ -637,16 +651,15 @@ namespace DimensionalTag
 
             if (CenterTag == null || CenterTag == null)
             {
-                await Shell.Current.ShowPopupAsync(new AlertPopup("Oops...", "Failed to read tag on center pad.", "Ok.", "", false), token: token);
+                await Alert.SendAlert("Oops...", "Failed to read tag on center pad.", "Ok.", "", false);
                 return TaskStatus.TimedOut;
             }
             TaskStatus status = new();
             var pageBytes = Read4Pages(CenterTag, 0x24);
             if (!IsEmptyCard(pageBytes))
             {
-                var alert = new AlertPopup(" Alert! ", " Card may not be empty. Proceed with writing data? ", " Cancel?", " Write? ", true);
-                var confirm = await Shell.Current.ShowPopupAsync(alert, token: token);
-                if (confirm is bool tru)
+                var confirm = await Alert.SendAlert(" Alert! ", " Card may not be empty. Proceed with writing data? ", " Cancel?", " Write? ", true);
+                if (confirm)
                 { status = await WriteToCard(CenterTag, tagType, token); }
 
                 ToDebug.AppendLine(BitConverter.ToString(pageBytes));
@@ -657,26 +670,25 @@ namespace DimensionalTag
         }
 #endif
 #if ANDROID || WINDOWS
-        private async Task<TaskStatus> WriteToCard(LegoTagEventArgs centerTag, object tagType, CancellationToken token)
+        private async Task<TaskStatus> WriteToCard(LegoTagEventArgs centerTag, ToyTag thisToy, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
             TaskStatus status = new();
             if (Portal1 is null || !IsConnected)
             {
+                ToDebug.AppendLine("WriteToCard: Portal null or not connected");
                 return TaskStatus.NoConnection;
             }
 
             var Uid = centerTag.CardUid;
             var index = centerTag.Index;
-            var auth = LegoTag.GenerateCardPassword(Uid);
+            var auth = LegoTagTools.GenerateCardPassword(Uid);
 
-            switch (tagType)
+            switch (thisToy.ToyTagType)
             {
-                case Character:
+                case ToyTagType.Character:
                     {
-                        Character c = (Character)tagType;
-
-                        var car = LegoTag.EncrypCharactertId(Uid, c.Id);
+                        var car = LegoTagTools.EncrypCharactertId(Uid, thisToy.Id);
                         Portal1.SetTagPassword(PortalPassword.Disable, index, auth);
 
                         bool success1 = Portal1.WriteTag(index, 0x24, car.AsSpan().Slice(0, 4).ToArray());
@@ -703,11 +715,9 @@ namespace DimensionalTag
                         break;
                     }
 
-                case Vehicle:
+                case ToyTagType.Vehicle:
                     {
-                        Vehicle v = (Vehicle)tagType;
-
-                        var vec = LegoTag.EncryptVehicleId(v.Id);
+                        var vec = LegoTagTools.EncryptVehicleId(thisToy.Id);
                         Portal1.SetTagPassword(PortalPassword.Disable, index);
 
                         bool success1 = Portal1.WriteTag(index, 0x24, vec);
@@ -790,7 +800,7 @@ namespace DimensionalTag
         }
 
         public object? GetItem(LegoTagEventArgs legoTag)
-        {
+        {     
             if(legoTag is null) { return null; }
             if (legoTag.LegoTag?.GetType().Name == "Character")
             {

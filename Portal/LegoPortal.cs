@@ -467,16 +467,16 @@ namespace DimensionalTag
                                         legoTag.LegoTag = null;
                                     }
 
-                                    else if (LegoTag.IsVehicle(message.Payload.AsSpan(9, 4).ToArray()))
+                                    else if (LegoTagTools.IsVehicle(message.Payload.AsSpan(9, 4).ToArray()))
                                     {
-                                        var vecId = LegoTag.GetVehicleId(message.Payload.AsSpan(1, 4).ToArray());
+                                        var vecId = LegoTagTools.GetVehicleId(message.Payload.AsSpan(1, 4).ToArray());
                                         var vec = Vehicle.Vehicles.FirstOrDefault(m => m.Id == vecId);
                                         legoTag.LegoTag = vec;
                                     }
 
                                     else
                                     {
-                                        var carId = LegoTag.GetCharacterId(legoTag.CardUid, message.Payload.AsSpan(1, 8).ToArray());
+                                        var carId = LegoTagTools.GetCharacterId(legoTag.CardUid, message.Payload.AsSpan(1, 8).ToArray());
                                         var car = Character.Characters.FirstOrDefault(m => m.Id == carId);
                                         legoTag.LegoTag = car;
                                     }

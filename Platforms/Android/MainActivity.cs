@@ -13,20 +13,28 @@ namespace DimensionalTag
 
     public class MainActivity : MauiAppCompatActivity
     {
-        public CardTools cardTools;
+        public NfcTools? Tools;
+        public AppSettings? Settings;
 
         protected override void OnCreate(Bundle? savedInstanceState)
         {
+            var settings = IPlatformApplication.Current!.Services.GetService<AppSettings>();
+            var iNfc  = IPlatformApplication.Current!.Services.GetService<INfcTools>();
+            if (iNfc != null)
+            {
+                Tools = iNfc as NfcTools;
+            }     
+        
             base.OnCreate(savedInstanceState);
-            cardTools = new CardTools(this);
-
-            cardTools.OnCreate();
+         
+            Tools?.OnCreate(this);
+            settings?.RestoreSettings();         
         }
 
         protected override void OnResume()
         {
             base.OnResume();
-            cardTools.OnResume();
+            Tools!.OnResume();
         }
 
         protected override void OnPause()
@@ -37,7 +45,7 @@ namespace DimensionalTag
         protected override void OnNewIntent(Intent? intent)
         {
             base.OnNewIntent(intent);
-            cardTools.OnNewIntent(intent);
+            Tools!.OnNewIntent(intent!);
         }
     }
 }

@@ -5,20 +5,14 @@ using SkiaSharp;
 namespace DimensionalTag
 {
 
-    [QueryProperty(nameof(WriteCharacter), nameof(WriteCharacter))]
-    [QueryProperty(nameof(WriteVehicle), nameof(WriteVehicle))]
+    [QueryProperty(nameof(WriteTag), nameof(WriteTag))]
 
     public partial class PortalPage : ContentPage
     {
 
-        public Character WriteCharacter
+        public ToyTag WriteTag
         {          
             set =>  SendToWrite(value);
-        }
-
-        public Vehicle WriteVehicle
-        {
-            set => SendToWrite(value);
         }
 
 #if ANDROID || WINDOWS
@@ -37,8 +31,7 @@ namespace DimensionalTag
             InitializeComponent();
             BindingContext = vm;
 
-            Vm = vm;
-            
+            Vm = vm;           
             this.Loaded += Page_Loaded;
         }
 
@@ -149,39 +142,21 @@ namespace DimensionalTag
             }
         }
 
-        public async void SendToWrite(object item)
+        public async void SendToWrite(ToyTag item)
         {
 #if ANDROID || WINDOWS
-           
-            switch (item)
-            {
-                case Character:
+            
+            if (item == null || item.ToyTagType == ToyTagType.None) { return; }
+            var resutl = await Vm.PrepareWrite(item);
 
-                    Character c = (Character)item;
-                    if (c == null || c.Name == "") { return; }
-                    var result1 = await Vm.PrepareWrite(c); 
-
-                    break; 
-                    
-                case Vehicle:
-
-                    Vehicle v = (Vehicle)item;
-                    if (v == null || v.Name == "") { return; }
-                    var result2 = await Vm.PrepareWrite(v); 
-
-                    break;
-            }
-
-            WriteCharacter = new Character(0, "", "", "", []);
-            WriteVehicle = new Vehicle(0, 0, "", "", "", []);           
+            WriteTag = new(0, "", "", [], ToyTagType.None);           
 #endif
         }
 
         private async void OnGoodbye(object sender, NavigatedFromEventArgs e)
         {
 #if ANDROID || WINDOWS      
-            WriteCharacter = new Character(0, "", "", "", []);
-            WriteVehicle = new Vehicle(0, 0, "", "", "", []);
+            WriteTag = new ToyTag(0, "", "", [], ToyTagType.None);
             await Task.Delay(200);
             Vm.CloseItCommand.Execute(null);          
 #endif

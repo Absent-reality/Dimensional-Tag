@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:DimensionalTag"
+             x:DataType="local:DebugPopup"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"            
+             x:Class="DimensionalTag.DebugPopup" Color="Transparent">
+    <Grid>
+
+        <Border
+            VerticalOptions="Start"
+            Background="#161616"
+            StrokeShape="{RoundRectangle CornerRadius=20}"
+            Margin="30"
+            Padding="10">
+
+
+            <VerticalStackLayout>
+
+                <Label
+                    Style="{StaticResource Headline}"
+                    SemanticProperties.HeadingLevel="Level1"
+                    HorizontalOptions="CenterAndExpand"                  
+                    TextColor="White"                    
+                    FontAttributes="Bold"
+                    TextDecorations="Underline"
+                    Text="Error log"
+                    Margin="0,0,0,10">
+                    <Label.Shadow>
+                        <Shadow
+                            Brush="DimGray"
+                            Offset="5,5"
+                            Radius="5"
+                            Opacity=".8" />
+                    </Label.Shadow>
+                </Label>
+
+                <Editor        
+                    x:Name="edt"
+                    MaximumHeightRequest="300"
+                    HorizontalTextAlignment="Start"
+                    BackgroundColor="Transparent"
+                    Text="{Binding DebugMessage}"
+                    TextColor="White"                        
+                    HorizontalOptions="CenterAndExpand"
+                    IsReadOnly="True" />
+
+
+                <HorizontalStackLayout HorizontalOptions="Center">
+                    <Button 
+                        x:Name="btn_Copy"
+                        HeightRequest="40"
+                        VerticalOptions="End"
+                        HorizontalOptions="StartAndExpand"
+                        BackgroundColor="#01a7d3"
+                        Text=" Copy "               
+                        FontSize="Small"
+                        FontAttributes="Bold"
+                        TextColor="Black"
+                        CornerRadius="20"
+                        Clicked="CopyButton_Clicked"                       
+                        Padding="10"
+                        Margin="15" >
+                        <Button.Shadow>
+                            <Shadow
+                                Brush="DimGray"
+                                Offset="5,5"
+                                Radius="5"
+                                Opacity=".8" />
+                        </Button.Shadow>
+                    </Button>
+
+                    <Button 
+                        x:Name="btn_Cancel"
+                        HeightRequest="40"
+                        VerticalOptions="End"
+                        HorizontalOptions="End"
+                        BackgroundColor="#01a7d3"
+                        Text=" Close "               
+                        FontSize="Small"
+                        FontAttributes="Bold"
+                        TextColor="Black"
+                        CornerRadius="20"
+                        Clicked="CancelButton_Clicked" 
+                        Padding="10"
+                        Margin="15">
+                        <Button.Shadow>
+                            <Shadow
+                                Brush="DimGray"
+                                Offset="5,5"
+                                Radius="5"
+                                Opacity=".8" />
+                        </Button.Shadow>
+                    </Button>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+
+            <Border.Shadow>
+                <Shadow
+                     Brush="DimGray"
+                     Offset="5,5"
+                     Radius="5"
+                     Opacity=".5" />
+            </Border.Shadow>
+        </Border>
+    </Grid>
+</toolkit:Popup>
