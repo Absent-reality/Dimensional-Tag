@@ -6,23 +6,14 @@ namespace DimensionalTag
 
     public partial class DebugPopup : Popup
     {
-        private string _debugMessage = "";
-        public string DebugMessage
-        {
-            get { return _debugMessage; }
-            set
-            {
-                if (_debugMessage == value)
-                    return;
-                _debugMessage = value;
-                OnPropertyChanged(nameof(DebugMessage));
-            }
-        }
-
+      
         public DebugPopup(StringBuilder debugMessage)
         {
+            DebugPopupViewModel vm = new();
             InitializeComponent();
-            DebugMessage = debugMessage.ToString();
+            BindingContext = vm;
+            vm.DisplayDebug(debugMessage);
+            
         }
 
         private void CancelButton_Clicked(object sender, EventArgs e)

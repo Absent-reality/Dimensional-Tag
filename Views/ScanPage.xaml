@@ -14,6 +14,10 @@
             <RowDefinition Height="2*" />
             <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer
+                Command="{Binding OverWriteTagCommand}" />
+        </Grid.GestureRecognizers>
 
         <Image x:Name="img_write"
                Grid.Row="0"
@@ -40,8 +44,9 @@
 
         <Label 
             Grid.Row="2"
-            x:Name="Lbl_scan"                                                                             
-            BackgroundColor="Transparent"            
+            x:Name="Lbl_scan" 
+            BackgroundColor="Transparent" 
+            Text="{Binding Message}"           
             FontSize="Medium"
             FontAttributes="Bold"
             TextColor="White"
@@ -49,6 +54,25 @@
             HeightRequest="100"              
             HorizontalOptions="CenterAndExpand" 
             Opacity="0"/>
+
+        <RadioButton
+            Grid.Row="3"
+            Margin="20"
+            HeightRequest="50"               
+            IsVisible="{Binding WriteEnabled}"
+            Content="OverWrite Vehicle?"
+            IsChecked="{Binding OverWrite}">
+        </RadioButton>
+       
+        <Label
+            Grid.Row="3"
+            Margin="0,0,0,25"
+            VerticalOptions="End"
+            HorizontalOptions="Center"
+            IsVisible="{Binding OverWrite}"
+            Text="Warning! Tag will be overwritten with new data."
+            TextColor="Red"          
+            />
 
         <toolkit:MediaElement
             x:Name="sfx"

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:DimensionalTag"
-             x:DataType="local:DebugPopup"
+             xmlns:viewmodel="clr-namespace:DimensionalTag"
+             x:DataType="viewmodel:DebugPopupViewModel"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"            
              x:Class="DimensionalTag.DebugPopup" Color="Transparent">
     <Grid>
@@ -37,10 +37,12 @@
 
                 <Editor        
                     x:Name="edt"
+                    HeightRequest="250"
+                    WidthRequest="200"
                     MaximumHeightRequest="300"
                     HorizontalTextAlignment="Start"
                     BackgroundColor="Transparent"
-                    Text="{Binding DebugMessage}"
+                    Text="{Binding Message}"
                     TextColor="White"                        
                     HorizontalOptions="CenterAndExpand"
                     IsReadOnly="True" />
@@ -58,7 +60,7 @@
                         FontAttributes="Bold"
                         TextColor="Black"
                         CornerRadius="20"
-                        Clicked="CopyButton_Clicked"                       
+                        Command="{Binding CopyDebugCommand}"                       
                         Padding="10"
                         Margin="15" >
                         <Button.Shadow>

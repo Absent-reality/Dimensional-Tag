@@ -25,10 +25,9 @@ namespace DimensionalTag
                 Tools = iNfc as NfcTools;
             }     
         
-            base.OnCreate(savedInstanceState);
-         
+            base.OnCreate(savedInstanceState);      
             Tools?.OnCreate(this);
-            settings?.RestoreSettings();         
+         
         }
 
         protected override void OnResume()

@@ -1,10 +1,31 @@
-﻿
+﻿using CommunityToolkit.Maui.Animations;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+
 namespace DimensionalTag
 {
     public partial class ScanViewModel(AppSettings settings, IAlert alert, INfcTools nfcTools) : BaseViewModel(settings, alert)
     {
         public IAlert Alerts { get; set; } = alert;
         public AppSettings AppSettings { get; set; } = settings;
+
+        [ObservableProperty]
+        bool writeEnabled = false;
+
+        [ObservableProperty]
+        bool overWrite = false;
+
+        [ObservableProperty]
+        string message = "";
+
+        [ObservableProperty]
+        double viewOpacity = 0;
+
+        [RelayCommand]
+        void OverWriteTag()
+        {
+            OverWrite = false;
+        }
 
         public async void LoadTo(ToyTag toy)
         {
@@ -68,10 +89,21 @@ namespace DimensionalTag
             }
         }
 
-        public void BeginWrite(ToyTag item)
+        public async Task<bool>BeginWrite(ToyTag item)
         {
-            if (item.Name == "") { return; }
-            nfcTools.SendToWrite(item);
+            if (item.Name == "") { return false; }
+            if(item.ToyTagType == ToyTagType.Vehicle)
+            WriteEnabled = true; 
+           
+            await nfcTools.SendToWrite(item, OverWrite);
+            WriteEnabled = false;
+            OverWrite = false;
+            return true;
+        }
+
+        public void FadeIt()
+        {
+           
         }
     }
 }

@@ -12,7 +12,8 @@ namespace DimensionalTag
         /// Sets the tag to be written.
         /// </summary>
         /// <param name="toyTag">Tag to write.</param>
-        void SendToWrite(ToyTag toyTag);
+        /// <returns>Status of task.</returns>
+        Task<ProgressStatus> SendToWrite(ToyTag toyTag, bool overWrite);
 
         /// <summary>
         /// Cancels write by emptying the tag.

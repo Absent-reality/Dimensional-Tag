@@ -40,7 +40,7 @@
 
                 <Editor
                     x:Name="edt_Alert"  
-                    HorizontalTextAlignment="Start"
+                    HorizontalTextAlignment="Center"
                     HorizontalOptions="CenterAndExpand"                    
                     BackgroundColor="Transparent"  
                     Text="{Binding Text}"

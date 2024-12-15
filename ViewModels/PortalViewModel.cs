@@ -561,22 +561,28 @@ namespace DimensionalTag
         }
 
 #if ANDROID || WINDOWS
-        public async Task<TaskStatus> PrepareWrite(ToyTag tagType)
+        public async Task<ProgressStatus> PrepareWrite(ToyTag tagType)
         {
             GrabPortal();
-            TaskStatus taskStatus = new();
+            ProgressStatus taskStatus = new();
             ToDebug = new();
             CancelWriteRequest = new();
             var token = CancelWriteRequest.Token;
-            while (!IsConnected)
+
+            if (!IsConnected)
             {
-               await Task.Delay(500);
-               break;
+                int i = 0;
+                while(i < 2000)
+                {
+                    if (IsConnected) { break; }
+                    await Task.Delay(100);
+                    i++;
+                }
             }
             
-            if (Portal1 is null || !IsConnected || IsDisconnecting) { return TaskStatus.TimedOut; }
+            if (Portal1 is null || !IsConnected || IsDisconnecting) { return ProgressStatus.TimedOut; }
 
-            Task<TaskStatus> task = BeginWrite(tagType, token);
+            Task<ProgressStatus> task = BeginWrite(tagType, token);
            
             try
             {
@@ -585,33 +591,33 @@ namespace DimensionalTag
             catch (Exception ex)            
             { System.Diagnostics.Debug.WriteLine($"Exception: {ex}"); }
             
-            if (task.IsCanceled) { taskStatus = TaskStatus.Cancelled; } 
+            if (task.IsCanceled) { taskStatus = ProgressStatus.Cancelled; } 
 
              var (title, message, cancelText, confirmText, debug) = ("", "", "Ok.", "", false);                                        
             switch (taskStatus)
             {
-                case TaskStatus.Cancelled:
+                case ProgressStatus.Cancelled:
                     (title, message) = ("", "Write cancelled.");
                     break;
 
-                case TaskStatus.TimedOut:
+                case ProgressStatus.TimedOut:
                     break;
 
-                case TaskStatus.NoConnection:
+                case ProgressStatus.NoConnection:
                     title = "Oops...";
                     message = "Portal not detected. Please connect lego portal and try again.";
                     confirmText = "View Log?";
                     debug = true;
                     break;
 
-                case TaskStatus.Failed:
+                case ProgressStatus.Failed:
                     title = "Oops..";
                     message = "Write failed.";
                     confirmText = "View Log?";
                     debug = true;
                     break;
 
-                case TaskStatus.Success:
+                case ProgressStatus.Success:
                     (title, message) = ("Yay!", "Write complete.");
                     break;
             }
@@ -628,7 +634,7 @@ namespace DimensionalTag
             return taskStatus;
         }
 
-        private async Task<TaskStatus> BeginWrite(ToyTag tagType, CancellationToken token)
+        private async Task<ProgressStatus> BeginWrite(ToyTag tagType, CancellationToken token)
         {    
             WriteEnabled = false;
             token.ThrowIfCancellationRequested();
@@ -636,7 +642,7 @@ namespace DimensionalTag
             if (Portal1 is null || !IsConnected)
             {
                 ToDebug.AppendLine("Portal is either null or not connected");
-                return TaskStatus.NoConnection;            
+                return ProgressStatus.NoConnection;            
             }
 
             Tagged = "Place empty card on center pad.";
@@ -646,15 +652,15 @@ namespace DimensionalTag
             while (!WriteEnabled)
             {
                 token.ThrowIfCancellationRequested();
-                await Task.Delay(1000, token);
+                await Task.Delay(500, token);
             }
 
             if (CenterTag == null || CenterTag == null)
             {
                 await Alert.SendAlert("Oops...", "Failed to read tag on center pad.", "Ok.", "", false);
-                return TaskStatus.TimedOut;
+                return ProgressStatus.TimedOut;
             }
-            TaskStatus status = new();
+            ProgressStatus status = new();
             var pageBytes = Read4Pages(CenterTag, 0x24);
             if (!IsEmptyCard(pageBytes))
             {
@@ -670,14 +676,14 @@ namespace DimensionalTag
         }
 #endif
 #if ANDROID || WINDOWS
-        private async Task<TaskStatus> WriteToCard(LegoTagEventArgs centerTag, ToyTag thisToy, CancellationToken token)
+        private async Task<ProgressStatus> WriteToCard(LegoTagEventArgs centerTag, ToyTag thisToy, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
-            TaskStatus status = new();
+            ProgressStatus status = new();
             if (Portal1 is null || !IsConnected)
             {
                 ToDebug.AppendLine("WriteToCard: Portal null or not connected");
-                return TaskStatus.NoConnection;
+                return ProgressStatus.NoConnection;
             }
 
             var Uid = centerTag.CardUid;
@@ -696,7 +702,7 @@ namespace DimensionalTag
                         {
                             //Failed to write;
                             ToDebug.AppendLine("Failed to write Character on 0x24");
-                            return TaskStatus.Failed;
+                            return ProgressStatus.Failed;
                         }
 
                         bool success2 = Portal1.WriteTag(index, 0x25, car.AsSpan().Slice(4, 4).ToArray());
@@ -704,11 +710,11 @@ namespace DimensionalTag
                         {
                             //Failed to write;
                             ToDebug.AppendLine("Failed to write Character on 0x25");
-                            return TaskStatus.Failed;
+                            return ProgressStatus.Failed;
                         }
 
                         if (success1 && success2)
-                        { status = TaskStatus.Success; } 
+                        { status = ProgressStatus.Success; } 
 
                         // "Automatic password again"
                         Portal1.SetTagPassword(PortalPassword.Automatic, index, auth);
@@ -725,7 +731,7 @@ namespace DimensionalTag
                         {
                             //failed to write
                             ToDebug.AppendLine("Failed to write Vehicle on 0x24");
-                            return TaskStatus.Failed;
+                            return ProgressStatus.Failed;
                         }
 
                         byte[] Data = [0x00, 0x01, 0x00, 0x00];
@@ -735,11 +741,11 @@ namespace DimensionalTag
                         {
                             //failed to write
                             ToDebug.AppendLine("Failed to write Vehicle on 0x26");
-                            return TaskStatus.Failed;
+                            return ProgressStatus.Failed;
                         }
 
                         if (success1 && success2)
-                        { status = TaskStatus.Success; }
+                        { status = ProgressStatus.Success; }
 
                         Portal1.SetTagPassword(PortalPassword.Automatic, index);
                         break;

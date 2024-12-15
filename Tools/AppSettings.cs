@@ -7,12 +7,18 @@ namespace DimensionalTag
     public partial class AppSettings : ObservableObject, INotifyPropertyChanged
     {
 
-        private double _bgm_Volume = 1;
-        private double _sfx_Volume = 1;
+        public AppSettings() 
+        {
+            RestoreSettings();
+        }
+        private double _bgm_Volume;
+        private double _sfx_Volume;
         private WritingDevice _setWritingDevice;
         private bool _writingType;
         private bool _bgm_isMute = false;
         private bool _sfx_isMute = false;
+        private bool _bgmShouldMute = false;
+        private bool _sfxShouldMute = false;
         private bool _save;
         private bool _nfcEnabled = true;
 
@@ -69,6 +75,30 @@ namespace DimensionalTag
                     return;
                 _sfx_isMute = value;
                 OnPropertyChanged(nameof(Sfx_isMute));
+            }
+        }
+
+        public bool BgmShouldMute
+        {
+            get { return _bgmShouldMute; }
+            set
+            {
+                if (_bgmShouldMute == value)
+                    return;
+                _bgm_isMute = value;
+                OnPropertyChanged(nameof(BgmShouldMute));
+            }
+        }
+
+        public bool SfxShouldMute
+        {
+            get { return _sfxShouldMute; }
+            set
+            {
+                if (_sfxShouldMute == value)
+                    return;
+                _sfx_isMute = value;
+                OnPropertyChanged(nameof(SfxShouldMute));
             }
         }
 

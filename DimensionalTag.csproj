@@ -39,6 +39,46 @@
 		<DefaultLanguage>en</DefaultLanguage>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|AnyCPU'">
+	  <ApplicationId>DimensionalTag</ApplicationId>
+	  <ApplicationDisplayVersion>2.0.0</ApplicationDisplayVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
+	  <ApplicationId>DimensionalTag</ApplicationId>
+	  <ApplicationDisplayVersion>2.0.0</ApplicationDisplayVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-maccatalyst|AnyCPU'">
+	  <ApplicationId>DimensionalTag</ApplicationId>
+	  <ApplicationDisplayVersion>2.0.0</ApplicationDisplayVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-windows10.0.19041.0|AnyCPU'">
+	  <ApplicationId>DimensionalTag</ApplicationId>
+	  <ApplicationDisplayVersion>2.0.0</ApplicationDisplayVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
+	  <ApplicationId>DimensionalTag</ApplicationId>
+	  <ApplicationDisplayVersion>2.0.0</ApplicationDisplayVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
+	  <ApplicationId>DimensionalTag</ApplicationId>
+	  <ApplicationDisplayVersion>2.0.0</ApplicationDisplayVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
+	  <ApplicationId>DimensionalTag</ApplicationId>
+	  <ApplicationDisplayVersion>2.0.0</ApplicationDisplayVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows10.0.19041.0|AnyCPU'">
+	  <ApplicationId>DimensionalTag</ApplicationId>
+	  <ApplicationDisplayVersion>2.0.0</ApplicationDisplayVersion>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<!-- App Icon -->
 

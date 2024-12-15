@@ -13,8 +13,15 @@ namespace DimensionalTag
         public void OnActivated()
         {
             DeviceDisplay.KeepScreenOn = true;
-            Settings.Bgm_isMute = false;
-            Settings.Sfx_isMute = false;
+            if (Settings.SfxShouldMute)
+            { Settings.Sfx_isMute = true; }
+            if (Settings.BgmShouldMute)
+            { Settings.Bgm_isMute = true; }
+            else
+            {
+                Settings.Sfx_isMute = false;
+                Settings.Bgm_isMute = false;
+            }
         }
 
         public void OnDeactivated()

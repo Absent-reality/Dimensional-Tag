@@ -13,6 +13,9 @@ namespace DimensionalTag
         public ToyTag? ToyTagToWrite = null;
         private IAlert Alert = alert;
         private AppSettings Settings = settings;
+        private bool OverWrite = false;
+        private bool WriteComplete = true;
+        private ProgressStatus WriteStatus;
 
         public void OnCreate(Activity actIn)
         {     
@@ -52,12 +55,15 @@ namespace DimensionalTag
 
             if (ToyTagToWrite != null)
             {
-              var report = await nfcCardUtil.PrepareToWrite(intent, ToyTagToWrite);
+                nfcCardUtil.OverWriteTag = OverWrite;
+                WriteStatus = await nfcCardUtil.PrepareToWrite(intent, ToyTagToWrite);
                 ToyTagToWrite = null;
-                var shouldDebug = await ReportIt(NfcTask.Write, report);
+                nfcCardUtil.OverWriteTag = false;              
+                WriteComplete = true;
 
+                var shouldDebug = await ReportIt(NfcTask.Write, WriteStatus);
                 if (shouldDebug)
-                {
+                {                   
                     await Shell.Current.ShowPopupAsync(new DebugPopup(nfcCardUtil.ForDebug));
                 }
                 return;
@@ -81,14 +87,23 @@ namespace DimensionalTag
             }
         }
 
-        public void SendToWrite(ToyTag toyTag)
+        public async Task<ProgressStatus>SendToWrite(ToyTag toyTag, bool overWrite)
         {
             ToyTagToWrite = toyTag;
+            OverWrite = overWrite;
+            WriteComplete = false;
+
+            while (!WriteComplete)
+            {
+               await Task.Delay(500);
+            }
+            return WriteStatus;
         }
 
         public void WriteCardCancel()
         {
             ToyTagToWrite = null;
+            OverWrite = false;
         }
 
         private async Task<bool> ReportIt(NfcTask readOrWrite, ProgressStatus currentStatus)
