@@ -14,10 +14,13 @@ Definately a work in progress. Use at your own risk. Music and images are copywr
 
 ### Use:
 !!!*REQUIRES AN NFC CAPABLE DEVICE*!!!!
+( Or at least a Lego® Portal and a usb adapter.)
 
 This app is really rather user friendly in my opinion. Scroll through each item and tap on them for more info. The search function will direct you to the location of the 
-searched for item. At this time each vehicle has a placeholder picture of the first form, and links to the other builds in the popup when they are clicked on. 
-The app is mostly designed with NTAG213 or 215 tags in mind. Currently this is only designed for android. I may port it over to ios when i feel like paying for it. 
+searched for item. At this time each vehicle has a placeholder picture of the first form, and links to the other builds in the popup when they are clicked on. Scan a lego 
+character or vehicle tag on the scan page, and it will navigate to the item matching that tag. The app is mostly designed with NTAG213 or 215 tags in mind. The portal page 
+works in concert with a connected lego portal to turn on and off, and change the color of the leds in the portal. Place a toy tag on the portal pad, and tap the icon when it 
+appears to view the items info. Currently this is only designed for android. I may port it over to ios when i feel like paying for it. 
 
 
 #### Credits:
