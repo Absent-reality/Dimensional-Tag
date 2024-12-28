@@ -25,7 +25,12 @@ namespace DimensionalTag
         private int _itemsCollectionEnd;
         public int ItemsCollectionEnd
         {
-            get { return SortedItems.Count -1; }
+            get 
+            { 
+                if(SortedItems.Count > 0) 
+                    return SortedItems.Count -1;
+                else return 0;
+            }
             set
             {
                 if (_itemsCollectionEnd == value)

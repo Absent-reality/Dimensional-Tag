@@ -100,7 +100,10 @@ public partial class WorldsPage : ContentPage
         vm.WorldCollection = worldCollection;
         vm.ItemCollection = itemCollection;
         vm.GetWorldList();
+
+        if(vm.AllWorlds.Count > 0)
         WorldLastIndex = vm.AllWorlds.Count -1;
+        else WorldLastIndex = 0;
 
         sfx.Source = MediaSource.FromResource("swish.mp3");
         this.Loaded += Page_Loaded;
@@ -111,6 +114,8 @@ public partial class WorldsPage : ContentPage
         this.Loaded -= Page_Loaded;
         sfx.Volume = Vm.CheckValue("Sfx", sfx.Volume);
         worldCollection.ScrollTo(1, position: ScrollToPosition.Center);
+        if (WorldLastIndex == 0 && Vm.AllWorlds.Count != 0)
+            WorldLastIndex = Vm.AllWorlds.Count - 1;
     }
 
     private async void PoppingIn()
@@ -226,6 +231,7 @@ public partial class WorldsPage : ContentPage
 
     private async void SpinTo(World world)
     {
+        await Task.Delay(200);
         while (!IsFullyLoaded)
         {
             await Task.Delay(500);

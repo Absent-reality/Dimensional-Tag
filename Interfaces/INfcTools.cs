@@ -4,6 +4,13 @@ namespace DimensionalTag
     public interface INfcTools
     {
         /// <summary>
+        /// For overwritting existing data.
+        /// </summary>
+        /// <param name="confirm"></param>
+        /// <returns></returns>
+        void CanOverWrite(bool confirm);
+
+        /// <summary>
         /// Event for when a tag is read.
         /// </summary>
         event EventHandler<NfcTagEventArgs>? NfcTagEvent;
@@ -13,7 +20,7 @@ namespace DimensionalTag
         /// </summary>
         /// <param name="toyTag">Tag to write.</param>
         /// <returns>Status of task.</returns>
-        Task<ProgressStatus> SendToWrite(ToyTag toyTag, bool overWrite);
+        Task<ProgressStatus> SendToWrite(ToyTag toyTag);
 
         /// <summary>
         /// Cancels write by emptying the tag.

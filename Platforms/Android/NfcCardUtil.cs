@@ -215,13 +215,15 @@ namespace DimensionalTag
                 //Try to read from block 0x24. 
                 BlockNumber = 0x24;
                 CardCommand = UltralightCommand.Read16Bytes; //Reads 4 pages starting at BlockNumber
-                dataFromCard = SendAway(nfcA);
-
-                if (IsEmptyCard(dataFromCard.AsSpan(0, 16).ToArray()))
+                try
                 {
-                    ForDebug.AppendLine("L#222: Tag doesnt contain lego data or may be empty. ");
+                   dataFromCard = SendAway(nfcA);
+                }
+                catch (Exception e)
+                {
+                    ForDebug.AppendLine($"L#220: {e.Message}");
 
-                    //Get authorization to read the card
+                    //Incase of original tag, then we'll neet to get authorization to read the card
                     CardCommand = UltralightCommand.PasswordAuthentication;
                     dataFromCard = SendAway(nfcA);
 
@@ -229,11 +231,13 @@ namespace DimensionalTag
                     BlockNumber = 0x24;
                     CardCommand = UltralightCommand.Read16Bytes; //Reads 4 pages starting at BlockNumber
                     dataFromCard = SendAway(nfcA);
-                    if (IsEmptyCard(dataFromCard.AsSpan(0, 16).ToArray()))
-                    {
-                        ForDebug.AppendLine($"L#234: {BitConverter.ToString(dataFromCard)}");
-                        return ProgressStatus.EmptyData;
-                    }
+                } 
+
+                if (IsEmptyCard(dataFromCard.AsSpan(0, 16).ToArray()))
+                {
+                    ForDebug.AppendLine(" Tag doesnt contain lego data or may be empty. ");
+                    ForDebug.AppendLine($"L#234: {BitConverter.ToString(dataFromCard)}");
+                    return ProgressStatus.EmptyData;                  
                 }
                 // If page 0x26 == 00 01 00 00 we have a vehicle
                 if (LegoTagTools.IsVehicle(dataFromCard.AsSpan(8, 4).ToArray()))
@@ -298,7 +302,7 @@ namespace DimensionalTag
             }
             catch (Exception e)
             {              
-                await Task.Run(() => Alert.SendAlert("Oops", "Failed to read tag.\n Tag maybe empty, or incompatible.", "Ok", "", false));
+                await Alert.SendAlert("Oops", "Failed to read tag.\n Tag maybe empty, or incompatible.", "Ok", "", false);
                 ForDebug.AppendLine($"L#302: {e.Message}");
             }
 
@@ -528,7 +532,7 @@ namespace DimensionalTag
             }
             catch (Exception e)
             {
-                await Task.Run(() => Alert.SendAlert("Oops","Something went wrong. \n Failed to write","Ok","", false));
+                await Alert.SendAlert("Oops","Something went wrong. \n Failed to write","Ok","", false);
                 ForDebug.AppendLine($"L#532 {e.Message}");
                 return ProgressStatus.Failed;
             }

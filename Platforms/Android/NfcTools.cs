@@ -87,10 +87,9 @@ namespace DimensionalTag
             }
         }
 
-        public async Task<ProgressStatus>SendToWrite(ToyTag toyTag, bool overWrite)
+        public async Task<ProgressStatus>SendToWrite(ToyTag toyTag)
         {
             ToyTagToWrite = toyTag;
-            OverWrite = overWrite;
             WriteComplete = false;
 
             while (!WriteComplete)
@@ -104,6 +103,11 @@ namespace DimensionalTag
         {
             ToyTagToWrite = null;
             OverWrite = false;
+        }
+
+        public void CanOverWrite(bool confirm)
+        {
+            OverWrite = confirm;
         }
 
         private async Task<bool> ReportIt(NfcTask readOrWrite, ProgressStatus currentStatus)

@@ -12,8 +12,18 @@ namespace DimensionalTag
         [ObservableProperty]
         bool writeEnabled = false;
 
-        [ObservableProperty]
-        bool overWrite = false;
+        private bool overWrite = false;
+        public bool OverWrite 
+        { 
+            get => overWrite;
+            set
+            {
+                if (overWrite == value) return;
+                overWrite = value;
+                OnPropertyChanged(nameof(OverWrite));
+                nfcTools.CanOverWrite(overWrite);
+            }
+        }
 
         [ObservableProperty]
         string message = "";
@@ -95,15 +105,10 @@ namespace DimensionalTag
             if(item.ToyTagType == ToyTagType.Vehicle)
             WriteEnabled = true; 
            
-            await nfcTools.SendToWrite(item, OverWrite);
+            await nfcTools.SendToWrite(item);
             WriteEnabled = false;
             OverWrite = false;
             return true;
-        }
-
-        public void FadeIt()
-        {
-           
         }
     }
 }

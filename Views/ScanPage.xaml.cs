@@ -94,6 +94,7 @@ namespace DimensionalTag
             await Lbl_scan.FadeTo(0, 250);
             img_write.IsVisible = false;
             Vm.WriteEnabled = false;
+            Vm.OverWrite = false;
             SwapBg(CameToWrite = false);
 #if ANDROID
             NfcTools.WriteCardCancel();          
@@ -102,7 +103,13 @@ namespace DimensionalTag
 
         private async void SwapBg(bool change)
         {
-            CancelAnimationRequest?.Cancel();
+            
+            await Task.Delay(100);
+            if (CancelAnimationRequest != null)
+            {
+               CancelAnimationRequest?.Cancel();
+            }
+
             CancelAnimationRequest = new();
             ProgressStatus taskStatus;
 
@@ -116,8 +123,8 @@ namespace DimensionalTag
                         taskStatus = await WritePage(token);
                     }
                     catch (Exception ex)
-                    { System.Diagnostics.Debug.WriteLine($"Exception: {ex}"); }
-                                       
+                    {  System.Diagnostics.Debug.WriteLine($"Exception: {ex.Message}");  }
+                                                        
                     break;
 
                 case false:
@@ -127,7 +134,7 @@ namespace DimensionalTag
                         taskStatus = await IdlePage(token);
                     }
                     catch (Exception ex)
-                    { System.Diagnostics.Debug.WriteLine($"Exception: {ex}"); }
+                    { System.Diagnostics.Debug.WriteLine($"Exception: {ex.Message}"); }
 
                     break;
             }
@@ -175,6 +182,7 @@ namespace DimensionalTag
             await img_scan.TranslateTo(0, 0, 500);
 
             return ProgressStatus.Success;
+            
         }
     }
 }
