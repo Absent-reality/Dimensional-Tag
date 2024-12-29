@@ -109,18 +109,23 @@ public partial class WorldsPage : ContentPage
         this.Loaded += Page_Loaded;
     }
 
-    void Page_Loaded(object? sender, EventArgs e)
+    async void Page_Loaded(object? sender, EventArgs e)
     {
         this.Loaded -= Page_Loaded;
         sfx.Volume = Vm.CheckValue("Sfx", sfx.Volume);
         worldCollection.ScrollTo(1, position: ScrollToPosition.Center);
         if (WorldLastIndex == 0 && Vm.AllWorlds.Count != 0)
             WorldLastIndex = Vm.AllWorlds.Count - 1;
+        if(Vm.CurrentWorld == null)
+        {
+          await Task.Delay(200);
+        }
+        Vm.SetItemsList(Vm.CurrentWorld);
     }
 
     private async void PoppingIn()
     {
-        sfx.Source = MediaSource.FromResource("swish.mp3");
+       sfx.Source = MediaSource.FromResource("swish.mp3");
 
         //measure the display size to know how far to translate.
         var width = (DeviceDisplay.MainDisplayInfo.Width) / 2;       
@@ -137,7 +142,7 @@ public partial class WorldsPage : ContentPage
             Opacity = .8f
         };
 
-        sfx.Play();
+       sfx.Play();
         await Task.Delay(500);
         sfx.Stop();
 
@@ -147,8 +152,9 @@ public partial class WorldsPage : ContentPage
         else if (ItemFirstIndex == 0) { views = [worldCollection, itemCollection, rightArrow]; }
         else if (ItemLastIndex == Vm.SortedItems.Count - 1) { views = [worldCollection, itemCollection, leftArrow]; }
         await FadeGroup(views, 1);
-        Vm.SetItemsList(Vm.CurrentWorld);
+      
         IsFullyLoaded = true;
+    
     }
 
     private void OnArrival(object sender, NavigatedToEventArgs e)
@@ -158,23 +164,26 @@ public partial class WorldsPage : ContentPage
 
     private async void OnGoodbye(object sender, NavigatedFromEventArgs e)
     {
+        
         if (sfx.CurrentState == MediaElementState.Playing)
         {
             sfx.Stop();
         }
 
         await FadeGroup([world_title, worldCollection, itemCollection, rightArrow, leftArrow], 0);
+        
     }
 
     private void OnPosition_Changed()
     {
+        
         if (sfx.CurrentState == MediaElementState.Playing)
         {
             sfx.Stop();
         }
         sfx.Source = MediaSource.FromResource("click.mp3");
         sfx.Play();
-
+        
     }
 
     private void OnWorlds_Scrolled(object sender, ItemsViewScrolledEventArgs e)
@@ -197,11 +206,13 @@ public partial class WorldsPage : ContentPage
         if (ItemFirstIndex == 0) { leftArrow.Opacity = 0; rightArrow.Opacity = 1; }
         else if (ItemLastIndex == total - 1) { rightArrow.Opacity = 0; leftArrow.Opacity = 1; }
         else { leftArrow.Opacity = 1; rightArrow.Opacity = 1; }
-        if (total < 4) { leftArrow.Opacity = 0; rightArrow.Opacity = 0; }      
+        if (total < 4) { leftArrow.Opacity = 0; rightArrow.Opacity = 0; } 
+
     }
 
     private void OnItems_Scrolled(object sender, ItemsViewScrolledEventArgs e)
     {
+        
         var itemSource = itemCollection.ItemsSource as ObservableCollection<SearchItems>;
         if (itemSource == null) { return; }
         var total = itemSource.Count;
@@ -226,7 +237,7 @@ public partial class WorldsPage : ContentPage
         ItemLastIndex = e.LastVisibleItemIndex;
         ItemCenterIndex = e.CenterItemIndex;
         itemCollection.SelectedItem = itemSource[ItemCenterIndex];
-
+        
     }
 
     private async void SpinTo(World world)
@@ -237,7 +248,8 @@ public partial class WorldsPage : ContentPage
             await Task.Delay(500);
         }
         var item = Vm.GetWorldPosition(world);
-        worldCollection.ScrollTo(item, position: ScrollToPosition.Center);
+        worldCollection.ScrollTo(item, position: ScrollToPosition.Center); 
+      
     }
 
     private void Arrow_Tapped(object sender, TappedEventArgs e)

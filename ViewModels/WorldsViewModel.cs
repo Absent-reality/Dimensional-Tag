@@ -148,8 +148,10 @@ namespace DimensionalTag
 
         public void SetItemsList(World? world)
         {
-            if (world?.Name == "") { return; }
+
+            if(world is null || world.Name is null || world.Name == "") { return; }
             var thisWorld = world;
+
             //Begin the digging for matches. 
             ListItems.Clear();
 
@@ -164,14 +166,16 @@ namespace DimensionalTag
             {
                 ListItems.Add(new SearchItems() { ItemName = w.Name, Id = w.Id, Images = w.Images });
             }
+
             foreach (var w in firstForm)
             {
                 ListItems.Add(new SearchItems() { ItemName = w.Name, Id = w.Id, Images = w.Images });
             }
 
-            ListItems.Add(new SearchItems() { ItemName = "", Id = 0, Images = "right_placeholder.png" });
+            ListItems.Add(new SearchItems() { ItemName = "", Id = 0, Images = "right_placeholder.png" });        
 
             SortedItems = ListItems;
+         
         }
     }
 }
