@@ -16,7 +16,6 @@ namespace DimensionalTag
 
         public AppShell(INfcTools nfcTools, AppSettings settings, IAlert alert)
         {
-
             InitializeComponent();
             BindingContext = this;             
             SettingsVM = new SettingsViewModel(settings, alert);
@@ -24,10 +23,10 @@ namespace DimensionalTag
             SearchVM = new SearchViewModel(settings, alert);
             Settings = settings;
 
-#if ANDROID   
-            
-            var manager = Android.App.Application.Context.GetSystemService(Context.NfcService) as NfcManager;           
-            var adapter = manager!.DefaultAdapter;  
+#if ANDROID
+
+            if (Android.App.Application.Context.GetSystemService(Context.NfcService) is not NfcManager manager) { return; }
+            var adapter = manager.DefaultAdapter;  
                       
             if (adapter != null )
             {

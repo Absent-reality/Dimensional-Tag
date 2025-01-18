@@ -93,7 +93,7 @@ namespace DimensionalTag
             });
 
             // WakeUp the portal
-            Task.Run(WakeUp);
+               Task.Run(WakeUp);
         }
 
         /// <inheritdoc/>
@@ -377,6 +377,12 @@ namespace DimensionalTag
                 try
                 {
                     bytesRead = _service!.GetIt(readBuffer);
+
+                    if (readBuffer.AsSpan(0, 2).SequenceEqual(new byte[] { 0x0b, 0x16 }))
+                    {
+                        readBuffer = [.. readBuffer.AsSpan(2, 30), 0x00, 0x00];
+                    }
+
                     if (bytesRead > 0)
                     {
                         System.Diagnostics.Debug.WriteLine($"REC: {BitConverter.ToString(readBuffer)}");

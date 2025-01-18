@@ -1,6 +1,7 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.Hardware.Usb;
+using Com.Google.Android.Exoplayer2;
 
 namespace DimensionalTag
 {
@@ -8,10 +9,13 @@ namespace DimensionalTag
     public partial class PortalConnectionService
     {
         // Constants
-        private const int ProductId = 0x0241;
-        private const int VendorId = 0x0E6F;
+        private const int Wii_Ps_Pid = 0x0241;
+        private const int Wii_Ps_Vid = 0x0E6F;
+        private const int Xb_Pid = 0xFA01;
+        private const int Xb_Vid = 0x24C6;
         private const int ReadWriteTimeout = 1000;
         private const int MessageLength = 32;
+
 
         // Class variables
         private UsbDevice? _portal;
@@ -20,6 +24,7 @@ namespace DimensionalTag
         private UsbInterface? _interface;
         private UsbEndpoint? _readEndpoint;
         private UsbEndpoint? _writeEndpoint;
+        private PortalType? _portalType;
 
         public partial object? GetConnection()
         {
@@ -33,8 +38,18 @@ namespace DimensionalTag
             _manager = portal.usbManager;
             _interface = portal.device.GetInterface(0);
             _writeEndpoint = _interface.GetEndpoint(1);
-            _readEndpoint = _interface.GetEndpoint(0);
+            _readEndpoint = _interface.GetEndpoint(0); 
+            switch (portal.device.ProductId)
+            {
+                case Xb_Pid:
+                    _portalType = PortalType.Xbox;
+                    break;
 
+                case Wii_Ps_Pid:
+                    _portalType = PortalType.Wii_PS;
+                    break;
+            }
+            
             return portal;
         }
 
@@ -54,11 +69,11 @@ namespace DimensionalTag
             //Find the device by vendor and pid in the list
 
             UsbDevice portal = devicesDirectory.FirstOrDefault().Value;
-
-            if (portal.ProductId != ProductId && portal.VendorId != VendorId)
+            // ||64001 9414
+            if (!(portal.ProductId == Xb_Pid && portal.VendorId == Xb_Vid) && !(portal.ProductId == Wii_Ps_Pid && portal.VendorId == Wii_Ps_Vid))
             {
-                throw new Exception("Please connect portal");
-            }
+               return (null, null);
+            }          
 
             if (manager.HasPermission(portal) == false)
             {
@@ -85,13 +100,32 @@ namespace DimensionalTag
 
         public int SendIt(byte[] bytes)
         {
-            var returned = _connection!.BulkTransfer(_writeEndpoint, bytes, MessageLength, ReadWriteTimeout);
+            byte[] message = [];
+            switch (_portalType)
+            {
+                case PortalType.Xbox:
+                   // byte[] prefix = { 0x0b, 0x16 };                  
+                    message = [0x0b, 0x16, ..bytes.AsSpan(0, 30).ToArray()];                   
+                    break;
+
+                case PortalType.Wii_PS:
+                    message = bytes;
+                    break;
+
+                case null:
+                    return 0;
+            }
+            
+            if (_connection == null) { return 0; }
+            var returned = _connection.BulkTransfer(_writeEndpoint, message, MessageLength, ReadWriteTimeout);
             return returned;
         }
 
         public int GetIt(byte[] readBuffer)
-        {
-          var returned = _connection!.BulkTransfer(_readEndpoint, readBuffer, MessageLength, ReadWriteTimeout);
+        {         
+            if (_connection == null) { return 0; }
+            var returned = _connection.BulkTransfer(_readEndpoint, readBuffer, MessageLength, ReadWriteTimeout);
+
             return returned;
         }
 

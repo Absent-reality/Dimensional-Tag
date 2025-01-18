@@ -53,11 +53,11 @@ namespace DimensionalTag
         SearchItems? currentItem;      
 
         [ObservableProperty]
-        ObservableCollection<World> _allWorlds = new();
+        ObservableCollection<World> _allWorlds = [];
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(ItemsCollectionEnd))]
-        ObservableCollection<SearchItems> _sortedItems = new();
+        ObservableCollection<SearchItems> _sortedItems = [];
 
         private ObservableCollection<SearchItems> ListItems = [];
 
