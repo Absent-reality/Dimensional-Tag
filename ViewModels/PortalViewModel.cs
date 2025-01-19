@@ -695,7 +695,7 @@ namespace DimensionalTag
                 case ToyTagType.Character:
                     {
                         var car = LegoTagTools.EncrypCharactertId(Uid, thisToy.Id);
-                        Portal1.SetTagPassword(PortalPassword.Disable, index, auth);
+                        Portal1.SetTagPassword(PortalPassword.Disable, index /*, auth */);
 
                         bool success1 = Portal1.WriteTag(index, 0x24, car.AsSpan().Slice(0, 4).ToArray());
                         if (!success1)
@@ -712,12 +712,22 @@ namespace DimensionalTag
                             ToDebug.AppendLine("Failed to write Character on 0x25");
                             return ProgressStatus.Failed;
                         }
+                      
+                        byte[] Data = [0x00, 0x00, 0x00, 0x00];
+                        var success3 = Portal1.WriteTag(index, 0x26, Data);
 
-                        if (success1 && success2)
+                        if (!success3)
+                        {
+                            //Failed to write;
+                            ToDebug.AppendLine("Failed to write 0s on 0x26");
+                            return ProgressStatus.Failed;
+                        }
+
+                        if (success1 && success2 && success3)
                         { status = ProgressStatus.Success; } 
 
                         // "Automatic password again"
-                        Portal1.SetTagPassword(PortalPassword.Automatic, index, auth);
+                        Portal1.SetTagPassword(PortalPassword.Automatic, index /*, auth */);
                         break;
                     }
 

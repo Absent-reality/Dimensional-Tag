@@ -270,12 +270,12 @@ namespace DimensionalTag
         /// <summary>
         /// Read 8 bytes from a tag at page 0x24 and 0x25.
         /// </summary>
-        /// <param name="encryoptedIndex">The tag index to read encrypted on 8 bytes.</param>
+        /// <param name="encryptedIndex">The tag index to read encrypted on 8 bytes.</param>
         /// <returns>A byte array of 8 bytes in case of success.</returns>
-        public byte[] GetTagInformation(byte[] encryoptedIndex)
+        public byte[] GetTagInformation(byte[] encryptedIndex)
         {
             Message message = new(MessageCommand.Model);
-            message.AddPayload(encryoptedIndex);
+            message.AddPayload(encryptedIndex);
             var getRead = new ManualResetEvent(false);
             var commandId = new CommandId(SendMessage(message), MessageCommand.Model, getRead);
             _commandId.Add(commandId);
