@@ -21,5 +21,11 @@ namespace DimensionalTag
         {
             //To be added
         }
+
+        public async Task<ProgressStatus> EraseIt(bool confirm)
+        {
+            //To be added
+            return ProgressStatus.NoConnection;
+        }
     }
 }
