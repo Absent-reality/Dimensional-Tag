@@ -51,7 +51,7 @@
 
                 <HorizontalStackLayout
                                   x:Name="stack1"
-                                  IsVisible="{Binding Visible}">
+                                  IsVisible="{Binding Visible2}">
 
                     <Label
                         x:Name="lbl_Form_Two"
@@ -81,7 +81,7 @@
                 </HorizontalStackLayout>
                 <HorizontalStackLayout
                                  x:Name="stack2"
-                                  IsVisible="{Binding Visible}">
+                                  IsVisible="{Binding Visible3}">
 
                     <Label
                         x:Name="lbl_Form_Three"

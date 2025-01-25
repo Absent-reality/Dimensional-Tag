@@ -34,7 +34,10 @@ namespace DimensionalTag
         string abilities = "";
 
         [ObservableProperty]
-        bool visible = false;
+        bool visible2 = false;
+
+        [ObservableProperty]
+        bool visible3 = false;
      
         public Popup? Popup { get; set; }
 
@@ -67,7 +70,7 @@ namespace DimensionalTag
                         if (form2 != null) { Form2 = form2.Name; }
                         if (form3 != null) { Form3 = form3.Name; }
 
-                        Visible = true;
+                        (Visible2, Visible3) = (true, true);
                         Name = v.Name;
                         ImgSource = v.Images;
                         World = $"\n World:\n {v.World}";

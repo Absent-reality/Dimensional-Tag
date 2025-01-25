@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
         <Grid.GestureRecognizers>
             <TapGestureRecognizer
-                Command="{Binding OverWriteTagCommand}" />
+                Command="{Binding CancelStuffCommand}" />
         </Grid.GestureRecognizers>
 
         <Image x:Name="img_write"
@@ -54,6 +54,41 @@
             HeightRequest="100"              
             HorizontalOptions="CenterAndExpand" 
             Opacity="0"/>
+
+        <RadioButton
+            Grid.Row="3"
+            VerticalOptions="Start"
+            Margin="25"
+            HeightRequest="50" 
+            IsVisible="True"
+            Content="Erase Tag?"
+            IsEnabled="True"
+            IsChecked="{Binding CanErase}">
+            <RadioButton.Triggers>
+                <DataTrigger
+                    TargetType="RadioButton"
+                    Binding="{Binding WriteEnabled}"
+                    Value="True">
+                    <Setter Property="IsVisible"
+                            Value="False" />
+                </DataTrigger>
+            </RadioButton.Triggers>
+            <RadioButton.GestureRecognizers>
+                <TapGestureRecognizer
+                    Command="{Binding Erase_TappedCommand}" />
+            </RadioButton.GestureRecognizers>
+        </RadioButton>
+
+        <Label
+            Grid.Row="3"
+            Margin="0,0,0,25"
+            VerticalOptions="Start"
+            HorizontalOptions="Center"
+            HorizontalTextAlignment="Center"
+            IsVisible="{Binding EraseVisible}"
+            Text="{Binding EraseMessage}"
+            TextColor="Red"          
+            />
 
         <RadioButton
             Grid.Row="3"

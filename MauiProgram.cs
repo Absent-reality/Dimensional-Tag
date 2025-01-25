@@ -42,8 +42,13 @@ namespace DimensionalTag
             builder.Services.AddTransient<IAlert, MauiAlert>();
             builder.Services.AddTransient<AppShell>();
             builder.Services.AddTransient<App>();
-#if ANDROID
+
+#if ANDROID || WINDOWS
             builder.Services.AddSingleton<INfcTools, NfcTools>();
+#endif
+
+#if ANDROID
+
             builder.Services.AddSingleton<MainActivity>();
 #endif
             return builder;

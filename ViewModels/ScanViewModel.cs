@@ -26,15 +26,56 @@ namespace DimensionalTag
         }
 
         [ObservableProperty]
+        bool canErase = false;        
+
+        [ObservableProperty]
         string message = "";
 
         [ObservableProperty]
         double viewOpacity = 0;
 
+        [ObservableProperty]
+        string eraseMessage = "";
+
+        [ObservableProperty]
+        bool eraseVisible = false;
+
+        [ObservableProperty]
+        int eraseTaps = 0;
+
         [RelayCommand]
-        void OverWriteTag()
+        void Erase_Tapped()
+        {
+            CanErase = false;
+            switch (EraseTaps)
+            {
+                case 0:
+                    EraseMessage = "";
+                    nfcTools.WriteCardCancel();
+                    break;
+                case 1:
+                    EraseVisible = true;
+                    EraseMessage = " Warning! Tag will be Erased. \n Tap 3 more times to continue.";
+                    break;
+                case >1 and <4:
+                    EraseMessage = $"Tapped {EraseTaps} times. {4-EraseTaps} to go.";
+                    break;
+                case 4:
+                    EraseMessage = "Erase Enabled! Place Tag under device to erase, or tap once more to cancel.";
+                    var current = EraseTag(CanErase = true);
+                    EraseTaps = 0;
+                    return;
+            }
+            EraseTaps++;
+        }
+
+        [RelayCommand]
+        void CancelStuff()
         {
             OverWrite = false;
+            CanErase = false;
+            EraseMessage = "";
+            EraseTaps = 0;
         }
 
         public async void LoadTo(ToyTag toy)
@@ -51,7 +92,9 @@ namespace DimensionalTag
                         }
                         else
                         {
-                            PassItOn(nameof(CharacterPage), "CharacterParam", character);
+                            if(character.Id == 769)
+                            { character = Character.Characters.FirstOrDefault(c => c.Id == 46); }
+                            PassItOn(nameof(CharacterPage), "CharacterParam", character!);
                         }
                     }
                     break;
@@ -67,31 +110,26 @@ namespace DimensionalTag
                         else
                         {
                             string destination = nameof(VehiclesPage);
-                            Vehicle? vehicleToLoad;
+                            Vehicle? vehicleToLoad = new(0, 0, "", "", "", []);
                             switch (vehicle.Form)
                             {
 
                                 case 1:
-                                  
-                                    PassItOn(destination, "VehicleParam", vehicle);
+                                    vehicleToLoad = vehicle;                            
                                     break;
 
                                 case 2:
-                                   
                                     vehicleToLoad = Vehicle.Vehicles.FirstOrDefault(v => v.Id == vehicle.Id - 1);
-                                    if (vehicleToLoad != null)
-                                    {
-                                        PassItOn(destination, "VehicleParam", vehicleToLoad);
-                                    }
                                     break;
 
                                 case 3:
                                     vehicleToLoad = Vehicle.Vehicles.FirstOrDefault(x => x.Id == vehicle.Id - 2);
-                                    if (vehicleToLoad != null)
-                                    {
-                                        PassItOn(destination, "VehicleParam", vehicleToLoad);
-                                    }
                                     break;
+                            }
+
+                            if (vehicleToLoad != null && vehicleToLoad.Id != 0)
+                            {
+                                PassItOn(destination, "VehicleParam", vehicleToLoad);
                             }
                         }
                     }
@@ -107,7 +145,15 @@ namespace DimensionalTag
            
             await nfcTools.SendToWrite(item);
             WriteEnabled = false;
-            OverWrite = false;
+            CancelStuff();
+            return true;
+        }
+
+        async Task<bool>EraseTag(bool confirm)
+        {
+            var status = await nfcTools.EraseIt(confirm);
+            CancelStuff();
+            nfcTools.WriteCardCancel();
             return true;
         }
     }

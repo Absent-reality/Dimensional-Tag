@@ -169,6 +169,7 @@
 	  <None Remove="Resources\Images\Animation\scan_one.png" />
 	  <None Remove="Resources\Images\Animation\scan_three.png" />
 	  <None Remove="Resources\Images\Animation\scan_two.png" />
+	  <None Remove="Resources\Images\blnk_splash.png" />
 	  <None Remove="Resources\Images\centerpad.png" />
 	  <None Remove="Resources\Images\Character.png" />
 	  <None Remove="Resources\Images\Char_Icons\abby_yates.png" />
@@ -671,8 +672,8 @@
 		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.92" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.92" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
-		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.0.0-preview.4.1" />
-		<PackageReference Include="SkiaSharp.Views.Maui.Core" Version="3.0.0-preview.4.1" />
+		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.116.1" />
+		<PackageReference Include="SkiaSharp.Views.Maui.Core" Version="3.116.1" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -685,6 +686,14 @@
 	  <Compile Update="Views\SettingsPage.xaml.cs">
 	    <DependentUpon>SettingsPage.xaml</DependentUpon>
 	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiImage Update="Resources\Images\blnk_splash.png">
+	    <resize>true</resize>
+	    <Color>#000000</Color>
+	    <BaseSize>128,128</BaseSize>
+	  </MauiImage>
 	</ItemGroup>
 
 	<ItemGroup>

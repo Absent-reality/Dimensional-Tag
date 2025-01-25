@@ -34,6 +34,7 @@ namespace DimensionalTag
             AllCharacters.Add(new Character(0, "", "", "left_placeholder.png", []));
             foreach (var character in Character.Characters)
             {
+                if (character != Character.Characters.FirstOrDefault(c => c.Id == 769))
                 AllCharacters.Add(character);
             }
             AllCharacters.Add(new Character(0, "", "", "right_placeholder.png", []));

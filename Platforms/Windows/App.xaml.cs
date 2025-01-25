@@ -12,8 +12,7 @@ namespace DimensionalTag.WinUI
     /// </summary>
     public partial class App : MauiWinUIApplication
     {
-        const int WindowWidth = 360;
-        const int WindowHeight = 646;
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -32,10 +31,10 @@ namespace DimensionalTag.WinUI
                 AppWindow appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
                 appWindow.Resize(new Windows.Graphics.SizeInt32(WindowWidth, WindowHeight));
 
-            }); */
+            }); */       
         }
 
-        protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
+        protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();      
     }
 
 }

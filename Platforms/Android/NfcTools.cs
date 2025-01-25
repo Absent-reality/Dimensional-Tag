@@ -14,6 +14,7 @@ namespace DimensionalTag
         private IAlert Alert = alert;
         private AppSettings Settings = settings;
         private bool OverWrite = false;
+        private bool ShouldErase = false;
         private bool WriteComplete = true;
         private ProgressStatus WriteStatus;
 
@@ -52,39 +53,47 @@ namespace DimensionalTag
         {
             if (intent.Action != NfcAdapter.ActionTagDiscovered) return;
             NfcCardUtil nfcCardUtil = new(Alert);
+            bool shouldDebug = false;
 
             if (ToyTagToWrite != null)
             {
                 nfcCardUtil.OverWriteTag = OverWrite;
                 WriteStatus = await nfcCardUtil.PrepareToWrite(intent, ToyTagToWrite);
                 ToyTagToWrite = null;
-                nfcCardUtil.OverWriteTag = false;              
+                nfcCardUtil.OverWriteTag = false;
                 WriteComplete = true;
 
-                var shouldDebug = await ReportIt(NfcTask.Write, WriteStatus);
+                shouldDebug = await ReportIt(NfcTask.Write, WriteStatus);
+            }
+            else if (ShouldErase)
+            {
+                nfcCardUtil.ShouldEraseTag = ShouldErase;
+                ToyTag blank = new( 0, "", "", [], ToyTagType.None );
+                WriteStatus = await nfcCardUtil.PrepareToWrite(intent, blank);
+                ShouldErase = false;
+                WriteComplete = true;
+
+                shouldDebug = await ReportIt(NfcTask.Write, WriteStatus);
+            }
+            else
+            {
+                var progressStatus = await nfcCardUtil!.TryRead(intent);
+                if (progressStatus == ProgressStatus.Success)
+                {
+                    if (nfcCardUtil.ReadTag != null)
+                    {
+                        NfcTagEvent?.Invoke(this, new NfcTagEventArgs(nfcCardUtil.ReadTag));
+                    }
+                }
+                else
+                {
+                    shouldDebug = await ReportIt(NfcTask.Read, progressStatus);
+                }
+            }
                 if (shouldDebug)
-                {                   
+                {
                     await Shell.Current.ShowPopupAsync(new DebugPopup(nfcCardUtil.ForDebug));
                 }
-                return;
-            }
-        
-            var progressStatus = await nfcCardUtil!.TryRead(intent);
-            if (progressStatus == ProgressStatus.Success)
-            {
-                if (nfcCardUtil.ReadTag != null)
-                {
-                    NfcTagEvent?.Invoke(this, new NfcTagEventArgs(nfcCardUtil.ReadTag));
-                }
-            }
-            else 
-            {
-                var shouldDebug = await ReportIt(NfcTask.Read, progressStatus);
-                if (shouldDebug)
-                {
-                    await Shell.Current.ShowPopupAsync(new DebugPopup(nfcCardUtil.ForDebug));
-                }
-            }
         }
 
         public async Task<ProgressStatus>SendToWrite(ToyTag toyTag)
@@ -103,11 +112,21 @@ namespace DimensionalTag
         {
             ToyTagToWrite = null;
             OverWrite = false;
+            ShouldErase = false;
         }
 
-        public void CanOverWrite(bool confirm)
+        public void CanOverWrite(bool confirm) => OverWrite = confirm;
+
+        public async Task<ProgressStatus>EraseIt(bool confirmErase)
         {
-            OverWrite = confirm;
+            ShouldErase = confirmErase;
+            WriteComplete = false;
+
+            while (!WriteComplete)
+            {
+                await Task.Delay(500);
+            }
+            return WriteStatus;
         }
 
         private async Task<bool> ReportIt(NfcTask readOrWrite, ProgressStatus currentStatus)

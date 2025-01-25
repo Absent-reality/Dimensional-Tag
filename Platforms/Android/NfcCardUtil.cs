@@ -11,6 +11,8 @@ namespace DimensionalTag
     {
         private byte[] Uid = [0];
         private byte[] AuthenticationKey = [0];
+        private readonly byte[] vehicleBlock = [0x00, 0x01, 0x00, 0x00];
+        private readonly byte[] emptyBlock = [0x00, 0x00, 0x00, 0x00];
         private UltralightCommand CardCommand { get; set; }
         private UltralightCardType CardType { get; set; }
         private int NdefCapacity;
@@ -87,6 +89,22 @@ namespace DimensionalTag
             }
         }
 
+        /// <summary>
+        /// Bool to erase (write zeros) to tag.
+        /// </summary>
+        private bool _shouldEraseTag = false;
+        public bool ShouldEraseTag
+        {
+            get { return _shouldEraseTag; }
+            set
+            {
+                if (_shouldEraseTag == value)
+                    return;
+                _shouldEraseTag = value;
+                OnPropertyChanged(nameof(ShouldEraseTag));
+            }
+        }
+
         public NfcCardUtil(IAlert alertInterface)
         {
             Alert = alertInterface;
@@ -143,7 +161,7 @@ namespace DimensionalTag
             }
             catch (Exception e)
             {
-                ForDebug.AppendLine($"L#146: {e.Message}");
+                ForDebug.AppendLine($"@TryRead, exception: {e.Message}");
                 return ProgressStatus.Failed;
             }
         }
@@ -159,7 +177,7 @@ namespace DimensionalTag
             var uuid = thisTag.GetId();
             if (uuid == null)
             {
-                ForDebug.AppendLine("#L162: Failed to read tag id. ");
+                ForDebug.AppendLine("@GrabTagInfo, GetId: Failed to read tag id. ");
                 return ProgressStatus.Failed;
             }
 
@@ -172,7 +190,7 @@ namespace DimensionalTag
             var this_tag = thisTag.GetTechList();
             if (this_tag == null)
             {
-                ForDebug.AppendLine($"L#175: {nameof(Tag)}: {tech}. Failed to get list.");
+                ForDebug.AppendLine($"@GrabTagInfo, TechList: {nameof(Tag)}: {tech}. Failed to get list.");
                 return ProgressStatus.Failed;
             }
 
@@ -185,14 +203,14 @@ namespace DimensionalTag
 
             if (!tech.Contains("android.nfc.tech.NfcA"))
             {
-                ForDebug.AppendLine("L#188: NfcA unavailible.");
+                ForDebug.AppendLine("@GrabTagInfo: NfcA unavailible.");
                 return ProgressStatus.Failed;
             }
 
             NfcA? nfcA = NfcA.Get(thisTag);
             if (nfcA == null)
             {
-                ForDebug.AppendLine("L#195: nfcA null");
+                ForDebug.AppendLine("@GrabTagInfo, Get: nfcA null");
                 return ProgressStatus.Failed;
             }
             try
@@ -201,7 +219,7 @@ namespace DimensionalTag
                 TagConnected = nfcA.IsConnected;
                 if (!TagConnected)
                 {
-                    ForDebug.AppendLine("L#204: No Connection to tag.");
+                    ForDebug.AppendLine("GrabTagInfo, nfca.Connect: No Connection to tag.");
                     return ProgressStatus.NoConnection;
                 }
 
@@ -221,7 +239,7 @@ namespace DimensionalTag
                 }
                 catch (Exception e)
                 {
-                    ForDebug.AppendLine($"L#220: {e.Message}");
+                    ForDebug.AppendLine($"@GrabTagInfo, first read: {e.Message}");
 
                     //Incase of original tag, then we'll neet to get authorization to read the card
                     CardCommand = UltralightCommand.PasswordAuthentication;
@@ -236,7 +254,11 @@ namespace DimensionalTag
                 if (IsEmptyCard(dataFromCard.AsSpan(0, 16).ToArray()))
                 {
                     ForDebug.AppendLine(" Tag doesnt contain lego data or may be empty. ");
-                    ForDebug.AppendLine($"L#234: {BitConverter.ToString(dataFromCard)}");
+                    ForDebug.AppendLine($"@GrabTagInfo, IsEmpty? Block 0x24:");
+                    ForDebug.AppendLine($"{BitConverter.ToString(dataFromCard.AsSpan(0, 4).ToArray())} \n " +
+                    $"{BitConverter.ToString(dataFromCard.AsSpan(4, 4).ToArray())} \n " +
+                    $"{BitConverter.ToString(dataFromCard.AsSpan(8, 4).ToArray())} \n " +
+                    $"{BitConverter.ToString(dataFromCard.AsSpan(12, 4).ToArray())}");
                     return ProgressStatus.EmptyData;                  
                 }
                 // If page 0x26 == 00 01 00 00 we have a vehicle
@@ -253,7 +275,7 @@ namespace DimensionalTag
                         if (vec == null)
                         {
                             // ErrorReport("Vehicle does not exist!");
-                            ForDebug.AppendLine($"L#252: No such Vehicle: {id}");
+                            ForDebug.AppendLine($"@GrabTagInfo: No such Vehicle: {id}");
                             return ProgressStatus.Failed;
                         }
 
@@ -279,7 +301,7 @@ namespace DimensionalTag
                         if (car == null)
                         {
                             // ErrorReport("Character does not exist!");
-                            ForDebug.AppendLine($"L#278: No such Charater: {id}");
+                            ForDebug.AppendLine($"@GrabTagInfo: No such Charater: {id}");
                             return ProgressStatus.Failed;
                         }
 
@@ -295,7 +317,7 @@ namespace DimensionalTag
                     else
                     {
                         // ErrorReport("Item does not exist! Make sure tag is a lego character or vehicle.");
-                        ForDebug.AppendLine("L#294: Failed to match id to vehicle or charater");
+                        ForDebug.AppendLine("@GrabTagInfo: Failed to match id to vehicle or charater");
                         return ProgressStatus.Failed;
                     }
                 }
@@ -303,7 +325,7 @@ namespace DimensionalTag
             catch (Exception e)
             {              
                 await Alert.SendAlert("Oops", "Failed to read tag.\n Tag maybe empty, or incompatible.", "Ok", "", false);
-                ForDebug.AppendLine($"L#302: {e.Message}");
+                ForDebug.AppendLine($"@GrabTagInfo, exception: {e.Message}");
             }
 
             nfcA.Close();
@@ -364,7 +386,7 @@ namespace DimensionalTag
             }
             catch (Exception e)
             {
-                ForDebug.AppendLine($"L#363 {e.Message}");
+                ForDebug.AppendLine($"@PrepareWrite exception: {e.Message}");
                 return ProgressStatus.Failed;
             }
 
@@ -379,7 +401,7 @@ namespace DimensionalTag
             var uuid = thisTag?.GetId();
             if (uuid == null)
             {
-                ForDebug.AppendLine("L#378 Failed to read tag id.");
+                ForDebug.AppendLine("@BeginWrite, GetId: Failed to read tag id.");
                 return ProgressStatus.Failed;
             }
 
@@ -393,7 +415,7 @@ namespace DimensionalTag
             var this_tag = thisTag?.GetTechList();
             if (this_tag == null)
             {
-                ForDebug.AppendLine($"L#392: {nameof(Tag)}: {tech}. Failed to get list.");
+                ForDebug.AppendLine($"@BeginWrite, GetTech: {nameof(Tag)}: {tech}. Failed to get list.");
                 return ProgressStatus.Failed;
             }
 
@@ -407,7 +429,7 @@ namespace DimensionalTag
             NfcA? nfcA = NfcA.Get(thisTag);
             if (nfcA == null)
             {
-                ForDebug.AppendLine("L#406: nfcA null");
+                ForDebug.AppendLine("@BeginWrite, NfcA.Get: nfcA null");
                 return ProgressStatus.Failed;
             }
 
@@ -417,7 +439,7 @@ namespace DimensionalTag
                 TagConnected = nfcA.IsConnected;
                 if (!TagConnected)
                 {
-                    ForDebug.AppendLine("L#416: No Connection to tag.");
+                    ForDebug.AppendLine("@BeginWrite, Connect: No Connection to tag.");
                     return ProgressStatus.NoConnection;
                 }
 
@@ -429,7 +451,7 @@ namespace DimensionalTag
 
                 if (CardType != UltralightCardType.UltralightNtag213 && CardType != UltralightCardType.UltralightNtag215 && CardType != UltralightCardType.UltralightNtag216)
                 {
-                    ForDebug.AppendLine($"L#428 Incorrect card type {CardType}");
+                    ForDebug.AppendLine($"@BeginWrite, CardType: Incorrect card type {CardType}");
                     return ProgressStatus.IncorrectType;
                 }
 
@@ -437,12 +459,12 @@ namespace DimensionalTag
                 BlockNumber = 0x24;
                 CardCommand = UltralightCommand.Read16Bytes; //Reads 4 pages starting at BlockNumber
                 dataFromCard = SendAway(nfcA);
-                if (toyTag.ToyTagType == ToyTagType.Vehicle && OverWriteTag) { }
+                if (toyTag.ToyTagType == ToyTagType.Vehicle && OverWriteTag || ShouldEraseTag) { }
                 else
                 {
                     if (!IsEmptyCard(dataFromCard.AsSpan(0, 16).ToArray()))
                     {
-                        ForDebug.AppendLine($"L#441 There's something here.");
+                        ForDebug.AppendLine($"@BeginWrite, IsEmpty?: There's something here.");
                         ForDebug.AppendLine($"{BitConverter.ToString(dataFromCard.AsSpan(0, 4).ToArray())} \n " +
                                             $"{BitConverter.ToString(dataFromCard.AsSpan(4, 4).ToArray())} \n " +
                                             $"{BitConverter.ToString(dataFromCard.AsSpan(8, 4).ToArray())} \n " +
@@ -471,69 +493,92 @@ namespace DimensionalTag
                 CardCommand = UltralightCommand.Write4Bytes;
                 SendAway(nfcA);
 
-                switch (toyTag.ToyTagType)
+                if (ShouldEraseTag)
+                {                  
+                    var progress = await EraseTag(nfcA, [0x24, 0x25, 0x26]);
+                    return progress;
+                }
+                else
                 {
-                    case ToyTagType.Character:
-                        {
-                            // Get the encrypted character ID
-                            var car = LegoTagTools.EncrypCharactertId(Uid, toyTag.Id);
-
-                            // Write Charater to blocks 0x24 and 0x25.
-                            Data = car.AsSpan(0, 4).ToArray();
-                            BlockNumber = 0x24;
-                            CardCommand = UltralightCommand.Write4Bytes;
-                            SendAway(nfcA);
-
-                            Data = car.AsSpan(4, 4).ToArray();
-                            BlockNumber = 0x25;
-                            CardCommand = UltralightCommand.Write4Bytes;
-                            SendAway(nfcA);
-
-                            //Try to read from block 0x25. (Let's see if it worked.)
-                            BlockNumber = 0x25;
-                            CardCommand = UltralightCommand.Read16Bytes; //Reads 4 pages starting at BlockNumber
-                            dataFromCard = SendAway(nfcA);
-                            if (!dataFromCard.AsSpan(0, 4).SequenceEqual(Data.AsSpan(0, 4).ToArray()))
+                    switch (toyTag.ToyTagType)
+                    {
+                        case ToyTagType.Character:
                             {
-                                ForDebug.AppendLine("L#494 Failed to write to card.");
-                                return ProgressStatus.Failed;
+                                // Get the encrypted character ID
+                                var car = LegoTagTools.EncrypCharactertId(Uid, toyTag.Id);
+
+                                // Write Charater to blocks 0x24 and 0x25.
+                                Data = car.AsSpan(0, 4).ToArray();
+                                BlockNumber = 0x24;
+                                CardCommand = UltralightCommand.Write4Bytes;
+                                SendAway(nfcA);
+
+                                Data = car.AsSpan(4, 4).ToArray();
+                                BlockNumber = 0x25;
+                                CardCommand = UltralightCommand.Write4Bytes;
+                                SendAway(nfcA);
+
+                                // Write Vehicle to blocks 0x24 and 0x26.
+                                Data = emptyBlock;
+                                BlockNumber = 0x26;
+                                CardCommand = UltralightCommand.Write4Bytes;
+                                SendAway(nfcA);
+
+                                //Try to read from block 0x25. (Let's see if it worked.)
+                                BlockNumber = 0x24;
+                                CardCommand = UltralightCommand.Read16Bytes; //Reads 4 pages starting at BlockNumber
+                                dataFromCard = SendAway(nfcA);
+                                if (!dataFromCard.AsSpan(0, 8).SequenceEqual(car.AsSpan(0, 8).ToArray()))
+                                {
+                                    ForDebug.AppendLine($"@BeginWrite, Character: Failed to write to card. \n" +
+                                        $"{BitConverter.ToString(dataFromCard)}");
+
+                                    return ProgressStatus.Failed;
+                                }
                             }
-                        }
-                        break;
+                            break;
 
-                    case ToyTagType.Vehicle:
-                        {
-                            // Get the encrypted vehicle ID
-                            var vec = LegoTagTools.EncryptVehicleId(toyTag.Id);
-
-                            // Write Vehicle to blocks 0x24 and 0x26.
-                            Data = vec;
-                            BlockNumber = 0x24;
-                            CardCommand = UltralightCommand.Write4Bytes;
-                            SendAway(nfcA);
-
-                            Data = new byte[] { 0x00, 0x01, 0x00, 0x00 };
-                            BlockNumber = 0x26;
-                            CardCommand = UltralightCommand.Write4Bytes;
-                            SendAway(nfcA);
-
-                            //Try to read from block for a match. 
-                            BlockNumber = 0x26;
-                            CardCommand = UltralightCommand.Read16Bytes; //Reads 4 pages starting at BlockNumber
-                            dataFromCard = SendAway(nfcA);
-                            if (!dataFromCard.AsSpan(0, 4).SequenceEqual(Data.AsSpan(0, 4).ToArray()))
+                        case ToyTagType.Vehicle:
                             {
-                                ForDebug.AppendLine("L#522 Failed to write to card.");
-                                return ProgressStatus.Failed;
+                                // Get the encrypted vehicle ID
+                                var vec = LegoTagTools.EncryptVehicleId(toyTag.Id);
+
+                                // Write Vehicle to blocks 0x24 and 0x26.
+                                Data = vec;
+                                BlockNumber = 0x24;
+                                CardCommand = UltralightCommand.Write4Bytes;
+                                SendAway(nfcA);
+
+                                // Write Vehicle to blocks 0x24 and 0x26.
+                                Data = emptyBlock;
+                                BlockNumber = 0x25;
+                                CardCommand = UltralightCommand.Write4Bytes;
+                                SendAway(nfcA);
+
+                                Data = vehicleBlock;
+                                BlockNumber = 0x26;
+                                CardCommand = UltralightCommand.Write4Bytes;
+                                SendAway(nfcA);
+
+                                //Try to read from block for a match. 
+                                BlockNumber = 0x24;
+                                CardCommand = UltralightCommand.Read16Bytes; //Reads 4 pages starting at BlockNumber
+                                dataFromCard = SendAway(nfcA);
+                                if (!dataFromCard.AsSpan(0, 4).SequenceEqual(vec.AsSpan(0, 4).ToArray()) || !dataFromCard.AsSpan(8, 4).SequenceEqual(vehicleBlock))
+                                {
+                                    ForDebug.AppendLine("@BeginWrite, vehicle: Failed to write to card.\n" +
+                                        $"{BitConverter.ToString(dataFromCard)}");
+                                    return ProgressStatus.Failed;
+                                }
                             }
-                        }
-                        break;
+                            break;
+                    }
                 }
             }
             catch (Exception e)
             {
-                await Alert.SendAlert("Oops","Something went wrong. \n Failed to write","Ok","", false);
-                ForDebug.AppendLine($"L#532 {e.Message}");
+                await Alert.SendAlert("Oops", "Something went wrong. \n Failed to write", "Ok", "", false);
+                ForDebug.AppendLine($"@BeginWrite: {e.Message}");
                 return ProgressStatus.Failed;
             }
 
@@ -541,7 +586,41 @@ namespace DimensionalTag
             TagConnected = nfcA.IsConnected;
 
             return ProgressStatus.Success;
-        }   
+        }
+
+        /// <summary>
+        /// Erases (Writes 0's over) bytes at pages specified 
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <param name="pages"></param>
+        /// <returns></returns>
+        private async Task<ProgressStatus> EraseTag(NfcA tag, byte[] pages)
+        {
+            if (!tag.IsConnected) { return ProgressStatus.NoConnection; }
+            if (pages == null || pages.Length <= 0)
+            {
+                ForDebug.AppendLine($"@EraseTag(): Invalid page #s");
+                return ProgressStatus.Failed;
+            }
+            try
+            {
+                foreach (byte page in pages)
+                {
+                    // Write 0 to blocks from page #s.
+                    Data = emptyBlock;
+                    BlockNumber = page;
+                    CardCommand = UltralightCommand.Write4Bytes;
+                    SendAway(tag);
+                }
+                return ProgressStatus.Success;
+            }
+            catch (Exception e)
+            {
+                await Alert.SendAlert("Oops", "Something went wrong. \n Failed to write", "Ok", "", false);
+                ForDebug.AppendLine($"@EraseTag(): {e.Message}");
+                return ProgressStatus.Failed;
+            }
+        }
 
             /// <summary>
             /// Serialize command for sending to card.
@@ -622,19 +701,20 @@ namespace DimensionalTag
                 return array;
             }
 
-            /// <summary>
-            /// Prepare and send data to tag.
-            /// </summary>
-            /// <param name="nfcA"></param>        
-            /// <returns>A Byte array response from tag.</returns>
-            public byte[] SendAway(NfcA nfcA)
-            {
-
-                byte[] dataToSend = Serialize(); //get back serialized command array.
-                byte[] dataFromCard = GetByteSize(); //get proper array size
-                dataFromCard = nfcA.Transceive(dataToSend); //send command and receive response as array
-                return dataFromCard;
-            }
+        /// <summary>
+        /// Prepare and send data to tag.
+        /// </summary>
+        /// <param name="nfcA"></param>        
+        /// <returns>A Byte array response from tag.</returns>
+        public byte[] SendAway(NfcA nfcA)
+        {
+            if (nfcA == null || !nfcA.IsConnected) return [];
+            byte[] dataToSend = Serialize(); //get back serialized command array.
+            byte[] dataFromCard = GetByteSize(); //get proper array size                                                
+            dataFromCard = nfcA.Transceive(dataToSend); //send command and receive response as array
+            if (dataFromCard == null) return [];
+            return dataFromCard;
+        }
 
             /// <summary>
             /// Checks if the tag is empty.

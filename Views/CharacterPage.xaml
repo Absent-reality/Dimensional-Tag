@@ -53,7 +53,7 @@
             BackgroundColor="Transparent"
             Stroke="Transparent" >
 
-            <CollectionView
+            <CollectionView             
                 x:Name="collection"
                 VerticalOptions="Center" 
                 HorizontalOptions="Center"
@@ -121,7 +121,7 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
         </Border>
-        
+  
         <Image
             x:Name="rightArrow"
             AutomationId="Right"

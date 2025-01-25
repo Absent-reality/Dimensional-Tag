@@ -10,6 +10,8 @@ namespace DimensionalTag
         /// <returns></returns>
         void CanOverWrite(bool confirm);
 
+
+
         /// <summary>
         /// Event for when a tag is read.
         /// </summary>
@@ -21,6 +23,13 @@ namespace DimensionalTag
         /// <param name="toyTag">Tag to write.</param>
         /// <returns>Status of task.</returns>
         Task<ProgressStatus> SendToWrite(ToyTag toyTag);
+
+        /// <summary>
+        /// For erasing existing tag data.
+        /// </summary>
+        /// <param name="confirm"></param>
+        /// <returns></returns>
+        Task<ProgressStatus> EraseIt(bool confirm);
 
         /// <summary>
         /// Cancels write by emptying the tag.

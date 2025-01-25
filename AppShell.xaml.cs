@@ -49,7 +49,9 @@ namespace DimensionalTag
             }
             else
             {
-                Tabby.Items.Add(new Tab()
+#endif
+#if ANDROID || WINDOWS
+            Tabby.Items.Add(new Tab()
                 {
                     Title = "Portal",
                     Icon = "portal_ico.png",
@@ -61,8 +63,11 @@ namespace DimensionalTag
                 CenterTab.Items.Add(new ShellContent() { Icon = "placeholder.png", IsEnabled = false });
                 CenterTab.IsEnabled = false; 
                 Img_Port.IsVisible = false;
+#endif
+#if ANDROID
             }
 #endif
+
         }
 
         private async void Settings_Tapped(object sender, TappedEventArgs e)
