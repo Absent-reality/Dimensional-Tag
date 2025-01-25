@@ -22,7 +22,7 @@ namespace DimensionalTag
         private bool _save;
         private bool _nfcEnabled = true;
 
-        private const string _versionNumber = "Ver: 2.0.0";
+        private const string _versionNumber = "Ver: 2.1.0";
         public string VersionNumber => _versionNumber;
 
         public double Bgm_Volume
