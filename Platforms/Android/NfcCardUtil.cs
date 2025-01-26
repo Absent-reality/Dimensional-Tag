@@ -123,8 +123,9 @@ namespace DimensionalTag
             {
                 Tag? thisTag;
                 ProgressStatus progressStatus = new();
+                var droidVerison = Android.OS.Build.VERSION.SdkInt;
 
-                if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Tiramisu)
+                if (droidVerison >= Android.OS.BuildVersionCodes.Tiramisu)
                 {
                     //get Tag from Intent
                     var cSharpType = typeof(Tag);
@@ -347,8 +348,9 @@ namespace DimensionalTag
             {
                 Tag? thisTag;
                 ProgressStatus progressStatus = new();
+                var droidVerison = Android.OS.Build.VERSION.SdkInt;
 
-                if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Tiramisu)
+                if (droidVerison >= Android.OS.BuildVersionCodes.Tiramisu)
                 {
                     //get Tag from Intent
                     var cSharpType = typeof(Tag);

@@ -744,17 +744,27 @@ namespace DimensionalTag
                             return ProgressStatus.Failed;
                         }
 
-                        byte[] Data = [0x00, 0x01, 0x00, 0x00];
-                        var success2 = Portal1.WriteTag(index, 0x26, Data);
+                        byte[] Data = [0x00, 0x00, 0x00, 0x00];
+                        var success2 = Portal1.WriteTag(index, 0x25, Data);
 
                         if (!success2)
+                        {
+                            //failed to write
+                            ToDebug.AppendLine("Failed to write 0s on 0x25");
+                            return ProgressStatus.Failed;
+                        }
+
+                        Data = [0x00, 0x01, 0x00, 0x00];
+                        var success3 = Portal1.WriteTag(index, 0x26, Data);
+
+                        if (!success3)
                         {
                             //failed to write
                             ToDebug.AppendLine("Failed to write Vehicle on 0x26");
                             return ProgressStatus.Failed;
                         }
 
-                        if (success1 && success2)
+                        if (success1 && success2 && success3)
                         { status = ProgressStatus.Success; }
 
                         Portal1.SetTagPassword(PortalPassword.Automatic, index);

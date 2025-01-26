@@ -2,6 +2,7 @@
 using Android.Content;
 using Android.Nfc;
 using CommunityToolkit.Maui.Views;
+using System.Text;
 
 namespace DimensionalTag
 {
@@ -27,7 +28,9 @@ namespace DimensionalTag
                 Settings.NfcEnabled = false;
                 Alert.SendAlert("Nfc Unavailable", "Nfc is not supported on this device. Please connect portal to usb port.", "Ok", "", false);
                 Settings.SetWritingDevice = WritingDevice.Portal;
-            }
+            }          
+
+            Settings.OsVersion = $"{Android.OS.Build.VERSION.SdkInt}";
         }
 
         public void OnResume()
@@ -90,10 +93,17 @@ namespace DimensionalTag
                     shouldDebug = await ReportIt(NfcTask.Read, progressStatus);
                 }
             }
-                if (shouldDebug)
-                {
-                    await Shell.Current.ShowPopupAsync(new DebugPopup(nfcCardUtil.ForDebug));
-                }
+            if (shouldDebug)
+            {
+                StringBuilder logInfo = new();
+                logInfo.AppendLine($"{Settings.ThisDeviceInfo.Manufacturer} \n" +
+                    $"{Settings.ThisDeviceInfo.Name} \n" +
+                    $"{Settings.OsVersion} \n" +
+                    $"App Version:{Settings.VersionNumber} \n" +
+                    $"{nfcCardUtil.ForDebug}");
+
+                await Shell.Current.ShowPopupAsync(new DebugPopup(logInfo));
+            }
         }
 
         public async Task<ProgressStatus>SendToWrite(ToyTag toyTag)

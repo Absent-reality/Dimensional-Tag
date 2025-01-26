@@ -25,6 +25,21 @@ namespace DimensionalTag
         private const string _versionNumber = "Ver: 2.1.0";
         public string VersionNumber => _versionNumber;
 
+        private IDeviceInfo _thisDeviceInfo = DeviceInfo.Current;
+        public IDeviceInfo ThisDeviceInfo => _thisDeviceInfo;
+        private string _osVersion = "";
+        public string OsVersion
+        {
+            get { return _osVersion; }
+            set 
+            {
+                if(_osVersion == value ) 
+                    return;
+                _osVersion = value;
+                OnPropertyChanged(nameof(OsVersion));
+            }
+        }
+
         public double Bgm_Volume
         {
             get { return _bgm_Volume; }
