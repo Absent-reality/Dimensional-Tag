@@ -21,7 +21,7 @@ This app is really rather user friendly in my opinion. Scroll through each item 
 searched for item. At this time each vehicle has a placeholder picture of the first form, and links to the other builds in the popup when they are clicked on. Scan a lego 
 character or vehicle tag on the scan page, and it will navigate to the item matching that tag. The app is mostly designed with NTAG213 tags in mind. The portal page 
 works in concert with a connected lego portal to turn on and off, and change the color of the leds in the portal. Place a toy tag on the portal pad, and tap the icon when it 
-appears to view the items info. Writing is possible from either the nfc device, or the portal, to blank 213 tags. Currently this is only designed for android. I may port it 
+appears to view the items info. Writing is possible from an nfc device to blank 213 or 215 tags. Currently this is only designed for android. I may port it 
 over to ios when i feel like paying for it. 
 
 

@@ -40,7 +40,7 @@ namespace DimensionalTag.Portal
         /// <summary>Fade to a random color.</summary>
         FadeRandom = 0xC4,
 
-        /// <summary>Fade unkwon?</summary>
+        /// <summary>Fade unknown?</summary>
         FadeUnknown = 0xC5,
 
         /// <summary>Fade all.</summary>

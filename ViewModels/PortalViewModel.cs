@@ -695,7 +695,7 @@ namespace DimensionalTag
                 case ToyTagType.Character:
                     {
                         var car = LegoTagTools.EncrypCharactertId(Uid, thisToy.Id);
-                        Portal1.SetTagPassword(PortalPassword.Disable, index /*, auth */);
+                        Portal1.SetTagPassword(PortalPassword.Disable, index);
 
                         bool success1 = Portal1.WriteTag(index, 0x24, car.AsSpan().Slice(0, 4).ToArray());
                         if (!success1)
@@ -723,18 +723,20 @@ namespace DimensionalTag
                             return ProgressStatus.Failed;
                         }
 
+                        var success4 = Portal1.WriteTag(index, (byte)0x2b, auth);
+
                         if (success1 && success2 && success3)
                         { status = ProgressStatus.Success; } 
 
-                        // "Automatic password again"
-                        Portal1.SetTagPassword(PortalPassword.Automatic, index /*, auth */);
+                        // "Automatic password again."
+                        Portal1.SetTagPassword(PortalPassword.Automatic, index);
                         break;
                     }
 
                 case ToyTagType.Vehicle:
                     {
                         var vec = LegoTagTools.EncryptVehicleId(thisToy.Id);
-                        Portal1.SetTagPassword(PortalPassword.Disable, index);
+                        Portal1.SetTagPassword(PortalPassword.Disable, index, auth);
 
                         bool success1 = Portal1.WriteTag(index, 0x24, vec);
                         if (!success1)
@@ -764,10 +766,12 @@ namespace DimensionalTag
                             return ProgressStatus.Failed;
                         }
 
+                        var success4 = Portal1.WriteTag(index, (byte)0x2b, auth);
+
                         if (success1 && success2 && success3)
                         { status = ProgressStatus.Success; }
 
-                        Portal1.SetTagPassword(PortalPassword.Automatic, index);
+                        Portal1.SetTagPassword(PortalPassword.Custom, index, auth);
                         break;
                     }             
             }        

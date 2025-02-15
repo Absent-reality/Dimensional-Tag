@@ -143,6 +143,7 @@ namespace DimensionalTag
                 }
                 else
                 {
+                    ForDebug.AppendLine("Version may be below 33");
 #pragma warning disable CA1422
                     // intent.GetParcelableArrayExtra(string) is obsolete on android 33 and later.
                     thisTag = (Tag?)intent.GetParcelableExtra(NfcAdapter.ExtraTag);
